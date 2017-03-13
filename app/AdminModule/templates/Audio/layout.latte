@@ -1,0 +1,20 @@
+{layout ../@layout.latte}
+{block left-column}
+<ul>
+	<li><a {ifCurrent 'list', 'all'}class="current"{/ifCurrent} n:href="list, all">Vše</a></li>
+	<li n:foreach="$interprets as $interpret"><a {ifCurrent 'list', $interpret->id}class="current"{/ifCurrent} n:href="list, $interpret->id">{$interpret->abbreviation}</a></li>
+</ul>
+{/block}
+{block content}
+<div id="head_line">
+	<h1>Audio</h1>
+	<nav id="sub_actions">
+		<a class="mp3-list" n:href="list">Lekce</a>
+		<a class="add" n:href="add">přidat lekci</a>
+		{* <a class="add-mp3" n:href="addMp3">přidat mp3 soubor</a> na wedosu technicky nemožné, post_max_size je jen 32 MB *}
+		<a class="interprets" n:href="Interpret:list">interpreti</a>
+		<a class="collections" n:href="Collection:list">kolekce</a>		
+	</nav>
+</div>
+{include audio-content}
+{/block}

@@ -1,0 +1,95 @@
+{block content}
+<div id="head_line">
+	<h1 n:block=title>Novinky</h1>
+	<nav id="sub_actions">
+		<a class="add" n:href="add">přidat novinku</a>
+	</nav>
+</div>
+
+{define new_item}
+			<div>
+			    <img src="{$basePath}/images/news_thumbs/{$new['file']}" />
+			    <div><span>Název:</span> {$new['title']}</div>
+			    <div>
+				    <span>Datum:</span> 
+				    {if $new['date_to'] != ""}
+						{$new['date_from']|date: 'd.m.Y'} - {$new['date_to']|date: 'd.m.Y'}
+					{else}
+						{$new['date_from']|date: 'd.m.Y'}
+					{/if}
+				</div>
+			    <div><span>Cíl okdazu:</span> <a n:if="$new['target'] != ''" n:class="$new['target_http_code'] != 200 ? broken" title="{$new['target']}" href="{$new['target']}" target="_blank">{$new['target']}</a></div>
+			    <div><span>Od:</span>
+				{if $new['show_from'] != ""}
+					{$new['show_from']|date: 'd.m.Y H:i'}
+				{else}
+					<span class="infinity">&infin;</span>
+				{/if}
+				<span>Do:</span> 
+				{if $new['show_to'] != ""}
+					{$new['show_to']|date: 'd.m.Y H:i'}
+				{else}
+					<span class="infinity">&infin;</span>
+				{/if}
+				</div>
+				<div class="controls horizontal">
+					<a class="edit" n:href="edit, $new['id']">Upravit</a>
+					<a class="remove" onclick="return (window.confirm('Opravdu smazat?') !== false)" n:href="remove, $new['id']">Odstranit</a>
+				</div>
+		    </div>
+{/define}
+
+<section id="news">
+	<h2>Události:</h2>
+	<section n:if="count($events) > 0">
+		<div class="slide">
+			<span class="counter">1</span>
+		{foreach $events as $new}
+			{if $iterator->counter % 3 == 1 && !$iterator->first}
+			{var slide_number = ($iterator->counter - 1) / 3 + 1}
+		</div>
+		<div class="slide">
+			<span class="counter">{$slide_number}</span>
+			{/if}
+			{include new_item}
+		{/foreach}
+		</div>
+	</section>
+	<h2>Foto:</h2>
+	<section n:if="count($photos) > 0">
+		<div class="slide">
+			<span class="counter">1</span>
+		{foreach $photos as $new}
+			{if $iterator->counter % 3 == 1 && !$iterator->first}
+			{var slide_number = ($iterator->counter - 1) / 3 + 1}
+		</div>
+		<div class="slide">
+			<span class="counter">{$slide_number}</span>
+			{/if}
+			{include new_item}
+		{/foreach}
+		</div>
+	</section>
+	<h2>Audio:</h2>
+	<section n:if="count($audios) > 0">
+		<div class="slide">
+			<span class="counter">1</span>
+		{foreach $audios as $new}
+			{if $iterator->counter % 3 == 1 && !$iterator->first}
+			{var slide_number = ($iterator->counter - 1) / 3 + 1}
+		</div>
+		<div class="slide">
+			<span class="counter">{$slide_number}</span>
+			{/if}
+			{include new_item}
+		{/foreach}
+		</div>
+	</section>
+</section>
+{/block}  
+{block scripts}
+{include parent}
+{/block}
+
+
+

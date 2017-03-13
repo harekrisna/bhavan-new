@@ -1,0 +1,59 @@
+{extends layout.latte}
+{block title}Audio{/block}
+{block audio-content}
+<table id="audio_list" class="list">
+	<thead>
+    	<tr>
+	        <th><span>Datum přidání</span></th>
+	        <th><span>Datum lekce</span></th>
+	        <th><span>Název</span></th>
+	        <th><span>Interpret</span></th>
+	        <th><span>Verš</span></th>
+			<th><span>Typ</span></th>
+			<th><span style="padding: 0">P</span></th>
+			<th><span style="padding: 0">D</span></th>
+	        <th></th>
+		</tr>
+    </thead>
+    <tbody id="table_list">
+    {foreach $audio as $mp3}
+        <tr id="{$mp3->id}">
+	        <td class="date">
+		        <span class="sort-helper">{$mp3->time_created|date: 'Y'}x{$mp3->time_created|date: 'm'}x{$mp3->time_created|date: 'd'}x{$mp3->time_created|date: 'H:i:s'}</span>{$mp3->time_created|date: 'j.n.Y H:i:s'}</td>
+            <td class="date">
+	            {if $mp3->audio_month && $mp3->audio_day}
+		            <span class="sort-helper">{$mp3->audio_year}x{$mp3->audio_month}x{$mp3->audio_day}</span><span class="day">{$mp3->audio_day}</span><span class="month">{$mp3->audio_month}</span>{$mp3->audio_year}
+	            {elseif $mp3->audio_month}
+		            <span class="sort-helper">{$mp3->audio_year.'x'.$mp3->audio_month.'00'}</span><span class="month">{$mp3->audio_month}</span>{$mp3->audio_year}
+	            {else}
+		            <span class="sort-helper">{$mp3->audio_year.'00x00'}</span>{$mp3->audio_year}
+	            {/if}
+	        </td>
+			<td><a n:href="edit, $mp3->id">{$mp3->title}</a></td>
+			<td>{$mp3->interpret->abbreviation}</td>
+			<td>{if isset($mp3->book_id)}{$mp3->book->abbreviation, $mp3->chapter, $mp3->verse|verseReadable}{/if}</td>
+			<td class="flags">
+				<img title="{$mp3->type == 'live' ? 'živá lekce' : 'lekce ze záznamu'}" src="{$basePath}/images/admin/{$mp3->type}-icon.png" />
+				<img n:if="$mp3->sankirtan" title="sankírtanová lekce" src="{$basePath}/images/admin/book-icon.png" />
+				<img n:if="$mp3->seminar" title="seminář" src="{$basePath}/images/admin/seminar-icon.png" />
+				<img n:if="$mp3->varnasrama" title="varnášrama a farmy" src="{$basePath}/images/admin/varnasrama-icon.png" />
+				<img n:if="$mp3->audio_collection_id" title="{$mp3->audio_collection->title}" src="{$basePath}/images/admin/collection-icon.png" />
+	        </td>
+	        <td class="center">{$mp3->related('audio_playcount')->sum(playcount)}</td>
+	        <td class="center">{$mp3->related('audio_downloadcount')->sum(downloadcount)}</td>
+            <td><a class="button edit" n:href="edit, $mp3->id"></a><a class="button remove" n:href="delete!, $mp3->id"></a></td>
+		</tr>        
+    {/foreach}
+    </tbody>
+</table>
+{/block}
+{block scripts}
+{include parent}
+  <script src="{$basePath}/js/admin.js"></script>
+  <script src="{$basePath}/js/jquery.tablesorter.min.js"></script>
+  <script>      
+	$(function(){
+		$('#audio_list').tablesorter();
+	});
+  </script>
+{/block}

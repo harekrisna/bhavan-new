@@ -1,0 +1,64 @@
+{block title}Slajdy{/block}
+{block content}
+<div id="head_line">
+	<h1>Slajdy</h1>
+	<nav id="sub_actions">
+		<a class="add" n:href="add">přidat slajd</a>
+	</nav>
+</div>
+<section id="slides">
+	<div n:foreach="$slides as $slide" n:class="$slide->show_from != NULL && $slide->show_from > $now || 
+												$slide->show_to != NULL && $slide->show_to < $now 
+												? disabled">
+		<h2>{$slide->title}</h2>
+		<img src="{$basePath}/images/slides/{$slide->file}"/>
+		<div class="info">
+			<div><span>Pořadí:</span>{$slide->position}</div>
+			<div>
+				<span>Název souboru:</span>
+				<a href="{$basePath}/images/slides/{$slide->file}" target="_blank">{$slide->file}</a>
+			</div>		
+			<div>
+				<span>Odkazuje na:</span>
+				{if strpos($slide->target, "http://") !== FALSE}
+					<a href="{$slide->target}" target="_blank">{$slide->target}</a>
+				{else}
+					<a href="{$basePath}/{$slide->target}" target="_blank">{$slide->target}</a>
+				{/if}
+			</div>
+			<div>
+				<span>Zobratovat od:</span>
+				{if $slide->show_from != ""}
+					{$slide->show_from|date: 'd.m.Y H:i'}
+				{else}
+					<span class="infinity">&infin;</span>
+				{/if}
+			</div>
+			<div>
+				<span>Zobratovat do:</span>
+				{if $slide->show_to != ""}
+					{$slide->show_to|date: 'd.m.Y H:i'}
+				{else}
+					<span class="infinity">&infin;</span>
+				{/if}
+			</div>
+			<div>
+				<span>Prodleva:</span>
+				{$slide->delay}s
+			</div>
+		</div>
+		<div class="controls">
+			<a class="up" n:if="$slide->position > 1" n:href="updatePosition!, $slide->id, $slide->position-1">Posunout dopředu</a>
+			<a class="down" n:if="$slide->position + 1 <= $max_position" n:href="updatePosition!, $slide->id, $slide->position+1">Posunout dozadu</a>
+			<a class="edit" n:href="edit, $slide->id">Upravit</a>
+			<a class="remove" onclick="return (window.confirm('Opravdu smazat?') !== false)" n:href="remove, $slide->id">Odstranit</a>
+		</div>
+	</div>
+</section>
+{/block}  
+{block scripts}
+{include parent}
+{/block}
+
+
+

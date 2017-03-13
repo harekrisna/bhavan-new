@@ -1,0 +1,62 @@
+{block title}{$form_title}{/block}
+{block head}
+  <link rel="stylesheet" type="text/css" href="{$basePath}/css/jquery-ui.min.css">
+  <link rel="stylesheet" type="text/css" href="{$basePath}/css/jquery-ui-timepicker-addon.min.css">
+{/block}
+{block content}
+<fieldset id="slide_form">
+	<legend>{$form_title}:</legend>
+	{form slideForm}
+	<ul class="errors" n:if="$form->hasErrors()">
+        <li n:foreach="$form->errors as $error">{$error}</li>
+	</ul>
+	<table>
+		<tr><th>{label title /}</th><td>{input title}</td></tr>
+		<tr>
+			<th class="picture">{label file /}</th>
+		{if $presenter->getAction() == "edit"}
+			<td>{$slide->file}</td></tr>
+			<tr><th></th><td><img src="{$basePath}/images/slides/{$slide->file}"</td></tr>
+		</tr>
+		<tr>
+	        <th></th><td>{input file}</td>
+		{else}
+			<td>{input file}</td>
+		{/if}
+		</tr>
+		<tr><th rowspan="2">{label target /}</th><td>{input select_target}</td></tr>
+		<tr><td>{input target}</td></tr>
+		{if $presenter->getAction() == "add"}
+			<tr><th>{label position /}</th><td>{input position}</td></tr>
+		{/if}
+		<tr><th>{label show_from /}</th><td>{input show_from}</td></tr>
+		<tr><th>{label show_to /}</th><td>{input show_to}</td></tr>
+		<tr><th>{label delay /}</th><td>{input delay, class => delay}<span class="input_info">sekund</span></td></tr>
+		<tr>
+			<th></th>
+			<td>
+			{if $presenter->getAction() == "edit"}
+				{input update}
+			{else}
+				{input insert}
+			{/if}
+			</td>
+		</tr>
+	</table>
+	{/form}
+</fieldset>
+{/block}
+{block scripts}
+<script type="text/javascript" src="{$basePath}/js/jquery-ui.min.js"></script>
+<script type="text/javascript" src="{$basePath}/js/jquery-ui-timepicker-addon.min.js"></script>
+<script type="text/javascript" src="{$basePath}/js/admin/forms.js"></script>
+<script type="text/javascript">
+	initDateTimeIntervalPicker('input#frm-slideForm-show_from', 'input#frm-slideForm-show_to');
+	
+	$('select#frm-slideForm-select_target').change(function() {
+		var selected_url = $(this).val();
+		$('input#frm-slideForm-target').val(selected_url);
+	});
+	
+</script>
+{/block}

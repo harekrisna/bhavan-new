@@ -1,0 +1,12 @@
+{block title}Aktualita: {$actuality->title}{/block}
+{block content}
+<h1>{$actuality->title}</h1>
+<article id="actuality_detail">
+	<time>Datum: {$actuality->actuality_date|date:'j. n. Y'}</time><br />
+	<span>URL: {$actuality->url}</span>	
+	<p><img n:if="$actuality->article_image" src="{$basePath}/images/actuality/{$actuality->article_image}" />{!$actuality->description}</p>
+</article>
+{/block}  
+{block scripts}
+{include parent}
+{/block}

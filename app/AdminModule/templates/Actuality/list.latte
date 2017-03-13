@@ -1,0 +1,48 @@
+{block content}
+<div id="head_line">
+	<h1 n:block=title>Aktuality</h1>
+	<nav id="sub_actions">
+		<a class="add" n:href="add">přidat aktualitu</a>
+	</nav>
+</div>
+<section id="actuality">
+	<div n:foreach="$actualities as $actuality">
+		<h2>
+			<a n:href="detail, $actuality->id">{$actuality->title}</a>
+			<div class="controls horizontal">
+				<a class="edit" n:href="edit, $actuality->id">Upravit</a>
+				<a class="remove" onclick="return (window.confirm('Opravdu smazat?') !== false)" n:href="remove, $actuality->id">Odstranit</a>
+			</div>
+		</h2>
+		{if $actuality->preview_image}
+			<img src="{$basePath}/images/actuality/previews/{$actuality->preview_image}" />
+		{else}
+			<img src="{$basePath}/images/actuality/previews/no_image.png" />
+		{/if}
+		<div class="description">{!$actuality->description}</div>
+	    <div><span>Url:</span> <a title="{$actuality->url}" href="http://www.bhavan.cz/aktuality/{$actuality->url}" target="_blank">{$actuality->url}</a></div>
+	    <div>
+		    <span>Datum:</span>
+		    {if $actuality->date_to != ""}
+				{$actuality->date_from|date: 'd.m.Y'} - {$actuality->date_to|date: 'd.m.Y'}
+			{else}
+				{$actuality->date_from|date: 'd.m Y'}
+			{/if}
+		</div>
+	    <div><span>Od:</span>
+		{if $actuality->show_from != ""}
+			{$actuality->show_from|date: 'd.m.Y H:i'}
+		{else}
+			<span class="infinity">&infin;</span>
+		{/if}
+		<span>Do:</span> 
+		{if $actuality->show_to != ""}
+			{$actuality->show_to|date: 'd.m.Y H:i'}
+		{else}
+			<span class="infinity">&infin;</span>
+		{/if}
+		</div>
+
+	</div>
+</section>
+{/block}

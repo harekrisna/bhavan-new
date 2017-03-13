@@ -1,0 +1,49 @@
+{block content}
+<div id="head_line">
+	<h1 n:block=title>Galerie</h1>
+	<nav id="sub_actions">
+		<a class="add" n:href="addGalery">přidat galerii</a>
+	</nav>
+</div>
+<table id="galery_list" class="list">
+	<thead>
+		<tr>
+			<th class="image"></th>
+			<th class="title">Název galerie</th>
+			<th class="date_action">Datum akce</th>
+			<th class="date_created">Vytvořeno</th>
+			<th class="count">Fotek</th>
+			<th></th>
+		</tr>
+	</thead>
+	<tbody>
+	<tr n:foreach="$galeries as $galery" id="{$galery->id}">
+		<td><img src="{$basePath}/images/galery/{$galery->photos_folder}/galery_image.jpg" /></td>
+		<td><a n:href="detail, $galery->id">{$galery->title}</a></td>
+		<td>{!$galery->galery_year, $galery->galery_month, $galery->galery_day|dynamicDateSortable}</td>
+		<td><span class="sort-helper">{$galery->time_created|date: 'Yxmxd'}</span>{$galery->time_created|date: 'j.n.Y'}</td>
+		<td class="center">{$galery->related("photo")->count()}</td>
+        <td>
+	        <a class="button edit" n:href="edit, $galery->id"></a>
+	        <a class="button photos" n:href="detail, $galery->id"></a>
+	        <a class="button remove" n:href="deleteGalery!, $galery->id"></a>
+	    </td>
+	</tr>
+	</tbody>
+</table>
+{/block}  
+{block scripts}
+{include parent}
+  <script src="{$basePath}/js/admin.js"></script>
+  <script src="{$basePath}/js/jquery.tablesorter.min.js"></script>
+  <script type="text/javascript">
+    $('#galery_list > div').click(function() {
+      var href = $(this).children("a").attr("href");
+      window.location.href = href;
+    });
+    
+    $('#galery_list').tablesorter();
+  </script>
+{/block}
+
+

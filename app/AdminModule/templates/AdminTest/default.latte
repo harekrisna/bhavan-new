@@ -1,0 +1,17 @@
+{block title}O nás{/block}
+{block content}
+	{form galeryForm}
+	<ul class="error" n:if="$form->hasErrors()">
+	        <li n:foreach="$form->errors as $error">{$error}</li>
+	</ul>
+	<table>
+
+	<tr><th>{label galery_image /}</th><td>{input galery_image}</td></tr> 
+
+	<tr><th></th><td>{input insert}</td></tr>
+	</table>
+	{/form}
+{/block}
+{block scripts}
+{include parent}
+{/block}

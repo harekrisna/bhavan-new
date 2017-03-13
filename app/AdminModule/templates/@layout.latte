@@ -1,0 +1,85 @@
+{var $robots = all}
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="description" content="">
+	<meta name="robots" content="{$robots}" n:ifset="$robots">
+
+	<title>{block title|striptags}{/block} | Admin</title>
+
+	<link rel="stylesheet" media="screen,projection,tv" href="{$basePath}/css/admin/admin.css">
+	<link rel="stylesheet" media="print" href="{$basePath}/css/print.css">
+	<link rel="shortcut icon" href="{$basePath}/favicon.ico?v=3">
+    <script src="{$basePath}/js/jquery.min.js"></script>
+    <script src="{$basePath}/js/netteForms.js"></script>
+	{block head}{/block}
+</head>
+
+<body>
+<div id="header">
+    <div id="header-inner">
+       	<a href="http://www.bhavan.cz"><img src="{$basePath}/favicon.ico" /></a>
+        <div class="main-menu">
+	        <nav id="admin-menu">
+				<a {ifCurrent News:*}class="current" {/ifCurrent}href="{link News:list}">Novinky</a>
+				<a {ifCurrent Actuality:*}class="current" {/ifCurrent}href="{link Actuality:list}">Aktuality</a>
+				<a {ifCurrent Slides:*}class="current" {/ifCurrent}href="{link Slides:list}">Slajdy</a>
+				<a {ifCurrent Audio:*}class="current" {/ifCurrent}href="{link Audio:list, 'all'}">Audio</a>
+				<a {ifCurrent Galery:*}class="current" {/ifCurrent}href="{link Galery:list}">Fotky</a>
+	        </nav>
+			<span>|</span>
+            <nav id="web-menu">
+                <a {ifCurrent Page:form, about}class="current"{/ifCurrent} href="{link Page:form, about}">O nás</a>
+            </nav>
+        </div>
+        {if $user->isLoggedIn()}
+        <div class="user">      
+          <div class="loading">
+            <div class="circle"></div>
+            <div class="circle1"></div>
+          </div>
+          <span class="icon user">{$user->getIdentity()->fullname}</span> |
+          <!-- <a n:href="User:password">Změna hesla</a> | -->
+          <a n:href="signOut!">Odhlásit se</a>
+        </div>                  
+        {/if}
+    </div>
+</div>
+
+<div id="container">
+	{ifset $wide}
+	<div id="content-wide">
+        <div n:foreach="$flashes as $flash" class="flash {$flash->type}">{$flash->message}</div>
+        <script>
+        $('.flash').hide().fadeIn(800).delay(2800).fadeOut(800);
+        </script>
+		{include #content}
+    </div>
+	{else}
+	<div id="sidebar">
+    	<div class="paraler-nav">
+			{block left-column}
+			<ul n:inner-foreach="$menu as $link => $title">
+				<li><a {ifCurrent $link}class="current"{/ifCurrent} n:href="$link">{$title}</a></li>
+			</ul>
+			{/block}
+		</div>             
+	</div>
+
+	<div id="content">
+    	<div n:foreach="$flashes as $flash" class="flash {$flash->type}">{$flash->message}</div>
+        <script>
+        $('.flash').hide().fadeIn(800).delay(2800).fadeOut(800);
+        </script>
+		{include #content}
+	</div>
+	{/ifset}
+	<div id="footer">
+	</div>
+</div> 
+{block scripts}
+	<script src="{$basePath}/js/nette.ajax.js"></script>
+{/block}
+</body>
+</html>

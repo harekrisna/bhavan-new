@@ -1,0 +1,64 @@
+{extends layout.latte}
+{block title}Přídat MP3 soubor{/block}
+{block head}
+{include parent}
+<link rel="stylesheet" type="text/css" href="{$basePath}/css/uploadifive.css">
+{/block}
+{block audio-content}
+<fieldset id="upload">
+	<legend>Nahrát MP3 soubor na server:</legend>
+	<form>
+		<div id="queue"></div>
+		<input id="file_upload" name="file_upload" type="file" multiple="true">
+		<a id="upload_link" href="javascript:$('#file_upload').uploadifive('upload')">Nahrát na server</a>
+	</form>		
+</fieldset>
+{/block}
+{block scripts}
+{include parent}
+<script type="text/javascript" src="{$basePath}/js/jquery.uploadifive.min.js"></script>
+  <script type="text/javascript">
+	    	
+	{? $timestamp = time()}
+	$(function() {
+		$('#file_upload').uploadifive({
+			'auto'             : false,
+			'formData'         : {
+								   'timestamp' : {$timestamp},
+								   'token'     : '<?php echo md5('unique_salt' . $timestamp);?>'
+			                     },
+			'queueID'          : 'queue',
+			'buttonText' : 'VYBRAT SOUBORY',
+			'uploadScript'     : {link uploadMp3!},
+			'onUploadComplete' : function(file, payload) { onUploadComplete(file, payload); }
+		});
+	});
+  	
+  	function onUploadComplete(file, payload) {
+        try {
+            payload = JSON.parse(payload);
+            photo = payload['photo'];
+            d = new Date();
+            
+            var container = $("#" + photo['id']);
+            container.find("span.dimensions").html(photo['width'] + 'x' + photo['height']);
+            container.find("div.info span").html(payload['filesize']);
+            container.find("img").attr("src", {$basePath} + "/" + payload['file_path'] + "?" + d.getTime());
+            container.addClass("refresh");
+            setTimeout(function(){
+                container.removeClass("refresh");
+            },2000);
+        }
+        catch (e) {
+            $('section#galery_photos').append(payload);
+    		var info = $('table#galery_info');			
+    		var dir = info.find('td#images_dir_count');
+    		var db = info.find('td#images_db_count');
+    		dir.html(parseInt(dir.text()) + 1);
+    		db.html(parseInt(db.text()) + 1);
+        }   
+        
+  	}
+  </script>
+
+{/block}

@@ -1,0 +1,147 @@
+{block head}
+{include parent}
+<link rel="stylesheet" type="text/css" href="{$basePath}/css/uploadifive.css">
+{/block}
+{block content}
+<div id="head_line">
+	<h1 n:block=title>Galerie: {$galery->title}</h1>
+	<nav id="sub_actions">
+		<a class="generate-photos" n:href="generatePhotos, $galery->id">Generovat fotky z adresáře</a>
+		<a class="sort" n:href="sortPhotos, $galery->id">Seřadit fotky podle názvu souboru</a>
+	</nav>
+</div>
+<table id="galery_info">
+	<tr>
+		<th>Počet fotek v adresáři:</th><td id="images_dir_count">{$images_dir_count}</td>
+		<th>Adresář galerie:</th><td>{$basePath}/{$galery->photos_folder}</td>
+	</tr>
+	<tr>
+		<th>Počet fotek v databázi:</th><td id="images_db_count">{$photos->count()}</td>
+		<td colspan="2">
+			<ul class="switch" id="in_active_switch">
+				<li n:class="$galery->active == 0 ? on"><a id="inactive">Neaktivní</a></li>
+				<li n:class="$galery->active == 1 ? on"><a id="active">Aktivní</a></li>
+			</ul>
+		</td>
+	</tr>
+</table>
+<fieldset id="upload">
+    <legend>Nahrát fotky:</legend>
+	<form>
+		<div id="queue"></div>
+		<input id="file_upload" name="file_upload" type="file" multiple="true">
+		<a id="upload_link" href="javascript:$('#file_upload').uploadifive('upload')">Nahrát na server</a>
+	</form>		
+</fieldset>
+<section id="galery_photos">
+    {foreach $photos as $photo}
+        {include photo-box.latte, photo => $photo}
+	{/foreach}
+</section>
+{/block}
+{block scripts}
+{include parent}
+  <script type="text/javascript" src="{$basePath}/js/nette.ajax.js"></script>
+  <script type="text/javascript" src="{$basePath}/js/jquery-ui.min.js"></script>
+  <script type="text/javascript" src="{$basePath}/js/jquery.uploadifive.min.js"></script>
+  <script type="text/javascript">
+    
+    var in_progress = false;
+
+    $("ul#in_active_switch li").click(function(){
+	    if(!in_progress) {
+	        var button = $(this);
+	        var status = button.find('a')[0].id;
+	        $.get({link changeActivation!}, { "galery_id": {$galery->id},
+	                                		  "status": status },
+	                                		  function(payload) {
+											  	  $.nette.success(payload);
+											  	  $("ul#in_active_switch li").removeClass("on");
+											  	  button.addClass("on"); 
+											  	  in_progress = false;
+											  }
+	        )
+	        in_progress = true;
+        }
+    });  
+  
+	$("#galery_photos").sortable({
+        handle: '.move',
+        cursor: 'move',
+        scroll: false,
+        effects: true,
+        placeholder: 'droppable-area',
+        update: function (event, ui) { 
+            $.get({link updatePosition!}, { "photo_id": $(ui.item).attr('id'),
+                                            "new_position": $(ui.item).index()+1}
+        )},
+    });
+  	
+	{? $timestamp = time()}
+	$(function() {
+		$('#file_upload').uploadifive({
+			'auto'             : false,
+			'formData'         : {
+								   'timestamp' : {$timestamp},
+								   'token'     : '<?php echo md5('unique_salt' . $timestamp);?>'
+			                     },
+			'queueID'          : 'queue',
+			'buttonText' : 'VYBRAT SOUBORY',
+			'uploadScript'     : {link uploadFile!, $galery->id},
+			'onUploadComplete' : function(file, payload) { onUploadComplete(file, payload); }
+		});
+	});
+  	
+  	function onUploadComplete(file, payload) {
+        try {
+            payload = JSON.parse(payload);
+            photo = payload['photo'];
+            d = new Date();
+            
+            var container = $("#" + photo['id']);
+            container.find("span.dimensions").html(photo['width'] + 'x' + photo['height']);
+            container.find("div.info span").html(payload['filesize']);
+            container.find("img").attr("src", {$basePath} + "/" + payload['file_path'] + "?" + d.getTime());
+            container.addClass("refresh");
+            setTimeout(function(){
+                container.removeClass("refresh");
+            },2000);
+        }
+        catch (e) {
+            $('section#galery_photos').append(payload);
+    		var info = $('table#galery_info');			
+    		var dir = info.find('td#images_dir_count');
+    		var db = info.find('td#images_db_count');
+    		dir.html(parseInt(dir.text()) + 1);
+    		db.html(parseInt(db.text()) + 1);
+        }   
+        
+  	}
+  	
+  	function removePhoto(event, a) {
+		event.preventDefault();
+		$.get(a.href, function(payload) {
+			if(payload.success) {
+				$(a).parent().animate({
+								height: 0,
+								width: 0,
+							}, function() {
+								this.remove();
+							});
+				
+				var info = $('table#galery_info');			
+				info.find('td#images_dir_count').html(payload.images_dir_count);
+				info.find('td#images_db_count').html(payload.images_db_count);
+				$('div.loading').fadeOut(400);
+			}
+		});
+	}
+
+function saveDescription(photo_id, text ) { 
+    $.get({link updateDescription!}, { "photo_id": photo_id,
+                                       "text": text }
+)};
+
+  </script>
+
+{/block}

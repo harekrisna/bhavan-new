@@ -1,0 +1,62 @@
+{block title}{$form_title}{/block}
+{block content}
+<fieldset id="galery_form">
+	<legend>{$form_title}:</legend>
+	{form form}
+	<ul class="error" n:if="$form->hasErrors()">
+	        <li n:foreach="$form->errors as $error">{$error}</li>
+	</ul>
+	<table>
+	<tr><th>{label data-title /}</th><td>{input data-title}</td></tr>
+	<tr>
+		<th class="picture">{label galery_image /}</th>
+	{if $presenter->getAction() == "edit"}
+		<td><img src="{$basePath}/images/galery/{$record->photos_folder}/galery_image.jpg" /></td></tr>
+	</tr>
+	<tr>
+        <th></th><td>{input galery_image}</td>
+	{else}
+		<td>{input galery_image}</td>
+	{/if}
+	</tr>
+	<tr><th>{label data-description /}</th><td>{input data-description}</td></tr>
+	<tr><th><label>Datum:</label></th><td>{input data-galery_day}.{input data-galery_month}.{input data-galery_year}</td></tr>
+	<tr><th>{label data-url /}</th><td>{input data-url}</td></tr>
+	{if $presenter->getAction() == 'addGalery'}
+		<tr><th>{label photos_folder /}</th><td>{input photos_folder}</td></tr>
+		<tr><th>{label add_to_news /}</th><td>{input add_to_news}</td></tr>
+	{/if}
+	<tr>
+		<th></th>
+		<td>
+		{if $presenter->getAction() == "edit"}
+			{input update}
+		{else}
+			{input insert}
+		{/if}
+		</td>
+	</tr>
+	</table>
+	{/form}
+</fieldset>
+{/block}
+{block scripts}
+{include parent}
+{if $presenter->getAction() == 'addGalery'}
+<script type='text/javascript' src="{$basePath}/js/admin.js"></script>
+<script>
+    $("input[name=data\\[title\\]]").keyup(function() {
+	    $("input[name=photos_folder]").val(stringToNiceURL(this.value));
+	    $("input[name=data\\[url\\]]").val(stringToNiceURL(this.value));
+    });    
+    
+    $("input[name=photos_folder]").keyup(function() {
+	    $("input[name=photos_folder]").val(stringToNiceURL(this.value));
+    });
+    
+    $("input[name=data\\[url\\]]").keyup(function() {
+	    $("input[name=data\\[url\\]]").val(stringToNiceURL(this.value));
+    });
+</script>
+{/if}
+{/block}

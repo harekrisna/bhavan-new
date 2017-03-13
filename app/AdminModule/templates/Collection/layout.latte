@@ -1,0 +1,18 @@
+{layout ../@layout.latte}
+{block left-column}
+<ul>
+	<li><a {ifCurrent 'add'}class="current"{/ifCurrent} n:href="add">Přidat kolekci</a></li>
+</ul>
+{/block}
+{block content}
+<div id="head_line">
+	<h1>Audio Kolekce</h1>
+	<nav id="sub_actions">
+		<a class="mp3-list" n:href="Audio:list">Lekce</a>
+		<a class="add" n:href="Audio:add">přidat audio</a>
+		<a class="interprets" n:href="list">interpreti</a>
+		<a class="collections" n:href="Collection:list">kolekce</a>
+	</nav>
+</div>
+{include interpret-content}
+{/block}

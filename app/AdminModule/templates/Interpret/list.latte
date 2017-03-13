@@ -1,0 +1,37 @@
+{extends layout.latte}
+{block title}Audio{/block}
+{block interpret-content}
+<table id="interpret_list" class="list">
+	<thead>
+		<tr>
+			<th class="image"></th>
+			<th class="title">Název</th>
+			<th>Zkratka</th>
+			<th>Popis</th>
+			<th class="lessons">Lekcí</th>
+			<th class="actions"></th>
+		</tr>
+	</thead>
+	<tbody>
+	<tr n:foreach="$interprets as $interpret" id="{$interpret->id}">
+		<td><img src="{$basePath}/images/interpret_avatars/{$interpret->image}" /></td>
+		<td><a n:href="edit, $interpret->id">{$interpret->title}</a></td>
+		<td class="center">{$interpret->abbreviation}</td>
+		<td>{$interpret->description}</td>
+		<td class="center">{$interpret->related('audio')->count()}</td>
+        <td>
+	        <a class="button edit" n:href="edit, $interpret->id"></a>
+	        <a class="button remove" n:href="remove!, $interpret->id"></a>
+	    </td>
+	</tr>
+	</tbody>
+</table>
+{/block}
+{block scripts}
+{include parent}
+  <script src="{$basePath}/js/admin.js"></script>
+  <script src="{$basePath}/js/jquery.tablesorter.min.js"></script>
+  <script type="text/javascript">    
+    $('#interpret_list').tablesorter();
+  </script>
+{/block}

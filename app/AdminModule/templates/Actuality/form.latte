@@ -1,0 +1,71 @@
+{block title}Nová galerie{/block}
+{block head}
+{include parent}
+  <link rel="stylesheet" type="text/css" href="{$basePath}/css/jquery-ui.min.css">
+  <link rel="stylesheet" type="text/css" href="{$basePath}/css/jquery-ui-timepicker-addon.min.css">
+{/block}
+{block content}
+<fieldset id="actuality_form">
+	<legend>{$form_title}</legend>
+	{form actualityForm}
+	<ul class="error" n:if="$form->hasErrors()">
+	        <li n:foreach="$form->errors as $error">{$error}</li>
+	</ul>
+	<table>
+		<tr><th>{label title /}</th><td>{input title}</td></tr>
+		<tr><th>{label description /}</th><td>{input description}</td></tr>
+		<tr><th>{label date_from /}</th><td>{input date_from}</td></tr>
+		<tr><th>{label date_to /}</th><td>{input date_to}</td></tr>
+		<tr><th>{label url /}</th><td>{input url}</td></tr>
+		<tr>
+			<th>{label preview_image /}</th>
+			<td>
+				{input preview_image}
+				<span n:if="$form_type == 'edit' && $actuality->preview_image">
+					<a n:href="deletePreviewImage, $actuality->id"><img class="remove" src="{$basePath}/images/admin/remove.png" /></a>
+					<a href="{$basePath}/images/actuality/previews/{$actuality->preview_image}" class="preview">{$actuality->preview_image}</a>
+				</span>
+			</td>
+		</tr>
+		<tr>
+			<th>{label article_image /}</th>
+			<td>
+				{input article_image}
+				<span n:if="$form_type == 'edit' && $actuality->article_image">
+					<a n:href="deleteArticleImage, $actuality->id"><img class="remove" src="{$basePath}/images/admin/remove.png" /></a>
+					<a href="{$basePath}/images/actuality/{$actuality->article_image}" class="preview">{$actuality->article_image}</a>
+				</span>
+			</td>
+		</tr>
+		<tr><th>{label show_from /}</th><td>{input show_from}</td></tr>
+		<tr><th>{label show_to /}</th><td>{input show_to}</td></tr>
+		<tr n:if="$form_type == 'add'"><th>{label add_to_news /}</th><td>{input add_to_news}</td></tr>
+		<tr><th></th><td>{if $form_type == "add"}{input insert}{else}{input update}{/if}</td></tr>
+	</table>
+	{/form}
+</fieldset>
+{/block}
+{block scripts}
+{include parent}
+    <script type="text/javascript" src="{$basePath}/js/jquery-ui.min.js"></script>
+    <script type="text/javascript" src="{$basePath}/js/ckeditor/ckeditor.js"></script>
+	<script type="text/javascript" src="{$basePath}/js/jquery-ui-timepicker-addon.min.js"></script>
+	<script type="text/javascript" src="{$basePath}/js/admin/forms.js"></script>
+    <script type="text/javascript" src="{$basePath}/js/admin.js"></script>
+    <script>
+		$(function() {						
+			initDateTimeIntervalPicker("input[name=date_from]", "input[name=date_to]");			
+			initDateTimeIntervalPicker('input#frm-actualityForm-show_from', 'input#frm-actualityForm-show_to');
+			
+			$("input[name=title], input[name=url]").keyup(function() {
+				$("input[name=url]").val(stringToNiceURL(this.value));
+			});
+			
+			CKEDITOR.replace('frm-actualityForm-description', {
+				filebrowserBrowseUrl: '/browser/browse.php',
+			});
+			
+			imagePreview();
+    	});    
+	</script>
+{/block}

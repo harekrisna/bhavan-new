@@ -1,0 +1,39 @@
+{extends layout.latte}
+{block title}{$form_title}{/block}
+{block interpret-content}
+<fieldset id="collection_form" class="form">
+	<legend>{$form_title}:</legend>
+	{form collectionForm}
+	<ul class="error" n:if="$form->hasErrors()">
+	        <li n:foreach="$form->errors as $error">{$error}</li>
+	</ul>
+	<table>
+	<tr><th>{label data-title /}:</th><td>{input data-title}</td></tr>
+	<tr><th>{label data-url /}:</th><td>{input data-url}</td></tr>
+	<tr>
+		<th></th>
+		<td>
+		{if $presenter->getAction() == "edit"}
+			{input update}
+		{else}
+			{input insert}
+		{/if}
+		</td>
+	</tr>
+	</table>
+	{/form}
+</fieldset>
+{/block}
+{block scripts}
+{include parent}
+<script type='text/javascript' src="{$basePath}/js/admin.js"></script>
+<script>
+    $("input[name=data\\[title\\]]").keyup(function() {
+	    $("input[name=data\\[url\\]]").val(stringToNiceURL(this.value));
+    });    
+        
+    $("input[name=data\\[url\\]]").keyup(function() {
+	    $("input[name=data\\[url\\]]").val(stringToNiceURL(this.value));
+    });
+</script>
+{/block}
