@@ -1,1 +1,3 @@
 app/config/config.local.neon
+node_modules/*
+temp/cache/*

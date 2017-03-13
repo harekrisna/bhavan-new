@@ -4,14 +4,6 @@ body {
   background-image: url('../images/layout/bg.gif');
   background-size: 120px;
 }
-#slideshow {
-  box-shadow: 0 0 10px 3px rgba(0, 0, 0, 0.3);
-  margin-bottom: 30px;
-}
-#slideshow img[u=image] {
-  width: 990px;
-  height: 526px;
-}
 .navbar {
   margin-top: 25px;
   background-color: transparent;
@@ -28,10 +20,10 @@ body {
   margin-top: 20px;
   font-size: 20px;
   height: 32px;
-  width: 459px;
+  width: 533px;
 }
 .navbar .actuality-bar #actuality_slider {
-  width: 396px;
+  width: 306px;
   height: 30px;
   margin: -1px 0 0 5px;
   float: left;
@@ -40,8 +32,9 @@ body {
   color: #EB8C3A;
 }
 .navbar .actuality-bar #actuality_slider div[u=slides] {
-  width: 396px;
+  width: 306px;
   height: 30px;
+  font-size: 13px;
 }
 .navbar .actuality-bar > a {
   font-size: 19px;
@@ -86,6 +79,11 @@ body {
 .navbar-nav a {
   font-size: 1.2em;
 }
+@media (max-width: 767px) {
+  .navbar-collapse .logo {
+    display: none;
+  }
+}
 .link {
   color: #12323D;
   transition: 0.3s;
@@ -94,10 +92,47 @@ body {
   color: #EB8C3A;
   transition: 0.3s;
 }
-@media (max-width: 767px) {
-  .navbar-collapse .logo {
-    display: none;
-  }
+.slideshow {
+  position: relative;
+  top: 0px;
+  left: 0px;
+  overflow: hidden;
+}
+.slideshow div[u=slides] {
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  overflow: hidden;
+}
+.slideshow .slider-bullets {
+  position: relative;
+  top: 500px;
+  left: 440px;
+}
+.slideshow .slider-bullets div[u=prototype] {
+  width: 16px;
+  height: 16px;
+}
+.slideshow .slider-bullets div,
+.slideshow .slider-bullets div:hover,
+.slideshow .slider-bullets .av {
+  background: url(../images/slides/dots.png) no-repeat;
+  overflow: hidden;
+  cursor: pointer;
+}
+.slideshow .slider-bullets div {
+  background-position: -7px -7px;
+}
+.slideshow .slider-bullets div:hover,
+.slideshow .slider-bullets .av:hover {
+  background-position: -37px -7px;
+}
+.slideshow .slider-bullets .av {
+  background-position: -67px -7px;
+}
+.slideshow .slider-bullets .dn,
+.slideshow .slider-bullets .dn:hover {
+  background-position: -97px -7px;
 }
 .logo {
   width: 370px;
