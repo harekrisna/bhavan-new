@@ -37,8 +37,8 @@
                 <a href="{link Homepage:default}"><img class="logo" src="{$basePath}/images/layout/logo-pb.png"></a>
             </div>
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-       	        <a href="{link Homepage:default}"><img class="logo" src="{$basePath}/images/layout/logo-pb.png"></a>
-       	        <nav class="actuality-bar"><a n:href="Actuality:default">AKCE:</a>
+       	        <a href="{link Homepage:default}"><img class="logo hidden-xs" src="{$basePath}/images/layout/logo-pb.png"></a>
+       	        <nav class="actuality-bar"><a class="section-link" n:href="Actuality:default">AKCE:</a>
 					<div id="actuality_slider" class="slideshow">
 					    <div u="slides">
 						    <div>
@@ -50,6 +50,7 @@
 					    </div>
 				    </div>
 		        </nav>
+                <a href="https://www.facebook.com/pages/Prabhup%C3%A1d-Bhavan/160940383943087" target="_blank" class="facebook-link">f</a>
                 <ul class="nav navbar-nav">
                     <li><a class="link" href="index.html">domů</a></li>
                     <li><a class="link" href="about.html">o nás</a></li>
@@ -58,7 +59,6 @@
                     <li><a class="link" href="contact.html">audio</a></li>
                     <li><a class="link" href="contact.html">odkazy</a></li>
                 </ul>
-                <a href="https://www.facebook.com/pages/Prabhup%C3%A1d-Bhavan/160940383943087" target="_blank" class="facebook-link">f</a>
             </div>
             <!-- /.navbar-collapse -->
         </div>
@@ -160,7 +160,7 @@
     <script src="js/jquery.js"></script>
     <script src="js/bootstrap.min.js"></script>
    	<script src="{$basePath}/js/main.js"></script>
-	<script src="{$basePath}/js/jssor.slider.mini.js"></script>
+	<script src="{$basePath}/js/jssor.slider.js"></script>
 	<script>
         var _SlideshowTransitions = [
 	        { $Duration:700,$Opacity:2,$Brother:{ $Duration:1000,$Opacity:2}},
@@ -172,7 +172,7 @@
                 $AutoPlay: true,   
                 $ArrowKeyNavigation: false,
                 $PauseOnHover: 1,  
-                $SlideWidth: 306,                                   {* [Optional] Width of every slide in pixels, default value is width of 'slides' container *}
+                $SlideWidth: 400,                                   {* [Optional] Width of every slide in pixels, default value is width of 'slides' container *}
                 $SlideHeight: 30,                                   {* [Optional] Height of every slide in pixels, default value is height of 'slides' container *}
                 $SlideshowOptions: {                                {* [Optional] Options to specify and enable slideshow or not *}
                     $Class: $JssorSlideshowRunner$,                 {* [Required] Class to create instance of slideshow *}
@@ -187,7 +187,12 @@
             function ScaleSlider() {
                 var parentWidth = jssor_slider1.$Elmt.parentNode.clientWidth;
                 if (parentWidth) {
-                    jssor_slider1.$ScaleWidth(parentWidth - 30);
+                    if(window.innerWidth <= 400) {
+                        jssor_slider1.$ScaleWidth(window.innerWidth);
+                    }
+                    else {
+                        jssor_slider1.$ScaleWidth(400);   
+                    }
                 }
                 else
                     window.setTimeout(ScaleSlider, 30);

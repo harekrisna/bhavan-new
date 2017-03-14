@@ -4,13 +4,23 @@ body {
   background-image: url('../images/layout/bg.gif');
   background-size: 120px;
 }
+a:hover {
+  text-decoration: none;
+}
 .navbar {
-  margin-top: 25px;
   background-color: transparent;
   border: none;
+  margin-top: 25px;
+  margin-bottom: 10px;
+}
+@media screen and (min-width: 768px) and (max-width: 991px) {
+  .navbar {
+    margin-bottom: 0px;
+  }
 }
 @media (max-width: 767px) {
   .navbar {
+    margin-top: 0px;
     background-color: #f8f8f8;
   }
 }
@@ -18,23 +28,74 @@ body {
   color: #EB8C3A;
   float: right;
   margin-top: 20px;
+  margin-right: 1px;
   font-size: 20px;
   height: 32px;
-  width: 533px;
+  width: 463px;
+}
+@media screen and (min-width: 992px) and (max-width: 1199px) {
+  .navbar .actuality-bar {
+    margin-top: 15px;
+    margin-right: 2px;
+  }
+}
+@media screen and (min-width: 768px) and (max-width: 991px) {
+  .navbar .actuality-bar {
+    margin-top: 5px;
+    width: 441px;
+  }
+}
+@media (max-width: 767px) {
+  .navbar .actuality-bar {
+    float: left;
+    width: 100%;
+  }
+}
+.navbar .actuality-bar > a.section-link {
+  font-size: 19px;
+  color: #12333e;
+  float: left;
+  transition: 0.3s;
+}
+.navbar .actuality-bar > a.section-link:hover {
+  color: #EB8C3A;
+  transition: 0.3s;
 }
 .navbar .actuality-bar #actuality_slider {
-  width: 306px;
+  width: 400px;
   height: 30px;
   margin: -1px 0 0 5px;
   float: left;
 }
+@media screen and (min-width: 768px) and (max-width: 991px) {
+  .navbar .actuality-bar #actuality_slider {
+    width: 378px !important;
+  }
+}
+@media (max-width: 544px) {
+  .navbar .actuality-bar #actuality_slider {
+    margin-top: 3px;
+    margin-left: 0px;
+    clear: both;
+  }
+}
 .navbar .actuality-bar #actuality_slider a {
   color: #EB8C3A;
 }
+@media (max-width: 544px) {
+  .navbar .actuality-bar #actuality_slider a {
+    font-size: 18px;
+  }
+}
 .navbar .actuality-bar #actuality_slider div[u=slides] {
-  width: 306px;
+  width: 400px;
   height: 30px;
-  font-size: 13px;
+  font-size: 20px;
+}
+@media screen and (min-width: 768px) and (max-width: 991px) {
+  .navbar .actuality-bar #actuality_slider div[u=slides] {
+    width: 378px;
+  }
 }
 .navbar .actuality-bar > a {
   font-size: 19px;
@@ -47,18 +108,29 @@ body {
   transition: 0.3s;
 }
 .navbar a.facebook-link {
-  float: right;
+  width: 30px;
+  height: 30px;
+  font-size: 25px;
   line-height: 33px;
-  margin-top: 14px;
-  margin-left: 10px;
+  text-align: center;
+  color: #ffffff;
   background-color: #EB8C3A;
   border-radius: 5px 0;
-  color: #ffffff;
-  font-size: 25px;
-  height: 30px;
-  text-align: center;
-  width: 30px;
+  margin-top: -24px;
+  margin-left: 10px;
+  float: right;
+  clear: left;
   transition: 0.2s;
+}
+@media screen and (min-width: 768px) and (max-width: 991px) {
+  .navbar a.facebook-link {
+    margin-top: -19px;
+  }
+}
+@media (max-width: 767px) {
+  .navbar a.facebook-link {
+    margin-top: -35px;
+  }
 }
 .navbar a.facebook-link:hover {
   color: #12323D;
@@ -74,14 +146,32 @@ body {
   }
 }
 .navbar-nav {
+  margin-top: -32px;
   float: right;
+}
+@media screen and (min-width: 768px) and (max-width: 991px) {
+  .navbar-nav {
+    margin-top: -29px;
+  }
+}
+@media (max-width: 767px) {
+  .navbar-nav {
+    margin-top: 0px;
+    float: left;
+  }
+}
+@media (max-width: 544px) {
+  .navbar-nav {
+    margin-top: 25px;
+  }
 }
 .navbar-nav a {
   font-size: 1.2em;
 }
-@media (max-width: 767px) {
-  .navbar-collapse .logo {
-    display: none;
+@media screen and (min-width: 768px) and (max-width: 991px) {
+  .navbar-nav a {
+    padding-left: 13px !important;
+    padding-right: 13px !important;
   }
 }
 .link {
@@ -175,9 +265,7 @@ body {
 }
 .box {
   margin-bottom: 20px;
-  padding: 30px 15px;
-  background: #fff;
-  background: rgba(255, 255, 255, 0.9);
+  padding: 0 15px;
 }
 .intro-text {
   text-transform: uppercase;
