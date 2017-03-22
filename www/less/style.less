@@ -1,1 +1,70 @@
 @import "layout.less";
+@import "homepage.less";
+
+/**********************
+       CONSTANTS
+***********************/
+
+@webTextColor: #12323d;
+@webTextColorHover: #eb8c3a;
+@webBrown: #61503c;
+
+/**********************
+        MIXINS
+***********************/
+
+// Mixins for mediaqueries
+.tablet-wide-screen(@rules) {
+    @media screen and (min-width: 992px) and (max-width: 1199px) {
+        @rules();
+    }
+}
+
+.tablet-screen(@rules) {
+    @media screen and (min-width: 768px) and (max-width: 991px) {
+        @rules();
+    }
+}
+
+.mobile-screen(@rules) {
+    @media (max-width: 767px) {
+        @rules();
+    }
+}
+
+.extra-small-screen(@rules) {
+    @media (max-width: 544px) {
+        @rules();
+    }
+}
+
+.outline(@color: black) {
+    outline: 1px @color solid;
+}
+
+.border-radiuses (@topright: 0, @bottomright: 0, @bottomleft: 0, @topleft: 0) {
+	border-top-right-radius: @topright;
+	border-bottom-right-radius: @bottomright;
+	border-bottom-left-radius: @bottomleft;
+	border-top-left-radius: @topleft;
+	background-clip: padding-box; 
+}
+
+
+a:hover {
+	text-decoration: none;
+}
+
+.link {
+	color: #12323D;
+	transition: 0.3s; 
+	
+	&:hover {
+		color: #EB8C3A;
+		transition: 0.3s; 
+	}
+}
+
+.bold {
+	font-weight: bold;
+}

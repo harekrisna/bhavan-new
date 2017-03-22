@@ -1,0 +1,16 @@
+{var $show_interpret_abbr = empty($show_interpret_abbr) ? false : $show_interpret_abbr}
+<div class="audio-player">
+	<div class="line">
+		<a class="title" n:href="audioCollection, $lecture->audio_collection_id">{$lecture->audio_collection->title}</a>
+		<div class="place-time">
+			{$lecture->place} 
+			{$lecture->audio_year, $lecture->audio_month, $lecture->audio_day|dynamicDate}
+		</div>
+		<div n:if="$lecture->book_id" class="verse">{$lecture->book->abbreviation, $lecture->chapter, $lecture->verse|verseReadable}</div>
+		<div n:if="$show_interpret_abbr" class="interpret-abbr">
+			<a class="link" n:href="interpret, $lecture->audio_interpret->id, $group_by" title="{$lecture->audio_interpret->title}">{$lecture->audio_interpret->abbreviation}</a>
+		</div>
+	</div>
+	
+	<span class="collection-text">Kolekce {ifset $collection_count}{$collection_count}{/ifset} přednášek</span>
+</div>

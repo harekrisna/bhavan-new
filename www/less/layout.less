@@ -1,40 +1,8 @@
-// Mixins for mediaqueries
-.tablet-wide-screen(@rules) {
-    @media screen and (min-width: 992px) and (max-width: 1199px) {
-        @rules();
-    }
-}
-
-.tablet-screen(@rules) {
-    @media screen and (min-width: 768px) and (max-width: 991px) {
-        @rules();
-    }
-}
-
-.mobile-screen(@rules) {
-    @media (max-width: 767px) {
-        @rules();
-    }
-}
-
-.extra-small-screen(@rules) {
-    @media (max-width: 544px) {
-        @rules();
-    }
-}
-
-//. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 
-
-
 body {
 	font-family: 'PT Sans', sans-serif;
 	background-color: #FFFFF3;
     background-image: url('../images/layout/bg.gif');
    	background-size: 120px;
-}
-
-a:hover {
-	text-decoration: none;
 }
 
 .navbar {
@@ -50,6 +18,11 @@ a:hover {
 		background-color: #f8f8f8
 	});
 
+	.navbar-collapse {
+		padding-right: 0;
+		padding-left: 0;
+	}
+
 	.navbar-brand {
 		float: none;
 
@@ -58,7 +31,10 @@ a:hover {
 			float: left;
 
 			.tablet-wide-screen({width: 300px});
-			.tablet-screen({width: 230px});
+			.tablet-screen({
+				width: 230px;
+				padding-top: 2px;
+			});
 			.mobile-screen({
 				width: 110px;
 				margin: 10px;
@@ -67,12 +43,12 @@ a:hover {
 	}
 
 	.nav-container {
-		width: 535px;
+		width: 545px;
 		height: 90px;
 		float: right;
 		
 		.tablet-screen({
-			width: 445px;
+			width: 465px;
 			height: 80px;
 		});
 
@@ -97,7 +73,7 @@ a:hover {
 		
 			.tablet-screen({
 				margin-top: 5px;
-				width: 441px;
+				width: 461px;
 			});
 
 			.mobile-screen({
@@ -123,7 +99,7 @@ a:hover {
 				margin: -1px 0 0 5px;
 				float: left;
 
-				.tablet-screen({width: 378px !important});
+				.tablet-screen({width: 388px !important});
 				.mobile-screen({width: 435px !important});
 				.extra-small-screen({
 					margin-top: 3px;
@@ -144,7 +120,7 @@ a:hover {
 			  	height: 30px;
 			  	font-size: 20px;
 
-			  	.tablet-screen({width: 378px});
+			  	.tablet-screen({width: 388px});
 			}
 		}
 		
@@ -210,7 +186,7 @@ a:hover {
 			font-size: 1.2em;
 
 			.tablet-screen({
-				padding-left: 4px !important;
+				padding-left: 6px !important;
 				padding-right: 13px !important;
 			});
 		}
@@ -224,101 +200,6 @@ a:hover {
 	}
 }
 
-.link {
-	color: #12323D;
-	transition: 0.3s; 
-	
-	&:hover {
-		color: #EB8C3A;
-		transition: 0.3s; 
-	}
-}
-
-.slideshow {
-	position: relative; top: 0px; left: 0px; overflow: hidden;
-	
-	div[u=slides] {
-		position: absolute; left: 0px; top: 0px; overflow: hidden;
-	}
-	
-	.slider-bullets {
-		position:relative; top: 550px; left: 550px;
-		
-		div[u=prototype] {
-			width: 16px; height: 16px;
-		}
-	}
-	
-	.slider-bullets div, .slider-bullets div:hover, .slider-bullets .av {
-	    background: url(../images/dots.png) no-repeat;
-	    overflow: hidden;
-	    cursor: pointer;
-	}
-	
-	.slider-bullets div { background-position: -7px -7px }
-	.slider-bullets div:hover, .slider-bullets .av:hover { background-position: -37px -7px }
-	.slider-bullets .av { background-position: -67px -7px }
-	.slider-bullets .dn, .slider-bullets .dn:hover {
-	    background-position: -97px -7px;
-	}	
-}
-
-#slideshow {
-	width: 1140px;
-	height: 606px;
-	box-shadow: 0 0 10px 3px rgba(0, 0, 0, 0.3);
-	margin-bottom: 30px;
-	visibility: hidden;
-	
-	div[u=slides], img[u=image] {
-		width: 1140px;
-		height: 606px;
-	}
-}
-
-.brand-before,
-.brand-name {
-    text-transform: capitalize;
-}
-
-.brand-before {
-    margin: 15px 0;
-}
-
-.brand-name {
-    margin: 0;
-    font-size: 4em;
-}
-
-.tagline-divider {
-    margin: 15px auto 3px;
-    max-width: 250px;
-    border-color: #999999;
-}
-
-.box {
-    margin-bottom: 20px;
-    padding: 0 15px;
-}
-
-.intro-text {
-    text-transform: uppercase;
-    font-size: 1.25em;
-    font-weight: 400;
-    letter-spacing: 1px;
-}
-
-.img-border {
-    float: none;
-    margin: 0 auto 0;
-    border: #999999 solid 1px;
-}
-
-.img-left {
-    float: none;
-    margin: 0 auto 0;
-}
-
 footer {
     background: #fff;
     background: rgba(255,255,255,0.9);
@@ -328,8 +209,6 @@ footer p {
     margin: 0;
     padding: 50px 0;
 }
-
-
 
 @media screen and (min-width:1200px) {
     .box:after {

@@ -1,0 +1,22 @@
+{block title}Foto{/block}
+{block content}
+<h1>Foto</h1>
+<div id="photo_folders">
+	<div n:foreach="$galeries as $galery">
+		<div class="preview_image" style="background-image: url('{$basePath}/images/galery/{$galery->photos_folder|noescape}/galery_image.jpg');">
+			<div>{$galery->galery_year, $galery->galery_month, $galery->galery_day|dynamicDate}</div>
+		</div>
+		<a href="{link photos, $galery->id}">{$galery->title}</a>
+		<p>{$galery->description}</p>
+	</div>
+</div>
+{/block}
+{block scripts}
+{include parent}
+  <script type="text/javascript">
+    $('#photo_folders > div').click(function() {
+      var href = $(this).children("a").attr("href");
+      window.location.href = href;
+    });
+  </script>
+{/block}

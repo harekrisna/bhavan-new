@@ -1,0 +1,18 @@
+{extends audio.latte}
+{block content}
+{include breadcrumb_nav, backlinks => ['themes' => "Audio"]}
+	<h1 n:block="title">Přednášky z Śrīmad-Bhāgavatamu</h1>
+	<section id="audio_folders" style="margin-top: -10px;">
+	{foreach $books as $sb}
+	{continueIf $sb->related('audio')->count() == 0}
+	<div>
+		<a class="preview" n:href="book, $sb->id"><img src="{$basePath}/images/books/{$sb->id}.jpg" /></a>
+		<a class="title" n:href="book, $sb->id">{strtok($sb->title, ":")}</a>
+		<p></p>
+		<div>
+			{$sb->related('audio')->count()|czPlural}
+		</div>
+	</div>
+	{/foreach}
+	</section>
+{/block}

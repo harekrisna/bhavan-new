@@ -1,0 +1,34 @@
+{block title}Foto{/block}
+{block head}
+{include parent}
+<link rel="stylesheet" href="{$basePath}/css/justifiedGallery.min.css" type="text/css" />
+<link rel="stylesheet" href="{$basePath}/css/photoswipe.css" type="text/css" />
+<link rel="stylesheet" href="{$basePath}/css/default-skin.css" type="text/css" />{/block}
+{block content}
+{include breadcrumb_nav, backlinks => $backlinks}
+<h1>{$galery->title}</h1>
+<div id="gallery" n:inner-foreach="$photos as $photo">
+	<a href="{$basePath}/images/galery/{$galery->photos_folder}/photos/{$photo->file}">
+		<img src="{$basePath}/images/galery/{$galery->photos_folder}/previews/{$photo->file}" data-size="{$photo->width}x{$photo->height}" alt="{$photo->description}" />
+	</a>
+</div>
+{include photoswipe.latte}
+{/block}
+{block scripts}
+{include parent}
+  <script src="{$basePath}/js/jquery.justifiedGallery.min.js"></script>
+  <script src="{$basePath}/js/photoswipe.min.js"></script> 
+  <script src="{$basePath}/js/photoswipe-ui-default.min.js"></script>
+  <script src="{$basePath}/js/photoswipe.js"></script>
+  <script>      
+  $("#gallery").justifiedGallery({
+	rowHeight: 120,
+    lastRow: 'nojustify',
+    captions: false,
+    margins: 2
+  });
+  
+  initPhotoSwipeFromDOM('#gallery');
+
+  </script>
+{/block}

@@ -1,0 +1,17 @@
+{extends audio.latte}
+{block audio}
+<section id="audio_folders" class="years">
+	<div n:foreach="$years as $year">
+		<a n:class="$year->year >= 2000 ? 'preview new', $year->year < 2000 ? 'preview old'" n:href="year, $year->year">
+			{$year->year}
+		</a>
+		<a class="title" n:href="year, $year->year">
+			Přednášky z roku {$year->year}
+		</a>
+		<p></p>
+		<div>
+			{$year->count|czPlural}
+		</div>
+	</div>
+</section>
+{/block}

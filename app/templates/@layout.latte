@@ -80,15 +80,49 @@
                 </div>
             </div>
         </div>
-        <div class="row">
+        <div class="row" id="news">
             <div class="col-md-4">
-              1 of 3
+                <h2><a class="link" n:href="Actuality:default">Akce:</a></h2>
+                <div id="events_slider" n:class="$event_news->count() == 2 ? slideshow, news-slideshow">
+                    <div u="slides">
+                        <div>
+                            <a n:href="Actuality:sunday">
+                                <img src="{$basePath}/images/actuality/previews/program.jpg" />
+                                <div class="bold">Programy pro veřejnost</div>
+                                <span>
+                                    Každou neděli od 14:00 hodin
+                                </span>
+                            </a>
+                        {foreach $event_news as $new}
+                        {if $iterator->counter % 3 == 1 && !$iterator->first}
+                        </div>
+                        <div>
+                        {/if}
+                            <a{if $new->target != ""} href="{$new->target}"{/if}>
+                                <img src="{$basePath}/images/news_thumbs/{$new->file}" />
+                                <div>{$new->title}</div>
+                                <span>
+                                    {if $new->date_to != ""}
+                                        {$new->date_from|date: 'j.n.'} - {$new->date_to|date: 'j.n.Y'}
+                                    {else}
+                                        {$new->date_from|date: 'j.n.Y'}
+                                    {/if}
+                                </span>
+                            </a>
+                        {/foreach}          
+                        </div>
+                    </div>
+                </div>
+                {if $event_news->count() != 1}
+                <button class="prev" onclick="events_slider.$Prev()">předchozí</button>
+                <button class="next" onclick="events_slider.$Next()">nadcházející</button>
+                {/if}
             </div>
             <div class="col-md-4">
-              1 of 3
+                <h2><a class="link" n:href="Galery:galeries">Foto:<a/></h2>
             </div>
             <div class="col-md-4">
-              1 of 3
+                <h2><a class="link" n:href="Audio:latest">Audio:<a/></h2>
             </div>
         </div>
     </div>
