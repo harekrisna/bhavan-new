@@ -1,8 +1,8 @@
 <?php
 
 /**
- * This file is part of the Nette Framework (https://nette.org)
- * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
+ * This file is part of the Nette Framework (http://nette.org)
+ * Copyright (c) 2004 David Grudl (http://davidgrudl.com)
  */
 
 namespace Nette\DI\Config;
@@ -14,20 +14,18 @@ use Nette\Utils\Validators;
 /**
  * Configuration file loader.
  */
-class Loader
+class Loader extends Nette\Object
 {
-	use Nette\SmartObject;
-
 	/** @internal */
 	const INCLUDES_KEY = 'includes';
 
-	private $adapters = [
-		'php' => Adapters\PhpAdapter::class,
-		'ini' => Adapters\IniAdapter::class,
-		'neon' => Adapters\NeonAdapter::class,
-	];
+	private $adapters = array(
+		'php' => 'Nette\DI\Config\Adapters\PhpAdapter',
+		'ini' => 'Nette\DI\Config\Adapters\IniAdapter',
+		'neon' => 'Nette\DI\Config\Adapters\NeonAdapter',
+	);
 
-	private $dependencies = [];
+	private $dependencies = array();
 
 
 	/**
@@ -41,7 +39,7 @@ class Loader
 		if (!is_file($file) || !is_readable($file)) {
 			throw new Nette\FileNotFoundException("File '$file' is missing or is not readable.");
 		}
-		$this->dependencies[] = $file;
+		$this->dependencies[] = realpath($file);
 		$data = $this->getAdapter($file)->load($file);
 
 		if ($section) {
@@ -52,14 +50,11 @@ class Loader
 		}
 
 		// include child files
-		$merged = [];
+		$merged = array();
 		if (isset($data[self::INCLUDES_KEY])) {
 			Validators::assert($data[self::INCLUDES_KEY], 'list', "section 'includes' in file '$file'");
 			foreach ($data[self::INCLUDES_KEY] as $include) {
-				if (!preg_match('#([a-z]:)?[/\\\\]#Ai', $include)) {
-					$include = dirname($file) . '/' . $include;
-				}
-				$merged = Helpers::merge($this->load($include), $merged);
+				$merged = Helpers::merge($this->load(dirname($file) . '/' . $include), $merged);
 			}
 		}
 		unset($data[self::INCLUDES_KEY]);
@@ -96,7 +91,7 @@ class Loader
 	 * Registers adapter for given file extension.
 	 * @param  string  file extension
 	 * @param  string|IAdapter
-	 * @return static
+	 * @return self
 	 */
 	public function addAdapter($extension, $adapter)
 	{

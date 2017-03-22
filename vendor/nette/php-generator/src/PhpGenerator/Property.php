@@ -13,27 +13,70 @@ use Nette;
 /**
  * Class property description.
  */
-class Property extends Member
+class Property extends Nette\Object
 {
+	/** @var string */
+	private $name = '';
+
 	/** @var mixed */
 	public $value;
 
 	/** @var bool */
 	private $static = FALSE;
 
+	/** @var string  public|protected|private */
+	private $visibility = 'public';
+
+	/** @var string[] */
+	private $documents = array();
+
 
 	/**
-	 * @deprecated
-	 * @return static
+	 * @return self
 	 */
 	public static function from(\ReflectionProperty $from)
 	{
-		return (new Factory)->fromPropertyReflection($from);
+		$prop = new static($from->getName());
+		$defaults = $from->getDeclaringClass()->getDefaultProperties();
+		$prop->value = isset($defaults[$prop->name]) ? $defaults[$prop->name] : NULL;
+		$prop->static = $from->isStatic();
+		$prop->visibility = $from->isPrivate() ? 'private' : ($from->isProtected() ? 'protected' : 'public');
+		$prop->documents = $from->getDocComment() ? array(preg_replace('#^\s*\* ?#m', '', trim($from->getDocComment(), "/* \r\n\t"))) : array();
+		return $prop;
 	}
 
 
 	/**
-	 * @return static
+	 * @param  string  without $
+	 */
+	public function __construct($name = '')
+	{
+		$this->setName($name);
+	}
+
+
+	/**
+	 * @param  string  without $
+	 * @return self
+	 */
+	public function setName($name)
+	{
+		$this->name = (string) $name;
+		return $this;
+	}
+
+
+	/**
+	 * @return string
+	 */
+	public function getName()
+	{
+		return $this->name;
+	}
+
+
+	/**
+	 * @return self
 	 */
 	public function setValue($val)
 	{
@@ -53,7 +96,7 @@ class Property extends Member
 
 	/**
 	 * @param  bool
-	 * @return static
+	 * @return self
 	 */
 	public function setStatic($state = TRUE)
 	{
@@ -68,6 +111,60 @@ class Property extends Member
 	public function isStatic()
 	{
 		return $this->static;
+	}
+
+
+	/**
+	 * @param  string  public|protected|private
+	 * @return self
+	 */
+	public function setVisibility($val)
+	{
+		if (!in_array($val, array('public', 'protected', 'private'), TRUE)) {
+			throw new Nette\InvalidArgumentException('Argument must be public|protected|private.');
+		}
+		$this->visibility = (string) $val;
+		return $this;
+	}
+
+
+	/**
+	 * @return string
+	 */
+	public function getVisibility()
+	{
+		return $this->visibility;
+	}
+
+
+	/**
+	 * @param  string[]
+	 * @return self
+	 */
+	public function setDocuments(array $s)
+	{
+		$this->documents = $s;
+		return $this;
+	}
+
+
+	/**
+	 * @return string[]
+	 */
+	public function getDocuments()
+	{
+		return $this->documents;
+	}
+
+
+	/**
+	 * @param  string
+	 * @return self
+	 */
+	public function addDocument($s)
+	{
+		$this->documents[] = (string) $s;
+		return $this;
 	}
 
 }

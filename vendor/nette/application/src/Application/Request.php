@@ -13,16 +13,13 @@ use Nette;
 /**
  * Presenter request.
  *
- * @property string $presenterName
- * @property array $parameters
- * @property array $post
- * @property array $files
- * @property string|NULL $method
+ * @property   array $parameters
+ * @property   array $post
+ * @property   array $files
+ * @property   string|NULL $method
  */
-class Request
+class Request extends Nette\Object
 {
-	use Nette\SmartObject;
-
 	/** method */
 	const FORWARD = 'FORWARD';
 
@@ -36,7 +33,7 @@ class Request
 	private $method;
 
 	/** @var array */
-	private $flags = [];
+	private $flags = array();
 
 	/** @var string */
 	private $name;
@@ -59,7 +56,7 @@ class Request
 	 * @param  array   all uploaded files
 	 * @param  array   flags
 	 */
-	public function __construct($name, $method = NULL, array $params = [], array $post = [], array $files = [], array $flags = [])
+	public function __construct($name, $method = NULL, array $params = array(), array $post = array(), array $files = array(), array $flags = array())
 	{
 		$this->name = $name;
 		$this->method = $method;
@@ -73,7 +70,7 @@ class Request
 	/**
 	 * Sets the presenter name.
 	 * @param  string
-	 * @return static
+	 * @return self
 	 */
 	public function setPresenterName($name)
 	{
@@ -94,7 +91,7 @@ class Request
 
 	/**
 	 * Sets variables provided to the presenter.
-	 * @return static
+	 * @return self
 	 */
 	public function setParameters(array $params)
 	{
@@ -126,7 +123,7 @@ class Request
 
 	/**
 	 * Sets variables provided to the presenter via POST.
-	 * @return static
+	 * @return self
 	 */
 	public function setPost(array $params)
 	{
@@ -157,7 +154,7 @@ class Request
 
 	/**
 	 * Sets all uploaded files.
-	 * @return static
+	 * @return self
 	 */
 	public function setFiles(array $files)
 	{
@@ -179,7 +176,7 @@ class Request
 	/**
 	 * Sets the method.
 	 * @param  string|NULL
-	 * @return static
+	 * @return self
 	 */
 	public function setMethod($method)
 	{
@@ -210,10 +207,20 @@ class Request
 
 
 	/**
+	 * @deprecated
+	 */
+	public function isPost()
+	{
+		trigger_error('Method isPost() is deprecated, use isMethod(\'POST\') instead.', E_USER_DEPRECATED);
+		return strcasecmp($this->method, 'post') === 0;
+	}
+
+
+	/**
 	 * Sets the flag.
 	 * @param  string
 	 * @param  bool
-	 * @return static
+	 * @return self
 	 */
 	public function setFlag($flag, $value = TRUE)
 	{

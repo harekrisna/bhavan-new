@@ -2,12 +2,10 @@
 
 /**
  * This file is part of the Nette Tester.
- * Copyright (c) 2009 David Grudl (https://davidgrudl.com)
+ * Copyright (c) 2009 David Grudl (http://davidgrudl.com)
  */
 
 namespace Tester\Runner;
-
-use Tester\Helpers;
 
 
 /**
@@ -36,7 +34,7 @@ class ZendPhpInterpreter implements PhpInterpreter
 
 	public function __construct($path, $args = NULL)
 	{
-		$this->path = Helpers::escapeArg($path);
+		$this->path = \Tester\Helpers::escapeArg($path);
 		$proc = proc_open(
 			"$this->path -n $args -v", // -v must be the last
 			array(array('pipe', 'r'), array('pipe', 'w'), array('pipe', 'w')),

@@ -46,13 +46,6 @@ interface IStructure
 	function getPrimaryKey($table);
 
 	/**
-	 * Returns autoincrement primary key name.
-	 * @param  string
-	 * @return string|NULL
-	 */
-	//function getPrimaryAutoincrementKey($table);
-
-	/**
 	 * Returns table primary key sequence.
 	 * @param  string
 	 * @return string|NULL
@@ -64,7 +57,7 @@ interface IStructure
 	 * If a targetTable is not provided, returns references for all tables.
 	 * @param  string
 	 * @param  string|NULL
-	 * @return array|NULL
+	 * @return mixed
 	 */
 	function getHasManyReference($table, $targetTable = NULL);
 
@@ -73,13 +66,13 @@ interface IStructure
 	 * If a column is not provided, returns references for all columns.
 	 * @param  string
 	 * @param  string|NULL
-	 * @return array|NULL
+	 * @return mixed
 	 */
 	function getBelongsToReference($table, $column = NULL);
 
 	/**
 	 * Rebuilds database structure cache.
-	 * @return void
+	 * @return mixed
 	 */
 	function rebuild();
 

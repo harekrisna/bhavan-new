@@ -13,15 +13,13 @@ use Nette;
 /**
  * A user group of form controls.
  */
-class ControlGroup
+class ControlGroup extends Nette\Object
 {
-	use Nette\SmartObject;
-
 	/** @var \SplObjectStorage */
 	protected $controls;
 
 	/** @var array user options */
-	private $options = [];
+	private $options = array();
 
 
 	public function __construct()
@@ -31,24 +29,20 @@ class ControlGroup
 
 
 	/**
-	 * @return static
+	 * @return self
 	 */
-	public function add(...$items)
+	public function add()
 	{
-		foreach ($items as $item) {
+		foreach (func_get_args() as $num => $item) {
 			if ($item instanceof IControl) {
 				$this->controls->attach($item);
 
-			} elseif ($item instanceof Container) {
-				foreach ($item->getComponents() as $component) {
-					$this->add($component);
-				}
 			} elseif ($item instanceof \Traversable || is_array($item)) {
-				$this->add(...$item);
+				call_user_func_array(array($this, 'add'), is_array($item) ? $item : iterator_to_array($item));
 
 			} else {
 				$type = is_object($item) ? get_class($item) : gettype($item);
-				throw new Nette\InvalidArgumentException("IControl or Container items expected, $type given.");
+				throw new Nette\InvalidArgumentException("IControl items expected, $type given.");
 			}
 		}
 		return $this;
@@ -67,15 +61,15 @@ class ControlGroup
 	/**
 	 * Sets user-specific option.
 	 * Options recognized by DefaultFormRenderer
-	 * - 'label' - textual or IHtmlString object label
+	 * - 'label' - textual or Html object label
 	 * - 'visual' - indicates visual group
 	 * - 'container' - container as Html object
-	 * - 'description' - textual or IHtmlString object description
+	 * - 'description' - textual or Html object description
 	 * - 'embedNext' - describes how render next group
 	 *
 	 * @param  string key
 	 * @param  mixed  value
-	 * @return static
+	 * @return self
 	 */
 	public function setOption($key, $value)
 	{

@@ -11,11 +11,9 @@ namespace Latte;
 /**
  * Templating engine Latte.
  */
-class Engine
+class Engine extends Object
 {
-	use Strict;
-
-	const VERSION = '2.4.3';
+	const VERSION = '2.3.6';
 
 	/** Content types */
 	const CONTENT_HTML = 'html',
@@ -23,11 +21,12 @@ class Engine
 		CONTENT_XML = 'xml',
 		CONTENT_JS = 'js',
 		CONTENT_CSS = 'css',
+		CONTENT_URL = 'url',
 		CONTENT_ICAL = 'ical',
 		CONTENT_TEXT = 'text';
 
 	/** @var callable[] */
-	public $onCompile = [];
+	public $onCompile = array();
 
 	/** @var Parser */
 	private $parser;
@@ -38,12 +37,6 @@ class Engine
 	/** @var ILoader */
 	private $loader;
 
-	/** @var Runtime\FilterExecutor */
-	private $filters;
-
-	/** @var array */
-	private $providers = [];
-
 	/** @var string */
 	private $contentType = self::CONTENT_HTML;
 
@@ -53,22 +46,52 @@ class Engine
 	/** @var bool */
 	private $autoRefresh = TRUE;
 
-
-
-	public function __construct()
-	{
-		$this->filters = new Runtime\FilterExecutor;
-	}
+	/** @var array run-time filters */
+	private $filters = array(
+		NULL => array(), // dynamic
+		'bytes' => 'Latte\Runtime\Filters::bytes',
+		'capitalize' => 'Latte\Runtime\Filters::capitalize',
+		'datastream' => 'Latte\Runtime\Filters::dataStream',
+		'date' => 'Latte\Runtime\Filters::date',
+		'escapecss' => 'Latte\Runtime\Filters::escapeCss',
+		'escapehtml' => 'Latte\Runtime\Filters::escapeHtml',
+		'escapehtmlcomment' => 'Latte\Runtime\Filters::escapeHtmlComment',
+		'escapeical' => 'Latte\Runtime\Filters::escapeICal',
+		'escapejs' => 'Latte\Runtime\Filters::escapeJs',
+		'escapeurl' => 'rawurlencode',
+		'escapexml' => 'Latte\Runtime\Filters::escapeXML',
+		'firstupper' => 'Latte\Runtime\Filters::firstUpper',
+		'implode' => 'implode',
+		'indent' => 'Latte\Runtime\Filters::indent',
+		'lower' => 'Latte\Runtime\Filters::lower',
+		'nl2br' => 'Latte\Runtime\Filters::nl2br',
+		'number' => 'number_format',
+		'repeat' => 'str_repeat',
+		'replace' => 'Latte\Runtime\Filters::replace',
+		'replacere' => 'Latte\Runtime\Filters::replaceRe',
+		'safeurl' => 'Latte\Runtime\Filters::safeUrl',
+		'strip' => 'Latte\Runtime\Filters::strip',
+		'striptags' => 'strip_tags',
+		'substr' => 'Latte\Runtime\Filters::substring',
+		'trim' => 'Latte\Runtime\Filters::trim',
+		'truncate' => 'Latte\Runtime\Filters::truncate',
+		'upper' => 'Latte\Runtime\Filters::upper',
+	);
 
 
 	/**
 	 * Renders template to output.
 	 * @return void
 	 */
-	public function render($name, array $params = [], $block = NULL)
+	public function render($name, array $params = array())
 	{
-		$this->createTemplate($name, $params + ['_renderblock' => $block])
-			->render();
+		$class = $this->getTemplateClass($name);
+		if (!class_exists($class, FALSE)) {
+			$this->loadCacheFile($name);
+		}
+
+		$template = new $class($params, $this, $name);
+		$template->render();
 	}
 
 
@@ -76,24 +99,16 @@ class Engine
 	 * Renders template to string.
 	 * @return string
 	 */
-	public function renderToString($name, array $params = [], $block = NULL)
+	public function renderToString($name, array $params = array())
 	{
-		$template = $this->createTemplate($name, $params + ['_renderblock' => $block]);
-		return $template->capture([$template, 'render']);
-	}
-
-
-	/**
-	 * Creates template object.
-	 * @return Runtime\Template
-	 */
-	public function createTemplate($name, array $params = [])
-	{
-		$class = $this->getTemplateClass($name);
-		if (!class_exists($class, FALSE)) {
-			$this->loadTemplate($name);
+		ob_start();
+		try {
+			$this->render($name, $params);
+		} catch (\Exception $e) {
+			ob_end_clean();
+			throw $e;
 		}
-		return new $class($this, $params, $this->filters, $this->providers, $name);
+		return ob_get_clean();
 	}
 
 
@@ -103,10 +118,10 @@ class Engine
 	 */
 	public function compile($name)
 	{
-		foreach ($this->onCompile ?: [] as $cb) {
+		foreach ($this->onCompile ?: array() as $cb) {
 			call_user_func(Helpers::checkCallback($cb), $this);
 		}
-		$this->onCompile = [];
+		$this->onCompile = array();
 
 		$source = $this->getLoader()->getContent($name);
 
@@ -128,7 +143,7 @@ class Engine
 		if (!preg_match('#\n|\?#', $name)) {
 			$code = "<?php\n// source: $name\n?>" . $code;
 		}
-		$code = PhpHelpers::reformatCode($code);
+		$code = Helpers::optimizePhp($code);
 		return $code;
 	}
 
@@ -147,7 +162,7 @@ class Engine
 
 		$class = $this->getTemplateClass($name);
 		if (!class_exists($class, FALSE)) {
-			$this->loadTemplate($name);
+			$this->loadCacheFile($name);
 		}
 	}
 
@@ -155,14 +170,10 @@ class Engine
 	/**
 	 * @return void
 	 */
-	private function loadTemplate($name)
+	private function loadCacheFile($name)
 	{
 		if (!$this->tempDirectory) {
-			$code = $this->compile($name);
-			if (@eval('?>' . $code) === FALSE) { // @ is escalated to exception
-				throw (new CompileException('Error in template: ' . error_get_last()['message']))
-					->setSource($code, error_get_last()['line'], "$name (compiled)");
-			}
+			eval('?>' . $this->compile($name));
 			return;
 		}
 
@@ -186,8 +197,6 @@ class Engine
 			if (file_put_contents("$file.tmp", $code) !== strlen($code) || !rename("$file.tmp", $file)) {
 				@unlink("$file.tmp"); // @ - file may not exist
 				throw new \RuntimeException("Unable to create '$file'.");
-			} elseif (function_exists('opcache_invalidate')) {
-				@opcache_invalidate($file, TRUE); // @ can be restricted
 			}
 		}
 
@@ -196,8 +205,6 @@ class Engine
 		}
 
 		flock($handle, LOCK_UN);
-		fclose($handle);
-		@unlink("$file.lock"); // @ file may become locked on Windows
 	}
 
 
@@ -217,11 +224,11 @@ class Engine
 	 */
 	public function getCacheFile($name)
 	{
-		$hash = substr($this->getTemplateClass($name), 8);
-		$base = preg_match('#([/\\\\][\w@.-]{3,35}){1,3}\z#', $name, $m)
-			? preg_replace('#[^\w@.-]+#', '-', substr($m[0], 1)) . '--'
-			: '';
-		return "$this->tempDirectory/$base$hash.php";
+		$file = $this->getTemplateClass($name);
+		if (preg_match('#\b\w.{10,50}$#', $name, $m)) {
+			$file = trim(preg_replace('#\W+#', '-', $m[0]), '-') . '-' . $file;
+		}
+		return $this->tempDirectory . '/' . $file . '.php';
 	}
 
 
@@ -230,8 +237,7 @@ class Engine
 	 */
 	public function getTemplateClass($name)
 	{
-		$key = $this->getLoader()->getUniqueId($name) . "\00" . self::VERSION;
-		return 'Template' . substr(md5($key), 0, 10);
+		return 'Template' . md5("$this->tempDirectory\00$name");
 	}
 
 
@@ -239,22 +245,26 @@ class Engine
 	 * Registers run-time filter.
 	 * @param  string|NULL
 	 * @param  callable
-	 * @return static
+	 * @return self
 	 */
 	public function addFilter($name, $callback)
 	{
-		$this->filters->add($name, $callback);
+		if ($name == NULL) { // intentionally ==
+			array_unshift($this->filters[NULL], $callback);
+		} else {
+			$this->filters[strtolower($name)] = $callback;
+		}
 		return $this;
 	}
 
 
 	/**
 	 * Returns all run-time filters.
-	 * @return string[]
+	 * @return callable[]
 	 */
 	public function getFilters()
 	{
-		return $this->filters->getAll();
+		return $this->filters;
 	}
 
 
@@ -266,13 +276,28 @@ class Engine
 	 */
 	public function invokeFilter($name, array $args)
 	{
-		return call_user_func_array($this->filters->$name, $args);
+		$lname = strtolower($name);
+		if (!isset($this->filters[$lname])) {
+			$args2 = $args;
+			array_unshift($args2, $lname);
+			foreach ($this->filters[NULL] as $filter) {
+				$res = call_user_func_array(Helpers::checkCallback($filter), $args2);
+				if ($res !== NULL) {
+					return $res;
+				} elseif (isset($this->filters[$lname])) {
+					return call_user_func_array(Helpers::checkCallback($this->filters[$lname]), $args);
+				}
+			}
+			$hint = ($t = Helpers::getSuggestion(array_keys($this->filters), $name)) ? ", did you mean '$t'?" : '.';
+			throw new \LogicException("Filter '$name' is not defined$hint");
+		}
+		return call_user_func_array(Helpers::checkCallback($this->filters[$lname]), $args);
 	}
 
 
 	/**
 	 * Adds new macro.
-	 * @return static
+	 * @return self
 	 */
 	public function addMacro($name, IMacro $macro)
 	{
@@ -282,28 +307,7 @@ class Engine
 
 
 	/**
-	 * Adds new provider.
-	 * @return static
-	 */
-	public function addProvider($name, $value)
-	{
-		$this->providers[$name] = $value;
-		return $this;
-	}
-
-
-	/**
-	 * Returns all providers.
-	 * @return array
-	 */
-	public function getProviders()
-	{
-		return $this->providers;
-	}
-
-
-	/**
-	 * @return static
+	 * @return self
 	 */
 	public function setContentType($type)
 	{
@@ -314,7 +318,7 @@ class Engine
 
 	/**
 	 * Sets path to temporary directory.
-	 * @return static
+	 * @return self
 	 */
 	public function setTempDirectory($path)
 	{
@@ -325,7 +329,7 @@ class Engine
 
 	/**
 	 * Sets auto-refresh mode.
-	 * @return static
+	 * @return self
 	 */
 	public function setAutoRefresh($on = TRUE)
 	{
@@ -361,7 +365,7 @@ class Engine
 
 
 	/**
-	 * @return static
+	 * @return self
 	 */
 	public function setLoader(ILoader $loader)
 	{

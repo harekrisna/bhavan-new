@@ -15,11 +15,8 @@ use Nette;
  */
 class Helpers
 {
-	use Nette\StaticClass;
-
 	const PHP_IDENT = '[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*';
 	const MAX_DEPTH = 50;
-	const WRAP_LENGTH = 70;
 
 
 	/**
@@ -32,17 +29,14 @@ class Helpers
 	}
 
 
-	private static function _dump(&$var, $level = 0)
+	private static function _dump(& $var, $level = 0)
 	{
 		if ($var instanceof PhpLiteral) {
 			return (string) $var;
 
 		} elseif (is_float($var)) {
-			if (is_finite($var)) {
-				$var = var_export($var, TRUE);
-				return strpos($var, '.') === FALSE ? $var . '.0' : $var; // workaround for PHP < 7.0.2
-			}
-			return str_replace('.0', '', var_export($var, TRUE)); // workaround for PHP 7.0.2
+			$var = var_export($var, TRUE);
+			return strpos($var, '.') === FALSE ? $var . '.0' : $var;
 
 		} elseif (is_bool($var)) {
 			return $var ? 'TRUE' : 'FALSE';
@@ -83,7 +77,7 @@ class Helpers
 				$outAlt = "\n$space";
 				$var[$marker] = TRUE;
 				$counter = 0;
-				foreach ($var as $k => &$v) {
+				foreach ($var as $k => & $v) {
 					if ($k !== $marker) {
 						$item = ($k === $counter ? '' : self::_dump($k, $level + 1) . ' => ') . self::_dump($v, $level + 1);
 						$counter = is_int($k) ? max($k + 1, $counter) : $counter;
@@ -93,7 +87,7 @@ class Helpers
 				}
 				unset($var[$marker]);
 			}
-			return '[' . (strpos($out, "\n") === FALSE && strlen($out) < self::WRAP_LENGTH ? $out : $outAlt) . ']';
+			return 'array(' . (strpos($out, "\n") === FALSE && strlen($out) < 40 ? $out : $outAlt) . ')';
 
 		} elseif ($var instanceof \Serializable) {
 			$var = serialize($var);
@@ -103,18 +97,14 @@ class Helpers
 			throw new Nette\InvalidArgumentException('Cannot dump closure.');
 
 		} elseif (is_object($var)) {
-			$class = get_class($var);
-			if (PHP_VERSION_ID >= 70000 && (new \ReflectionObject($var))->isAnonymous()) {
+			if (PHP_VERSION_ID >= 70000 && ($rc = new \ReflectionObject($var)) && $rc->isAnonymous()) {
 				throw new Nette\InvalidArgumentException('Cannot dump anonymous class.');
-
-			} elseif (in_array($class, ['DateTime', 'DateTimeImmutable'], TRUE)) {
-				return self::formatArgs("new $class(?, new DateTimeZone(?))", [$var->format('Y-m-d H:i:s.u'), $var->getTimeZone()->getName()]);
 			}
-
 			$arr = (array) $var;
 			$space = str_repeat("\t", $level);
+			$class = get_class($var);
 
-			static $list = [];
+			static $list = array();
 			if ($level > self::MAX_DEPTH || in_array($var, $list, TRUE)) {
 				throw new Nette\InvalidArgumentException('Nesting level too deep or recursive dependency.');
 
@@ -126,7 +116,7 @@ class Helpers
 						$props[$v] = $props["\x00*\x00$v"] = $props["\x00$class\x00$v"] = TRUE;
 					}
 				}
-				foreach ($arr as $k => &$v) {
+				foreach ($arr as $k => & $v) {
 					if (!isset($props) || isset($props[$k])) {
 						$out .= "$space\t" . self::_dump($k, $level + 1) . ' => ' . self::_dump($v, $level + 1) . ",\n";
 					}
@@ -135,8 +125,8 @@ class Helpers
 				$out .= $space;
 			}
 			return $class === 'stdClass'
-				? "(object) [$out]"
-				: __CLASS__ . "::createObject('$class', [$out])";
+				? "(object) array($out)"
+				: __CLASS__ . "::createObject('$class', array($out))";
 
 		} elseif (is_resource($var)) {
 			throw new Nette\InvalidArgumentException('Cannot dump resource.');
@@ -151,9 +141,10 @@ class Helpers
 	 * Generates PHP statement.
 	 * @return string
 	 */
-	public static function format($statement, ...$args)
+	public static function format($statement)
 	{
-		return self::formatArgs($statement, $args);
+		$args = func_get_args();
+		return self::formatArgs(array_shift($args), $args);
 	}
 
 
@@ -177,13 +168,13 @@ class Helpers
 				$sep = '';
 				foreach ($arg as $tmp) {
 					$s .= $sep . self::dump($tmp);
-					$sep = strlen($s) - strrpos($s, "\n") > self::WRAP_LENGTH ? ",\n\t" : ', ';
+					$sep = strlen($s) - strrpos($s, "\n") > 100 ? ",\n\t" : ', ';
 				}
 				$statement = $s . substr($statement, $a + 2);
 				$a = strlen($s);
 
 			} else {
-				$arg = substr($statement, $a - 1, 1) === '$' || in_array(substr($statement, $a - 2, 2), ['->', '::'], TRUE)
+				$arg = substr($statement, $a - 1, 1) === '$' || in_array(substr($statement, $a - 2, 2), array('->', '::'), TRUE)
 					? self::formatMember($arg) : self::_dump($arg);
 				$statement = substr_replace($statement, $arg, $a, 1);
 				$a += strlen($arg);
@@ -203,30 +194,6 @@ class Helpers
 		return $name instanceof PhpLiteral || !self::isIdentifier($name)
 			? '{' . self::_dump($name) . '}'
 			: $name;
-	}
-
-
-	/**
-	 * @return string
-	 */
-	public static function formatDocComment($content)
-	{
-		if (($s = trim($content)) === '') {
-			return '';
-		} elseif (strpos($content, "\n") === FALSE) {
-			return "/** $s */\n";
-		} else {
-			return str_replace("\n", "\n * ", "/**\n$s") . "\n */\n";
-		}
-	}
-
-
-	/**
-	 * @return string
-	 */
-	public static function unformatDocComment($comment)
-	{
-		return preg_replace('#^\s*\* ?#m', '', trim(trim(trim($comment), '/*')));
 	}
 
 

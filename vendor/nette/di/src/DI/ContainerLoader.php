@@ -1,8 +1,8 @@
 <?php
 
 /**
- * This file is part of the Nette Framework (https://nette.org)
- * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
+ * This file is part of the Nette Framework (http://nette.org)
+ * Copyright (c) 2004 David Grudl (http://davidgrudl.com)
  */
 
 namespace Nette\DI;
@@ -13,10 +13,8 @@ use Nette;
 /**
  * DI container loader.
  */
-class ContainerLoader
+class ContainerLoader extends Nette\Object
 {
-	use Nette\SmartObject;
-
 	/** @var bool */
 	private $autoRebuild = FALSE;
 
@@ -32,16 +30,12 @@ class ContainerLoader
 
 
 	/**
-	 * @param  callable  function (Nette\DI\Compiler $compiler): string|NULL
 	 * @param  mixed
+	 * @param  callable  function (Nette\DI\Compiler $compiler): string|NULL
 	 * @return string
 	 */
-	public function load($generator, $key = NULL)
+	public function load($key, $generator)
 	{
-		if (!is_callable($generator)) { // back compatiblity
-			trigger_error(__METHOD__ . ': order of arguments has been swapped.', E_USER_DEPRECATED);
-			list($generator, $key) = [$key, $generator];
-		}
 		$class = $this->getClassName($key);
 		if (!class_exists($class, FALSE)) {
 			$this->loadFile($class, $generator);
@@ -85,8 +79,6 @@ class ContainerLoader
 				if (file_put_contents("$name.tmp", $content) !== strlen($content) || !rename("$name.tmp", $name)) {
 					@unlink("$name.tmp"); // @ - file may not exist
 					throw new Nette\IOException("Unable to create file '$name'.");
-				} elseif (function_exists('opcache_invalidate')) {
-					@opcache_invalidate($name, TRUE); // @ can be restricted
 				}
 			}
 		}
@@ -102,7 +94,8 @@ class ContainerLoader
 	{
 		if ($this->autoRebuild) {
 			$meta = @unserialize(file_get_contents("$file.meta")); // @ - file may not exist
-			return empty($meta[0]) || DependencyChecker::isExpired(...$meta);
+			$files = $meta ? array_combine($tmp = array_keys($meta), $tmp) : array();
+			return $meta !== @array_map('filemtime', $files); // @ - files may not exist
 		}
 		return FALSE;
 	}
@@ -114,12 +107,15 @@ class ContainerLoader
 	protected function generate($class, $generator)
 	{
 		$compiler = new Compiler;
-		$compiler->setClassName($class);
-		$code = call_user_func_array($generator, [&$compiler]) ?: $compiler->compile();
-		return [
+		$compiler->getContainerBuilder()->setClassName($class);
+		$code = call_user_func_array($generator, array(& $compiler));
+		$code = $code ?: implode("\n\n\n", $compiler->compile());
+		$files = $compiler->getDependencies();
+		$files = $files ? array_combine($files, $files) : array(); // workaround for PHP 5.3 array_combine
+		return array(
 			"<?php\n$code",
-			serialize($compiler->exportDependencies())
-		];
+			serialize(@array_map('filemtime', $files)), // @ - file may not exist
+		);
 	}
 
 }

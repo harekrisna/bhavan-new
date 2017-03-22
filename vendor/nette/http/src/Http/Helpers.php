@@ -1,8 +1,8 @@
 <?php
 
 /**
- * This file is part of the Nette Framework (https://nette.org)
- * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
+ * This file is part of the Nette Framework (http://nette.org)
+ * Copyright (c) 2004 David Grudl (http://davidgrudl.com)
  */
 
 namespace Nette\Http;
@@ -16,11 +16,10 @@ use Nette\Utils\DateTime;
  */
 class Helpers
 {
-	use Nette\StaticClass;
 
 	/**
 	 * Returns HTTP valid date format.
-	 * @param  string|int|\DateTimeInterface
+	 * @param  string|int|\DateTime
 	 * @return string
 	 */
 	public static function formatDate($time)
@@ -42,10 +41,10 @@ class Helpers
 		$ip = implode('', array_map($tmp, unpack('N*', inet_pton($ip))));
 		$mask = implode('', array_map($tmp, unpack('N*', inet_pton($mask))));
 		$max = strlen($ip);
-		if (!$max || $max !== strlen($mask) || (int) $size < 0 || (int) $size > $max) {
+		if (!$max || $max !== strlen($mask) || $size < 0 || $size > $max) {
 			return FALSE;
 		}
-		return strncmp($ip, $mask, $size === '' ? $max : (int) $size) === 0;
+		return strncmp($ip, $mask, $size === '' ? $max : $size) === 0;
 	}
 
 
@@ -60,7 +59,7 @@ class Helpers
 			return;
 		}
 
-		$flatten = [];
+		$flatten = array();
 		foreach (headers_list() as $header) {
 			if (preg_match('#^Set-Cookie: .+?=#', $header, $m)) {
 				$flatten[$m[0]] = $header;
@@ -70,6 +69,21 @@ class Helpers
 		foreach (array_values($flatten) as $key => $header) {
 			header($header, $key === 0);
 		}
+	}
+
+
+	/**
+	 * @internal
+	 */
+	public static function stripSlashes($arr, $onlyKeys = FALSE)
+	{
+		$res = array();
+		foreach ($arr as $k => $v) {
+			$res[stripslashes($k)] = is_array($v)
+				? self::stripSlashes($v, $onlyKeys)
+				: ($onlyKeys ? $v : stripslashes($v));
+		}
+		return $res;
 	}
 
 }

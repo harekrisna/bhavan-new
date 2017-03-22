@@ -23,15 +23,11 @@ abstract class TextBase extends BaseControl
 	/** @var mixed unfiltered submitted value */
 	protected $rawValue = '';
 
-	/** @var bool */
-	private $nullable;
-
 
 	/**
 	 * Sets control's value.
 	 * @param  string
-	 * @return static
-	 * @internal
+	 * @return self
 	 */
 	public function setValue($value)
 	{
@@ -51,26 +47,14 @@ abstract class TextBase extends BaseControl
 	 */
 	public function getValue()
 	{
-		return $this->nullable && $this->value === '' ? NULL : $this->value;
-	}
-
-
-	/**
-	 * Sets whether getValue() returns NULL instead of empty string.
-	 * @param  bool
-	 * @return static
-	 */
-	public function setNullable($value = TRUE)
-	{
-		$this->nullable = (bool) $value;
-		return $this;
+		return $this->value === Strings::trim($this->translate($this->emptyValue)) ? '' : $this->value;
 	}
 
 
 	/**
 	 * Sets the special value which is treated as empty string.
 	 * @param  string
-	 * @return static
+	 * @return self
 	 */
 	public function setEmptyValue($value)
 	{
@@ -92,7 +76,7 @@ abstract class TextBase extends BaseControl
 	/**
 	 * Sets the maximum number of allowed characters.
 	 * @param  int
-	 * @return static
+	 * @return self
 	 */
 	public function setMaxLength($length)
 	{
@@ -104,11 +88,11 @@ abstract class TextBase extends BaseControl
 	/**
 	 * Appends input string filter callback.
 	 * @param  callable
-	 * @return static
+	 * @return self
 	 */
 	public function addFilter($filter)
 	{
-		$this->getRules()->addFilter($filter);
+		$this->rules->addFilter($filter);
 		return $this;
 	}
 
@@ -126,17 +110,6 @@ abstract class TextBase extends BaseControl
 	}
 
 
-	/**
-	 * @return string|NULL
-	 */
-	protected function getRenderedValue()
-	{
-		return $this->rawValue === ''
-			? ($this->emptyValue === '' ? NULL : $this->translate($this->emptyValue))
-			: $this->rawValue;
-	}
-
-
 	public function addRule($validator, $message = NULL, $arg = NULL)
 	{
 		if ($validator === Form::LENGTH || $validator === Form::MAX_LENGTH) {
@@ -146,19 +119,6 @@ abstract class TextBase extends BaseControl
 			}
 		}
 		return parent::addRule($validator, $message, $arg);
-	}
-
-
-	/**
-	 * Performs the server side validation.
-	 * @return void
-	 */
-	public function validate()
-	{
-		if ($this->value === Strings::trim($this->translate($this->emptyValue))) {
-			$this->value = '';
-		}
-		parent::validate();
 	}
 
 }

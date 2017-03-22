@@ -23,7 +23,6 @@ class Button extends BaseControl
 	{
 		parent::__construct($caption);
 		$this->control->type = 'button';
-		$this->setOption('type', 'button');
 	}
 
 
@@ -34,7 +33,7 @@ class Button extends BaseControl
 	public function isFilled()
 	{
 		$value = $this->getValue();
-		return $value !== NULL && $value !== [];
+		return $value !== NULL && $value !== array();
 	}
 
 
@@ -57,11 +56,11 @@ class Button extends BaseControl
 	{
 		$this->setOption('rendered', TRUE);
 		$el = clone $this->control;
-		return $el->addAttributes([
+		return $el->addAttributes(array(
 			'name' => $this->getHtmlName(),
 			'disabled' => $this->isDisabled(),
 			'value' => $this->translate($caption === NULL ? $this->caption : $caption),
-		]);
+		));
 	}
 
 }

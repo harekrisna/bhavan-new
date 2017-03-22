@@ -1,8 +1,8 @@
 <?php
 
 /**
- * This file is part of the Nette Framework (https://nette.org)
- * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
+ * This file is part of the Nette Framework (http://nette.org)
+ * Copyright (c) 2004 David Grudl (http://davidgrudl.com)
  */
 
 namespace Nette\Caching\Storages;
@@ -13,14 +13,13 @@ use Nette;
 /**
  * Cache dummy storage.
  */
-class DevNullStorage implements Nette\Caching\IStorage
+class DevNullStorage extends Nette\Object implements Nette\Caching\IStorage
 {
-	use Nette\SmartObject;
 
 	/**
 	 * Read from cache.
-	 * @param  string
-	 * @return mixed
+	 * @param  string key
+	 * @return mixed|NULL
 	 */
 	public function read($key)
 	{
@@ -29,7 +28,7 @@ class DevNullStorage implements Nette\Caching\IStorage
 
 	/**
 	 * Prevents item reading and writing. Lock is released by write() or remove().
-	 * @param  string
+	 * @param  string key
 	 * @return void
 	 */
 	public function lock($key)
@@ -39,8 +38,9 @@ class DevNullStorage implements Nette\Caching\IStorage
 
 	/**
 	 * Writes item into the cache.
-	 * @param  string
-	 * @param  mixed
+	 * @param  string key
+	 * @param  mixed  data
+	 * @param  array  dependencies
 	 * @return void
 	 */
 	public function write($key, $data, array $dependencies)
@@ -50,7 +50,7 @@ class DevNullStorage implements Nette\Caching\IStorage
 
 	/**
 	 * Removes item from the cache.
-	 * @param  string
+	 * @param  string key
 	 * @return void
 	 */
 	public function remove($key)

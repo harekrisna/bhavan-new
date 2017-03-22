@@ -1,53 +1,53 @@
 <?php
 
 /**
- * This file is part of the Nette Framework (https://nette.org)
- * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
+ * This file is part of the Nette Framework (http://nette.org)
+ * Copyright (c) 2004 David Grudl (http://davidgrudl.com)
  */
 
 namespace Nette\DI;
 
 use Nette;
-use Nette\PhpGenerator\Helpers as PhpHelpers;
-use Nette\Utils\Strings;
 use Nette\Utils\Validators;
-use Nette\Utils\Reflection;
+use Nette\Utils\Strings;
+use Nette\PhpGenerator\Helpers as PhpHelpers;
 use ReflectionClass;
 
 
 /**
- * Container builder.
+ * Basic container builder.
  */
-class ContainerBuilder
+class ContainerBuilder extends Nette\Object
 {
-	use Nette\SmartObject;
-
 	const THIS_SERVICE = 'self',
 		THIS_CONTAINER = 'container';
 
 	/** @var array */
-	public $parameters = [];
-
-	/** @var ServiceDefinition[] */
-	private $definitions = [];
-
-	/** @var array of alias => service */
-	private $aliases = [];
-
-	/** @var array for auto-wiring */
-	private $classList = [];
-
-	/** @var bool */
-	private $classListNeedsRefresh = TRUE;
-
-	/** @var string[] of classes excluded from auto-wiring */
-	private $excludedClasses = [];
-
-	/** @var array */
-	private $dependencies = [];
+	public $parameters = array();
 
 	/** @var string */
-	private $currentService;
+	private $className = 'Container';
+
+	/** @var ServiceDefinition[] */
+	private $definitions = array();
+
+	/** @var array of alias => service */
+	private $aliases = array();
+
+	/** @var array for auto-wiring */
+	private $classes;
+
+	/** @var string[] of classes excluded from auto-wiring */
+	private $excludedClasses = array();
+
+	/** @var array of file names */
+	private $dependencies = array();
+
+	/** @var Nette\PhpGenerator\ClassType[] */
+	private $generatedClasses = array();
+
+	/** @var string */
+	/*private in 5.4*/public $currentService;
 
 
 	/**
@@ -57,7 +57,6 @@ class ContainerBuilder
 	 */
 	public function addDefinition($name, ServiceDefinition $definition = NULL)
 	{
-		$this->classListNeedsRefresh = TRUE;
 		if (!is_string($name) || !$name) { // builder is not ready for falsy names such as '0'
 			throw new Nette\InvalidArgumentException(sprintf('Service name must be a non-empty string, %s given.', gettype($name)));
 		}
@@ -65,13 +64,7 @@ class ContainerBuilder
 		if (isset($this->definitions[$name])) {
 			throw new Nette\InvalidStateException("Service '$name' has already been added.");
 		}
-		if (!$definition) {
-			$definition = new ServiceDefinition;
-		}
-		$definition->setNotifier(function () {
-			$this->classListNeedsRefresh = TRUE;
-		});
-		return $this->definitions[$name] = $definition;
+		return $this->definitions[$name] = $definition ?: new ServiceDefinition;
 	}
 
 
@@ -82,9 +75,16 @@ class ContainerBuilder
 	 */
 	public function removeDefinition($name)
 	{
-		$this->classListNeedsRefresh = TRUE;
 		$name = isset($this->aliases[$name]) ? $this->aliases[$name] : $name;
 		unset($this->definitions[$name]);
+
+		if ($this->classes) {
+			foreach ($this->classes as & $tmp) {
+				foreach ($tmp as & $names) {
+					$names = array_values(array_diff($names, array($name)));
+				}
+			}
+		}
 	}
 
 
@@ -149,16 +149,6 @@ class ContainerBuilder
 
 
 	/**
-	 * Removes the specified alias.
-	 * @return void
-	 */
-	public function removeAlias($alias)
-	{
-		unset($this->aliases[$alias]);
-	}
-
-
-	/**
 	 * Gets all service aliases.
 	 * @return array
 	 */
@@ -169,37 +159,21 @@ class ContainerBuilder
 
 
 	/**
-	 * @param  string[]
-	 * @return static
-	 */
-	public function addExcludedClasses(array $classes)
-	{
-		foreach ($classes as $class) {
-			if (class_exists($class) || interface_exists($class)) {
-				self::checkCase($class);
-				$this->excludedClasses += class_parents($class) + class_implements($class) + [$class => $class];
-			}
-		}
-		return $this;
-	}
-
-
-	/**
-	 * @deprecated
+	 * @return self
 	 */
 	public function setClassName($name)
 	{
-		trigger_error(__METHOD__ . ' has been deprecated', E_USER_DEPRECATED);
+		$this->className = (string) $name;
 		return $this;
 	}
 
 
 	/**
-	 * @deprecated
+	 * @return string
 	 */
 	public function getClassName()
 	{
-		trigger_error(__METHOD__ . ' has been deprecated', E_USER_DEPRECATED);
+		return $this->className;
 	}
 
 
@@ -216,43 +190,23 @@ class ContainerBuilder
 	{
 		$class = ltrim($class, '\\');
 
-		if ($this->currentService !== NULL
-			&& is_a($this->definitions[$this->currentService]->getClass(), $class, TRUE)
-		) {
-			return $this->currentService;
+		if ($this->currentService !== NULL) {
+			$curClass = $this->definitions[$this->currentService]->getClass();
+			if ($curClass === $class || is_subclass_of($curClass, $class)) {
+				return $this->currentService;
+			}
 		}
 
-		$classes = $this->getClassList();
-		if (empty($classes[$class][TRUE])) {
+		if (empty($this->classes[$class][TRUE])) {
 			self::checkCase($class);
 			return;
 
-		} elseif (count($classes[$class][TRUE]) === 1) {
-			return $classes[$class][TRUE][0];
+		} elseif (count($this->classes[$class][TRUE]) === 1) {
+			return $this->classes[$class][TRUE][0];
 
 		} else {
-			$list = $classes[$class][TRUE];
-			$hint = count($list) === 2 && ($tmp = strpos($list[0], '.') xor strpos($list[1], '.'))
-				? '. If you want to overwrite service ' . $list[$tmp ? 0 : 1] . ', give it proper name.'
-				: '';
-			throw new ServiceCreationException("Multiple services of type $class found: " . implode(', ', $list) . $hint);
+			throw new ServiceCreationException("Multiple services of type $class found: " . implode(', ', $this->classes[$class][TRUE]));
 		}
-	}
-
-
-	/**
-	 * Gets the service definition of the specified type.
-	 * @param  string
-	 * @return ServiceDefinition
-	 */
-	public function getDefinitionByType($class)
-	{
-		$definitionName = $this->getByType($class);
-		if (!$definitionName) {
-			throw new MissingServiceException("Service of type '$class' not found.");
-		}
-
-		return $this->getDefinition($definitionName);
 	}
 
 
@@ -265,10 +219,9 @@ class ContainerBuilder
 	{
 		$class = ltrim($class, '\\');
 		self::checkCase($class);
-		$found = [];
-		$classes = $this->getClassList();
-		if (!empty($classes[$class])) {
-			foreach (array_merge(...array_values($classes[$class])) as $name) {
+		$found = array();
+		if (!empty($this->classes[$class])) {
+			foreach (call_user_func_array('array_merge', $this->classes[$class]) as $name) {
 				$found[$name] = $this->definitions[$name];
 			}
 		}
@@ -283,7 +236,7 @@ class ContainerBuilder
 	 */
 	public function findByTag($tag)
 	{
-		$found = [];
+		$found = array();
 		foreach ($this->definitions as $name => $def) {
 			if (($tmp = $def->getTag($tag)) !== NULL) {
 				$found[$name] = $tmp;
@@ -294,29 +247,39 @@ class ContainerBuilder
 
 
 	/**
-	 * @internal
+	 * Creates a list of arguments using autowiring.
+	 * @return array
 	 */
-	public function getClassList()
+	public function autowireArguments($class, $method, array $arguments)
 	{
-		if ($this->classList !== FALSE && $this->classListNeedsRefresh) {
-			$this->prepareClassList();
-			$this->classListNeedsRefresh = FALSE;
+		$rc = new ReflectionClass($class);
+		if (!$rc->hasMethod($method)) {
+			if (!Nette\Utils\Arrays::isList($arguments)) {
+				throw new ServiceCreationException("Unable to pass specified arguments to $class::$method().");
+			}
+			return $arguments;
 		}
-		return $this->classList ?: [];
+
+		$rm = $rc->getMethod($method);
+		if (!$rm->isPublic()) {
+			throw new ServiceCreationException("$class::$method() is not callable.");
+		}
+		$this->addDependency($rm->getFileName());
+		return Helpers::autowireArguments($rm, $arguments, $this);
 	}
 
 
 	/**
 	 * Generates $dependencies, $classes and normalizes class names.
-	 * @return void
+	 * @return array
 	 * @internal
 	 */
 	public function prepareClassList()
 	{
 		unset($this->definitions[self::THIS_CONTAINER]);
-		$this->addDefinition(self::THIS_CONTAINER)->setClass(Container::class);
+		$this->addDefinition(self::THIS_CONTAINER)->setClass('Nette\DI\Container');
 
-		$this->classList = FALSE;
+		$this->classes = FALSE;
 
 		foreach ($this->definitions as $name => $def) {
 			// prepare generated factories
@@ -337,13 +300,12 @@ class ContainerBuilder
 				if (!$def->getClass()) {
 					throw new ServiceCreationException("Class and factory are missing in definition of service '$name'.");
 				}
-				$def->setFactory($def->getClass(), ($factory = $def->getFactory()) ? $factory->arguments : []);
+				$def->setFactory($def->getClass(), ($factory = $def->getFactory()) ? $factory->arguments : array());
 			}
 
 			// auto-disable autowiring for aliases
-			if ($def->getAutowired() === TRUE
-				&& ($alias = $this->getServiceName($def->getFactory()->getEntity()))
-				&& (!$def->getImplement() || (!Strings::contains($alias, '\\') && $this->definitions[$alias]->getImplement()))
+			if (($alias = $this->getServiceName($def->getFactory()->getEntity())) &&
+				(!$def->getImplement() || (!Strings::contains($alias, '\\') && $this->definitions[$alias]->getImplement()))
 			) {
 				$def->setAutowired(FALSE);
 			}
@@ -355,40 +317,24 @@ class ContainerBuilder
 		}
 
 		//  build auto-wiring list
-		$this->classList = $preferred = [];
+		$excludedClasses = array();
+		foreach ($this->excludedClasses as $class) {
+			self::checkCase($class);
+			$excludedClasses += class_parents($class) + class_implements($class) + array($class => $class);
+		}
+
+		$this->classes = array();
 		foreach ($this->definitions as $name => $def) {
 			if ($class = $def->getImplement() ?: $def->getClass()) {
-				$defAutowired = $def->getAutowired();
-				if (is_array($defAutowired)) {
-					foreach ($defAutowired as $k => $aclass) {
-						if ($aclass === self::THIS_SERVICE) {
-							$defAutowired[$k] = $class;
-						} elseif (!is_a($class, $aclass, TRUE)) {
-							throw new ServiceCreationException("Incompatible class $aclass in autowiring definition of service '$name'.");
-						}
-					}
-				}
-
-				foreach (class_parents($class) + class_implements($class) + [$class] as $parent) {
-					$autowired = $defAutowired && empty($this->excludedClasses[$parent]);
-					if ($autowired && is_array($defAutowired)) {
-						$autowired = FALSE;
-						foreach ($defAutowired as $aclass) {
-							if (is_a($parent, $aclass, TRUE)) {
-								if (empty($preferred[$parent]) && isset($this->classList[$parent][TRUE])) {
-									$this->classList[$parent][FALSE] = array_merge(...$this->classList[$parent]);
-									$this->classList[$parent][TRUE] = [];
-								}
-								$preferred[$parent] = $autowired = TRUE;
-								break;
-							}
-						}
-					} elseif (isset($preferred[$parent])) {
-						$autowired = FALSE;
-					}
-					$this->classList[$parent][$autowired][] = (string) $name;
+				foreach (class_parents($class) + class_implements($class) + array($class) as $parent) {
+					$this->classes[$parent][$def->isAutowired() && empty($excludedClasses[$parent])][] = (string) $name;
 				}
 			}
+		}
+
+		foreach ($this->classes as $class => $foo) {
+			$rc = new ReflectionClass($class);
+			$this->addDependency($rc->getFileName());
 		}
 	}
 
@@ -401,7 +347,6 @@ class ContainerBuilder
 		}
 		self::checkCase($interface);
 		$rc = new ReflectionClass($interface);
-		$this->addDependency($rc);
 		$method = $rc->hasMethod('create')
 			? $rc->getMethod('create')
 			: ($rc->hasMethod('get') ? $rc->getMethod('get') : NULL);
@@ -409,22 +354,21 @@ class ContainerBuilder
 		if (count($rc->getMethods()) !== 1 || !$method || $method->isStatic()) {
 			throw new ServiceCreationException("Interface $interface used in service '$name' must have just one non-static method create() or get().");
 		}
-		$def->setImplementMode($rc->hasMethod('create') ? $def::IMPLEMENT_MODE_CREATE : $def::IMPLEMENT_MODE_GET);
-		$methodName = Reflection::toString($method) . '()';
+		$def->setImplementType($methodName = $rc->hasMethod('create') ? 'create' : 'get');
 
 		if (!$def->getClass() && !$def->getEntity()) {
-			$returnType = Helpers::getReturnType($method);
+			$returnType = PhpReflection::getReturnType($method);
 			if (!$returnType) {
-				throw new ServiceCreationException("Method $methodName used in service '$name' has not return type hint or annotation @return.");
+				throw new ServiceCreationException("Method $interface::$methodName() used in service '$name' has no @return annotation.");
 			} elseif (!class_exists($returnType)) {
-				throw new ServiceCreationException("Check a type hint or annotation @return of the $methodName method used in service '$name', class '$returnType' cannot be found.");
+				throw new ServiceCreationException("Please check a @return annotation of the $interface::$methodName() method used in service '$name'. Class '$returnType' cannot be found.");
 			}
 			$def->setClass($returnType);
 		}
 
-		if ($rc->hasMethod('get')) {
+		if ($methodName === 'get') {
 			if ($method->getParameters()) {
-				throw new ServiceCreationException("Method $methodName used in service '$name' must have no arguments.");
+				throw new ServiceCreationException("Method $interface::get() used in service '$name' must have no arguments.");
 			}
 			if (!$def->getEntity()) {
 				$def->setFactory('@\\' . ltrim($def->getClass(), '\\'));
@@ -434,12 +378,12 @@ class ContainerBuilder
 		}
 
 		if (!$def->parameters) {
-			$ctorParams = [];
+			$ctorParams = array();
 			if (!$def->getEntity()) {
-				$def->setFactory($def->getClass(), $def->getFactory() ? $def->getFactory()->arguments : []);
+				$def->setFactory($def->getClass(), $def->getFactory() ? $def->getFactory()->arguments : array());
 			}
-			if (($class = $this->resolveEntityClass($def->getFactory(), [$name => 1]))
-				&& ($ctor = (new ReflectionClass($class))->getConstructor())
+			if (($class = $this->resolveEntityClass($def->getFactory(), array($name => 1)))
+				&& ($rc = new ReflectionClass($class)) && ($ctor = $rc->getConstructor())
 			) {
 				foreach ($ctor->getParameters() as $param) {
 					$ctorParams[$param->getName()] = $param;
@@ -447,21 +391,17 @@ class ContainerBuilder
 			}
 
 			foreach ($method->getParameters() as $param) {
-				$hint = Reflection::getParameterType($param);
+				$hint = PhpReflection::getParameterType($param);
 				if (isset($ctorParams[$param->getName()])) {
 					$arg = $ctorParams[$param->getName()];
-					if ($hint !== Reflection::getParameterType($arg)) {
-						throw new ServiceCreationException("Type hint for \${$param->getName()} in $methodName doesn't match type hint in $class constructor.");
+					if ($hint !== PhpReflection::getParameterType($arg)) {
+						throw new ServiceCreationException("Type hint for \${$param->getName()} in $interface::$methodName() doesn't match type hint in $class constructor.");
 					}
 					$def->getFactory()->arguments[$arg->getPosition()] = self::literal('$' . $arg->getName());
-				} elseif (!$def->getSetup()) {
-					$hint = Nette\Utils\ObjectMixin::getSuggestion(array_keys($ctorParams), $param->getName());
-					throw new ServiceCreationException("Unused parameter \${$param->getName()} when implementing method $methodName" . ($hint ? ", did you mean \${$hint}?" : '.'));
 				}
-				$nullable = $hint && $param->allowsNull() && (!$param->isDefaultValueAvailable() || $param->getDefaultValue() !== NULL);
-				$paramDef = ($nullable ? '?' : '') . $hint . ' ' . $param->getName();
-				if ($param->isDefaultValueAvailable()) {
-					$def->parameters[$paramDef] = Reflection::getParameterDefaultValue($param);
+				$paramDef = $hint . ' ' . $param->getName();
+				if ($param->isOptional()) {
+					$def->parameters[$paramDef] = $param->getDefaultValue();
 				} else {
 					$def->parameters[] = $paramDef;
 				}
@@ -471,7 +411,7 @@ class ContainerBuilder
 
 
 	/** @return string|NULL */
-	private function resolveServiceClass($name, $recursive = [])
+	private function resolveServiceClass($name, $recursive = array())
 	{
 		if (isset($recursive[$name])) {
 			throw new ServiceCreationException(sprintf('Circular reference detected for services: %s.', implode(', ', array_keys($recursive))));
@@ -479,29 +419,25 @@ class ContainerBuilder
 		$recursive[$name] = TRUE;
 
 		$def = $this->definitions[$name];
-		$factoryClass = $def->getFactory() ? $this->resolveEntityClass($def->getFactory()->getEntity(), $recursive) : NULL; // call always to check entities
-		if ($class = $def->getClass() ?: $factoryClass) {
+		$class = $def->getFactory() ? $this->resolveEntityClass($def->getFactory()->getEntity(), $recursive) : NULL; // call always to check entities
+		if ($class = $def->getClass() ?: $class) {
+			$def->setClass($class);
 			if (!class_exists($class) && !interface_exists($class)) {
-				throw new ServiceCreationException("Class or interface '$class' used in service '$name' not found.");
+				throw new ServiceCreationException("Type $class used in service '$name' not found or is not class or interface.");
 			}
 			self::checkCase($class);
-			$def->setClass($class);
-			if (count($recursive) === 1) {
-				$this->addDependency(new ReflectionClass($factoryClass ?: $class));
-			}
 
-		} elseif ($def->getAutowired()) {
-			throw new ServiceCreationException("Unknown type of service '$name', declare return type of factory method (for PHP 5 use annotation @return)");
+		} elseif ($def->isAutowired()) {
+			trigger_error("Type of service '$name' is unknown.", E_USER_NOTICE);
 		}
 		return $class;
 	}
 
 
 	/** @return string|NULL */
-	private function resolveEntityClass($entity, $recursive = [])
+	private function resolveEntityClass($entity, $recursive = array())
 	{
 		$entity = $this->normalizeEntity($entity instanceof Statement ? $entity->getEntity() : $entity);
-		$serviceName = current(array_slice(array_keys($recursive), -1));
 
 		if (is_array($entity)) {
 			if (($service = $this->getServiceName($entity[0])) || $entity[0] instanceof Statement) {
@@ -520,210 +456,339 @@ class ContainerBuilder
 			}
 
 			if (isset($e) || ($refClass && (!$reflection->isPublic()
-				|| ($refClass->isTrait() && !$reflection->isStatic())
+				|| (PHP_VERSION_ID >= 50400 && $refClass->isTrait() && !$reflection->isStatic())
 			))) {
-				throw new ServiceCreationException(sprintf("Method %s() used in service '%s' is not callable.", Nette\Utils\Callback::toString($entity), $serviceName));
+				$name = array_slice(array_keys($recursive), -1);
+				throw new ServiceCreationException(sprintf("Factory '%s' used in service '%s' is not callable.", Nette\Utils\Callback::toString($entity), $name[0]));
 			}
-			$this->addDependency($reflection);
 
-			$type = Helpers::getReturnType($reflection);
-			if ($type && !class_exists($type) && !interface_exists($type)) {
-				throw new ServiceCreationException(sprintf("Class or interface '%s' not found. Is return type of %s() used in service '%s' correct?", $type, Nette\Utils\Callback::toString($entity), $serviceName));
-			}
-			return $type;
+			return PhpReflection::getReturnType($reflection);
 
 		} elseif ($service = $this->getServiceName($entity)) { // alias or factory
 			if (Strings::contains($service, '\\')) { // @\Class
 				return ltrim($service, '\\');
 			}
-			return $this->definitions[$service]->getImplement()
-				?: $this->definitions[$service]->getClass()
-				?: $this->resolveServiceClass($service, $recursive);
+			return $this->definitions[$service]->getImplement() ?: $this->resolveServiceClass($service, $recursive);
 
-		} elseif (is_string($entity)) { // class
-			if (!class_exists($entity)) {
-				throw new ServiceCreationException("Class $entity used in service '$serviceName' not found.");
+		} elseif (is_string($entity)) {
+			if (!class_exists($entity) || !($rc = new ReflectionClass($entity)) || !$rc->isInstantiable()) {
+				$name = array_slice(array_keys($recursive), -1);
+				throw new ServiceCreationException("Class $entity used in service '$name[0]' not found or is not instantiable.");
 			}
 			return ltrim($entity, '\\');
 		}
 	}
 
 
-	/**
-	 * @return void
-	 */
-	public function complete()
-	{
-		$this->prepareClassList();
-
-		foreach ($this->definitions as $name => $def) {
-			if ($def->isDynamic()) {
-				continue;
-			}
-
-			$this->currentService = NULL;
-			$entity = $def->getFactory()->getEntity();
-			$serviceRef = $this->getServiceName($entity);
-			$factory = $serviceRef && !$def->getFactory()->arguments && !$def->getSetup() && $def->getImplementMode() !== $def::IMPLEMENT_MODE_CREATE
-				? new Statement(['@' . self::THIS_CONTAINER, 'getService'], [$serviceRef])
-				: $def->getFactory();
-
-			try {
-				$def->setFactory($this->completeStatement($factory));
-				$this->classListNeedsRefresh = FALSE;
-
-				$this->currentService = $name;
-				$setups = $def->getSetup();
-				foreach ($setups as &$setup) {
-					if (is_string($setup->getEntity()) && strpbrk($setup->getEntity(), ':@?\\') === FALSE) { // auto-prepend @self
-						$setup = new Statement(['@' . $name, $setup->getEntity()], $setup->arguments);
-					}
-					$setup = $this->completeStatement($setup);
-				}
-				$def->setSetup($setups);
-
-			} catch (\Exception $e) {
-				throw new ServiceCreationException("Service '$name': " . $e->getMessage(), 0, $e);
-
-			} finally {
-				$this->currentService = NULL;
-			}
-		}
-	}
-
-
-	/**
-	 * @return Statement
-	 */
-	public function completeStatement(Statement $statement)
-	{
-		$entity = $this->normalizeEntity($statement->getEntity());
-		$arguments = $statement->arguments;
-
-		if (is_string($entity) && Strings::contains($entity, '?')) { // PHP literal
-
-		} elseif ($service = $this->getServiceName($entity)) { // factory calling
-			$params = [];
-			foreach ($this->definitions[$service]->parameters as $k => $v) {
-				$params[] = preg_replace('#\w+\z#', '\$$0', (is_int($k) ? $v : $k)) . (is_int($k) ? '' : ' = ' . PhpHelpers::dump($v));
-			}
-			$rm = new \ReflectionFunction(create_function(implode(', ', $params), ''));
-			$arguments = Helpers::autowireArguments($rm, $arguments, $this);
-			$entity = '@' . $service;
-
-		} elseif ($entity === 'not') { // operator
-
-		} elseif (is_string($entity)) { // class name
-			$entity = ltrim($entity, '\\');
-			if (!class_exists($entity)) {
-				throw new ServiceCreationException("Class $entity not found.");
-			} elseif ((new ReflectionClass($entity))->isAbstract()) {
-				throw new ServiceCreationException("Class $entity is abstract.");
-			} elseif (($rm = (new ReflectionClass($entity))->getConstructor()) !== NULL && !$rm->isPublic()) {
-				$visibility = $rm->isProtected() ? 'protected' : 'private';
-				throw new ServiceCreationException("Class $entity has $visibility constructor.");
-			} elseif ($constructor = (new ReflectionClass($entity))->getConstructor()) {
-				$this->addDependency($constructor);
-				$arguments = Helpers::autowireArguments($constructor, $arguments, $this);
-			} elseif ($arguments) {
-				throw new ServiceCreationException("Unable to pass arguments, class $entity has no constructor.");
-			}
-
-		} elseif (!Nette\Utils\Arrays::isList($entity) || count($entity) !== 2) {
-			throw new ServiceCreationException(sprintf('Expected class, method or property, %s given.', PhpHelpers::dump($entity)));
-
-		} elseif (!preg_match('#^\$?' . PhpHelpers::PHP_IDENT . '(\[\])?\z#', $entity[1])) {
-			throw new ServiceCreationException("Expected function, method or property name, '$entity[1]' given.");
-
-		} elseif ($entity[0] === '') { // globalFunc
-			if (!Nette\Utils\Arrays::isList($arguments)) {
-				throw new ServiceCreationException("Unable to pass specified arguments to $entity[0].");
-			} elseif (!function_exists($entity[1])) {
-				throw new ServiceCreationException("Function $entity[1] doesn't exist.");
-			}
-
-			$rf = new \ReflectionFunction($entity[1]);
-			$this->addDependency($rf);
-			$arguments = Helpers::autowireArguments($rf, $arguments, $this);
-
-		} else {
-			if ($entity[0] instanceof Statement) {
-				$entity[0] = $this->completeStatement($entity[0]);
-			} elseif ($service = $this->getServiceName($entity[0])) { // service method
-				$entity[0] = '@' . $service;
-			} elseif (is_string($entity[0])) {
-				$entity[0] = ltrim($entity[0], '\\');
-			}
-
-			if ($entity[1][0] === '$') { // property getter, setter or appender
-				Validators::assert($arguments, 'list:0..1', "setup arguments for '" . Nette\Utils\Callback::toString($entity) . "'");
-				if (!$arguments && substr($entity[1], -2) === '[]') {
-					throw new ServiceCreationException("Missing argument for $entity[1].");
-				}
-			} elseif ($class = empty($service) || $entity[1] === 'create'
-				? $this->resolveEntityClass($entity[0])
-				: $this->definitions[$service]->getClass()
-			) {
-				$arguments = $this->autowireArguments($class, $entity[1], $arguments);
-			}
-		}
-
-		array_walk_recursive($arguments, function (&$val) {
-			if ($val instanceof Statement) {
-				$val = $this->completeStatement($val);
-
-			} elseif ($val === $this) {
-				trigger_error("Replace object ContainerBuilder in Statement arguments with '@container'.", E_USER_DEPRECATED);
-				$val = self::literal('$this');
-
-			} elseif ($val instanceof ServiceDefinition) {
-				$val = '@' . current(array_keys($this->getDefinitions(), $val, TRUE));
-
-			} elseif (is_string($val) && strlen($val) > 1 && $val[0] === '@' && $val[1] !== '@') {
-				$pair = explode('::', $val, 2);
-				$name = $this->getServiceName($pair[0]);
-				if (!isset($pair[1])) { // @service
-					$val = '@' . $name;
-				} elseif (preg_match('#^[A-Z][A-Z0-9_]*\z#', $pair[1], $m)) { // @service::CONSTANT
-					$val = self::literal($this->getDefinition($name)->getClass() . '::' . $pair[1]);
-				} else { // @service::property
-					$val = new Statement(['@' . $name, '$' . $pair[1]]);
-				}
-			}
-		});
-
-		return new Statement($entity, $arguments);
-	}
-
-
 	private function checkCase($class)
 	{
-		if ((class_exists($class) || interface_exists($class)) && $class !== ($name = (new ReflectionClass($class))->getName())) {
-			throw new ServiceCreationException("Case mismatch on class name '$class', correct name is '$name'.");
+		if (class_exists($class) && ($rc = new ReflectionClass($class)) && $class !== $rc->getName()) {
+			throw new ServiceCreationException("Case mismatch on class name '$class', correct name is '{$rc->getName()}'.");
 		}
 	}
 
 
 	/**
-	 * Adds item to the list of dependencies.
-	 * @param  ReflectionClass|\ReflectionFunctionAbstract|string
-	 * @return static
-	 * @internal
+	 * @param  string[]
+	 * @return self
 	 */
-	public function addDependency($dep)
+	public function addExcludedClasses(array $classes)
 	{
-		$this->dependencies[] = $dep;
+		$this->excludedClasses = array_merge($this->excludedClasses, $classes);
 		return $this;
 	}
 
 
 	/**
-	 * Returns the list of dependencies.
+	 * Adds a file to the list of dependencies.
+	 * @return self
+	 * @internal
+	 */
+	public function addDependency($file)
+	{
+		$this->dependencies[$file] = TRUE;
+		return $this;
+	}
+
+
+	/**
+	 * Returns the list of dependent files.
 	 * @return array
 	 */
 	public function getDependencies()
 	{
-		return $this->dependencies;
+		unset($this->dependencies[FALSE]);
+		return array_keys($this->dependencies);
+	}
+
+
+	/********************* code generator ****************d*g**/
+
+
+	/**
+	 * Generates PHP classes. First class is the container.
+	 * @return Nette\PhpGenerator\ClassType[]
+	 */
+	public function generateClasses($className = NULL, $parentName = NULL)
+	{
+		$this->prepareClassList();
+
+		$this->generatedClasses = array();
+		$this->className = $className ?: $this->className;
+		$containerClass = $this->generatedClasses[] = new Nette\PhpGenerator\ClassType($this->className);
+		$containerClass->setExtends($parentName ?: 'Nette\DI\Container');
+		$containerClass->addMethod('__construct')
+			->addBody('parent::__construct(?);', array($this->parameters));
+
+		$definitions = $this->definitions;
+		ksort($definitions);
+
+		$meta = $containerClass->addProperty('meta')
+			->setVisibility('protected')
+			->setValue(array(Container::TYPES => $this->classes));
+
+		foreach ($definitions as $name => $def) {
+			$meta->value[Container::SERVICES][$name] = $def->getClass() ?: NULL;
+			foreach ($def->getTags() as $tag => $value) {
+				$meta->value[Container::TAGS][$tag][$name] = $value;
+			}
+		}
+
+		foreach ($definitions as $name => $def) {
+			try {
+				$name = (string) $name;
+				$methodName = Container::getMethodName($name);
+				if (!PhpHelpers::isIdentifier($methodName)) {
+					throw new ServiceCreationException('Name contains invalid characters.');
+				}
+				$containerClass->addMethod($methodName)
+					->addDocument('@return ' . ($def->getImplement() ?: $def->getClass()))
+					->setBody($name === self::THIS_CONTAINER ? 'return $this;' : $this->generateService($name))
+					->setParameters($def->getImplement() ? array() : $this->convertParameters($def->parameters));
+			} catch (\Exception $e) {
+				throw new ServiceCreationException("Service '$name': " . $e->getMessage(), NULL, $e);
+			}
+		}
+
+		$aliases = $this->aliases;
+		ksort($aliases);
+		$meta->value[Container::ALIASES] = $aliases;
+
+		return $this->generatedClasses;
+	}
+
+
+	/**
+	 * Generates body of service method.
+	 * @return string
+	 */
+	private function generateService($name)
+	{
+		$this->currentService = NULL;
+		$def = $this->definitions[$name];
+
+		if ($def->isDynamic()) {
+			return PhpHelpers::formatArgs('throw new Nette\\DI\\ServiceCreationException(?);',
+				array("Unable to create dynamic service '$name', it must be added using addService()")
+			);
+		}
+
+		$entity = $def->getFactory()->getEntity();
+		$serviceRef = $this->getServiceName($entity);
+		$factory = $serviceRef && !$def->getFactory()->arguments && !$def->getSetup() && $def->getImplementType() !== 'create'
+			? new Statement(array('@' . self::THIS_CONTAINER, 'getService'), array($serviceRef))
+			: $def->getFactory();
+
+		$code = '$service = ' . $this->formatStatement($factory) . ";\n";
+		$this->currentService = $name;
+
+		if (($class = $def->getClass()) && !$serviceRef && $class !== $entity
+			&& !(is_string($entity) && preg_match('#^[\w\\\\]+\z#', $entity) && is_subclass_of($entity, $class))
+		) {
+			$code .= PhpHelpers::formatArgs("if (!\$service instanceof $class) {\n"
+				. "\tthrow new Nette\\UnexpectedValueException(?);\n}\n",
+				array("Unable to create service '$name', value returned by factory is not $class type.")
+			);
+		}
+
+		foreach ($def->getSetup() as $setup) {
+			if (is_string($setup->getEntity()) && strpbrk($setup->getEntity(), ':@?\\') === FALSE) { // auto-prepend @self
+				$setup->setEntity(array('@self', $setup->getEntity()));
+			}
+			$code .= $this->formatStatement($setup) . ";\n";
+		}
+		$this->currentService = NULL;
+
+		$code .= 'return $service;';
+
+		if (!$def->getImplement()) {
+			return $code;
+		}
+
+		$factoryClass = $this->generatedClasses[] = new Nette\PhpGenerator\ClassType;
+		$factoryClass->setName(str_replace(array('\\', '.'), '_', "{$this->className}_{$def->getImplement()}Impl_{$name}"))
+			->addImplement($def->getImplement())
+			->setFinal(TRUE);
+
+		$factoryClass->addProperty('container')
+			->setVisibility('private');
+
+		$factoryClass->addMethod('__construct')
+			->addBody('$this->container = $container;')
+			->addParameter('container')
+				->setTypeHint($this->className);
+
+		$factoryClass->addMethod($def->getImplementType())
+			->setParameters($this->convertParameters($def->parameters))
+			->setBody(str_replace('$this', '$this->container', $code))
+			->setReturnType(PHP_VERSION_ID >= 70000 ? $def->getClass() : NULL);
+
+		return "return new {$factoryClass->getName()}(\$this);";
+	}
+
+
+	/**
+	 * Converts parameters from ServiceDefinition to PhpGenerator.
+	 * @return Nette\PhpGenerator\Parameter[]
+	 */
+	private function convertParameters(array $parameters)
+	{
+		$res = array();
+		foreach ($parameters as $k => $v) {
+			$tmp = explode(' ', is_int($k) ? $v : $k);
+			$param = $res[] = new Nette\PhpGenerator\Parameter;
+			$param->setName(end($tmp));
+			if (!is_int($k)) {
+				$param = $param->setOptional(TRUE)->setDefaultValue($v);
+			}
+			if (isset($tmp[1])) {
+				$param->setTypeHint($tmp[0]);
+			}
+		}
+		return $res;
+	}
+
+
+	/**
+	 * Formats PHP code for class instantiating, function calling or property setting in PHP.
+	 * @return string
+	 * @internal
+	 */
+	public function formatStatement(Statement $statement)
+	{
+		$entity = $this->normalizeEntity($statement->getEntity());
+		$arguments = $statement->arguments;
+
+		if (is_string($entity) && Strings::contains($entity, '?')) { // PHP literal
+			return $this->formatPhp($entity, $arguments);
+
+		} elseif ($service = $this->getServiceName($entity)) { // factory calling
+			$params = array();
+			foreach ($this->definitions[$service]->parameters as $k => $v) {
+				$params[] = preg_replace('#\w+\z#', '\$$0', (is_int($k) ? $v : $k)) . (is_int($k) ? '' : ' = ' . PhpHelpers::dump($v));
+			}
+			$rm = new \ReflectionFunction(create_function(implode(', ', $params), ''));
+			$arguments = Helpers::autowireArguments($rm, $arguments, $this);
+			return $this->formatPhp('$this->?(?*)', array(Container::getMethodName($service), $arguments));
+
+		} elseif ($entity === 'not') { // operator
+			return $this->formatPhp('!?', array($arguments[0]));
+
+		} elseif (is_string($entity)) { // class name
+			$rc = new ReflectionClass($entity);
+			if ($constructor = $rc->getConstructor()) {
+				$this->addDependency($constructor->getFileName());
+				$arguments = Helpers::autowireArguments($constructor, $arguments, $this);
+			} elseif ($arguments) {
+				throw new ServiceCreationException("Unable to pass arguments, class $entity has no constructor.");
+			}
+			return $this->formatPhp("new $entity" . ($arguments ? '(?*)' : ''), array($arguments));
+
+		} elseif (!Nette\Utils\Arrays::isList($entity) || count($entity) !== 2) {
+			throw new ServiceCreationException(sprintf('Expected class, method or property, %s given.', PhpHelpers::dump($entity)));
+
+		} elseif (!preg_match('#^\$?' . PhpHelpers::PHP_IDENT . '\z#', $entity[1])) {
+			throw new ServiceCreationException("Expected function, method or property name, '$entity[1]' given.");
+
+		} elseif ($entity[0] === '') { // globalFunc
+			return $this->formatPhp("$entity[1](?*)", array($arguments));
+
+		} elseif ($entity[0] instanceof Statement) {
+			$inner = $this->formatPhp('?', array($entity[0]));
+			if (substr($inner, 0, 4) === 'new ') {
+				$inner = PHP_VERSION_ID < 50400 ? "current(array($inner))" : "($inner)";
+			}
+			return $this->formatPhp("$inner->?(?*)", array($entity[1], $arguments));
+
+		} elseif (Strings::contains($entity[1], '$')) { // property setter
+			Validators::assert($arguments, 'list:1', "setup arguments for '" . Nette\Utils\Callback::toString($entity) . "'");
+			if ($this->getServiceName($entity[0])) {
+				return $this->formatPhp('?->? = ?', array($entity[0], substr($entity[1], 1), $arguments[0]));
+			} else {
+				return $this->formatPhp($entity[0] . '::$? = ?', array(substr($entity[1], 1), $arguments[0]));
+			}
+
+		} elseif ($service = $this->getServiceName($entity[0])) { // service method
+			$class = $this->definitions[$service]->getImplement();
+			if (!$class || !method_exists($class, $entity[1])) {
+				$class = $this->definitions[$service]->getClass();
+			}
+			if ($class) {
+				$arguments = $this->autowireArguments($class, $entity[1], $arguments);
+			}
+			return $this->formatPhp('?->?(?*)', array($entity[0], $entity[1], $arguments));
+
+		} else { // static method
+			$arguments = $this->autowireArguments($entity[0], $entity[1], $arguments);
+			return $this->formatPhp("$entity[0]::$entity[1](?*)", array($arguments));
+		}
+	}
+
+
+	/**
+	 * Formats PHP statement.
+	 * @return string
+	 * @internal
+	 */
+	public function formatPhp($statement, $args)
+	{
+		$that = $this;
+		array_walk_recursive($args, function (& $val) use ($that) {
+			if ($val instanceof Statement) {
+				$val = ContainerBuilder::literal($that->formatStatement($val));
+
+			} elseif ($val === $that) {
+				$val = ContainerBuilder::literal('$this');
+
+			} elseif ($val instanceof ServiceDefinition) {
+				$val = '@' . current(array_keys($that->getDefinitions(), $val, TRUE));
+			}
+
+			if (!is_string($val)) {
+				return;
+
+			} elseif (substr($val, 0, 2) === '@@') {
+				$val = substr($val, 1);
+
+			} elseif (substr($val, 0, 1) === '@') {
+				$pair = explode('::', $val, 2);
+				$name = $that->getServiceName($pair[0]);
+				if (isset($pair[1]) && preg_match('#^[A-Z][A-Z0-9_]*\z#', $pair[1], $m)) {
+					$val = $that->getDefinition($name)->getClass() . '::' . $pair[1];
+				} else {
+					if ($name === ContainerBuilder::THIS_CONTAINER) {
+						$val = '$this';
+					} elseif ($name === $that->currentService) {
+						$val = '$service';
+					} else {
+						$val = $that->formatStatement(new Statement(array('@' . ContainerBuilder::THIS_CONTAINER, 'getService'), array($name)));
+					}
+					$val .= (isset($pair[1]) ? PhpHelpers::formatArgs('->?', array($pair[1])) : '');
+				}
+				$val = ContainerBuilder::literal($val);
+			}
+		});
+		return PhpHelpers::formatArgs($statement, $args);
 	}
 
 
@@ -741,9 +806,9 @@ class ContainerBuilder
 	/**
 	 * @return Nette\PhpGenerator\PhpLiteral
 	 */
-	public static function literal($code, array $args = NULL)
+	public static function literal($phpCode)
 	{
-		return new Nette\PhpGenerator\PhpLiteral($args === NULL ? $code : PhpHelpers::formatArgs($code, $args));
+		return new Nette\PhpGenerator\PhpLiteral($phpCode);
 	}
 
 
@@ -761,7 +826,6 @@ class ContainerBuilder
 			$entity = '@' . current(array_keys($this->definitions, $entity, TRUE));
 
 		} elseif (is_array($entity) && $entity[0] === $this) { // [$this, ...] -> [@container, ...]
-			trigger_error("Replace object ContainerBuilder in Statement entity with '@container'.", E_USER_DEPRECATED);
 			$entity[0] = '@' . self::THIS_CONTAINER;
 		}
 		return $entity; // Class, @service, [Class, member], [@service, member], [, globalFunc], Statement
@@ -775,7 +839,8 @@ class ContainerBuilder
 	 */
 	public function getServiceName($arg)
 	{
-		if (!is_string($arg) || !preg_match('#^@[\w\\\\.][^:]*\z#', $arg)) {
+		$arg = $this->normalizeEntity($arg);
+		if (!is_string($arg) || !preg_match('#^@[\w\\\\.].*\z#', $arg)) {
 			return FALSE;
 		}
 		$service = substr($arg, 1);
@@ -783,7 +848,7 @@ class ContainerBuilder
 			$service = $this->currentService;
 		}
 		if (Strings::contains($service, '\\')) {
-			if ($this->classList === FALSE) { // may be disabled by prepareClassList
+			if ($this->classes === FALSE) { // may be disabled by prepareClassList
 				return $service;
 			}
 			$res = $this->getByType($service);
@@ -797,65 +862,6 @@ class ContainerBuilder
 			throw new ServiceCreationException("Reference to missing service '$service'.");
 		}
 		return $service;
-	}
-
-
-	/**
-	 * Creates a list of arguments using autowiring.
-	 * @return array
-	 * @internal
-	 */
-	public function autowireArguments($class, $method, array $arguments)
-	{
-		$rc = new ReflectionClass($class);
-		if (!$rc->hasMethod($method)) {
-			if (!Nette\Utils\Arrays::isList($arguments)) {
-				throw new ServiceCreationException("Unable to pass specified arguments to $class::$method().");
-			}
-			return $arguments;
-		}
-
-		$rm = $rc->getMethod($method);
-		if (!$rm->isPublic()) {
-			throw new ServiceCreationException("$class::$method() is not callable.");
-		}
-		$this->addDependency($rm);
-		return Helpers::autowireArguments($rm, $arguments, $this);
-	}
-
-
-	/** @deprecated */
-	public function generateClasses($className = 'Container', $parentName = NULL)
-	{
-		trigger_error(__METHOD__ . ' is deprecated', E_USER_DEPRECATED);
-		return (new PhpGenerator($this))->generate($className);
-	}
-
-
-	/** @deprecated */
-	public function formatStatement(Statement $statement)
-	{
-		trigger_error(__METHOD__ . ' is deprecated', E_USER_DEPRECATED);
-		return (new PhpGenerator($this))->formatStatement($statement);
-	}
-
-
-	/** @deprecated */
-	public function formatPhp($statement, $args)
-	{
-		array_walk_recursive($args, function (&$val) {
-			if ($val instanceof Statement) {
-				$val = $this->completeStatement($val);
-
-			} elseif ($val === $this) {
-				trigger_error("Replace object ContainerBuilder in Statement arguments with '@container'.", E_USER_DEPRECATED);
-				$val = self::literal('$this');
-
-			} elseif ($val instanceof ServiceDefinition) {
-				$val = '@' . current(array_keys($this->getDefinitions(), $val, TRUE));
-			}
-		});
-		return (new PhpGenerator($this))->formatPhp($statement, $args);
 	}
 
 }

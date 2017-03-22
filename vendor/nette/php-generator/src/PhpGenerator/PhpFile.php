@@ -7,7 +7,7 @@
 
 namespace Nette\PhpGenerator;
 
-use Nette;
+use Nette\Object;
 use Nette\Utils\Strings;
 
 
@@ -19,69 +19,43 @@ use Nette\Utils\Strings;
  * - doc comments
  * - one or more namespaces
  */
-class PhpFile
+class PhpFile extends Object
 {
-	use Nette\SmartObject;
-
-	/** @var string|NULL */
-	private $comment;
+	/** @var string[] */
+	private $documents = array();
 
 	/** @var PhpNamespace[] */
-	private $namespaces = [];
+	private $namespaces = array();
 
 
 	/**
-	 * @param  string|NULL
-	 * @return static
+	 * @return string[]
 	 */
-	public function setComment($val)
+	public function getDocuments()
 	{
-		$this->comment = $val ? (string) $val : NULL;
-		return $this;
+		return $this->documents;
 	}
 
 
 	/**
-	 * @return string|NULL
+	 * @param  string[]
+	 * @return self
 	 */
-	public function getComment()
+	public function setDocuments(array $documents)
 	{
-		return $this->comment;
+		$this->documents = $documents;
+		return $this;
 	}
 
 
 	/**
 	 * @param  string
-	 * @return static
+	 * @return self
 	 */
-	public function addComment($val)
+	public function addDocument($document)
 	{
-		$this->comment .= $this->comment ? "\n$val" : $val;
+		$this->documents[] = $document;
 		return $this;
-	}
-
-
-	/** @deprecated */
-	public function setDocuments(array $s)
-	{
-		trigger_error(__METHOD__ . '() is deprecated, use similar setComment()', E_USER_DEPRECATED);
-		return $this->setComment(implode("\n", $s));
-	}
-
-
-	/** @deprecated */
-	public function getDocuments()
-	{
-		trigger_error(__METHOD__ . '() is deprecated, use similar getComment()', E_USER_DEPRECATED);
-		return $this->comment ? [$this->comment] : [];
-	}
-
-
-	/** @deprecated */
-	public function addDocument($s)
-	{
-		trigger_error(__METHOD__ . '() is deprecated, use addComment()', E_USER_DEPRECATED);
-		return $this->addComment($s);
 	}
 
 
@@ -145,7 +119,7 @@ class PhpFile
 
 		return Strings::normalize(
 			"<?php\n"
-			. ($this->comment ? "\n" . Helpers::formatDocComment($this->comment . "\n") . "\n" : '')
+			. ($this->documents ? "\n" . str_replace("\n", "\n * ", "/**\n" . implode("\n", $this->documents)) . "\n */\n\n" : '')
 			. implode("\n\n", $this->namespaces)
 		) . "\n";
 	}

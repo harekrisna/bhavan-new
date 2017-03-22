@@ -26,10 +26,8 @@ use Nette;
  * @property-read int|NULL $countdownOffset
  * @property-read int|NULL $length
  */
-class Paginator
+class Paginator extends Nette\Object
 {
-	use Nette\SmartObject;
-
 	/** @var int */
 	private $base = 1;
 
@@ -46,7 +44,7 @@ class Paginator
 	/**
 	 * Sets current page number.
 	 * @param  int
-	 * @return static
+	 * @return self
 	 */
 	public function setPage($page)
 	{
@@ -88,7 +86,7 @@ class Paginator
 	/**
 	 * Sets first page (base) number.
 	 * @param  int
-	 * @return static
+	 * @return self
 	 */
 	public function setBase($base)
 	{
@@ -151,7 +149,7 @@ class Paginator
 	/**
 	 * Sets the number of items to display on a single page.
 	 * @param  int
-	 * @return static
+	 * @return self
 	 */
 	public function setItemsPerPage($itemsPerPage)
 	{
@@ -173,7 +171,7 @@ class Paginator
 	/**
 	 * Sets the total number of items.
 	 * @param  int (or NULL as infinity)
-	 * @return static
+	 * @return self
 	 */
 	public function setItemCount($itemCount)
 	{

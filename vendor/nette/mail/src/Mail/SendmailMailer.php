@@ -13,11 +13,9 @@ use Nette;
 /**
  * Sends emails via the PHP internal mail() function.
  */
-class SendmailMailer implements IMailer
+class SendmailMailer extends Nette\Object implements IMailer
 {
-	use Nette\SmartObject;
-
-	/** @var string|NULL */
+	/** @var string */
 	public $commandArgs;
 
 
@@ -34,16 +32,16 @@ class SendmailMailer implements IMailer
 
 		$parts = explode(Message::EOL . Message::EOL, $tmp->generateMessage(), 2);
 
-		$args = [
+		$args = array(
 			str_replace(Message::EOL, PHP_EOL, $mail->getEncodedHeader('To')),
 			str_replace(Message::EOL, PHP_EOL, $mail->getEncodedHeader('Subject')),
 			str_replace(Message::EOL, PHP_EOL, $parts[1]),
 			str_replace(Message::EOL, PHP_EOL, $parts[0]),
-		];
+		);
 		if ($this->commandArgs) {
 			$args[] = (string) $this->commandArgs;
 		}
-		$res = Nette\Utils\Callback::invokeSafe('mail', $args, function ($message) use (&$info) {
+		$res = Nette\Utils\Callback::invokeSafe('mail', $args, function ($message) use (& $info) {
 			$info = ": $message";
 		});
 		if ($res === FALSE) {

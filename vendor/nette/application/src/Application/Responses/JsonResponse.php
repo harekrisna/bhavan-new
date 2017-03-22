@@ -13,11 +13,9 @@ use Nette;
 /**
  * JSON response used mainly for AJAX requests.
  */
-class JsonResponse implements Nette\Application\IResponse
+class JsonResponse extends Nette\Object implements Nette\Application\IResponse
 {
-	use Nette\SmartObject;
-
-	/** @var mixed */
+	/** @var array|\stdClass */
 	private $payload;
 
 	/** @var string */
@@ -25,18 +23,21 @@ class JsonResponse implements Nette\Application\IResponse
 
 
 	/**
-	 * @param  mixed   payload
-	 * @param  string  MIME content type
+	 * @param  array|\stdClass  payload
+	 * @param  string    MIME content type
 	 */
 	public function __construct($payload, $contentType = NULL)
 	{
+		if (!is_array($payload) && !is_object($payload)) {
+			throw new Nette\InvalidArgumentException(sprintf('Payload must be array or object class, %s given.', gettype($payload)));
+		}
 		$this->payload = $payload;
 		$this->contentType = $contentType ? $contentType : 'application/json';
 	}
 
 
 	/**
-	 * @return mixed
+	 * @return array|\stdClass
 	 */
 	public function getPayload()
 	{
@@ -60,7 +61,8 @@ class JsonResponse implements Nette\Application\IResponse
 	 */
 	public function send(Nette\Http\IRequest $httpRequest, Nette\Http\IResponse $httpResponse)
 	{
-		$httpResponse->setContentType($this->contentType, 'utf-8');
+		$httpResponse->setContentType($this->contentType);
+		$httpResponse->setExpiration(FALSE);
 		echo Nette\Utils\Json::encode($this->payload);
 	}
 

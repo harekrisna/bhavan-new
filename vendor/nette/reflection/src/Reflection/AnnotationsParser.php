@@ -1,8 +1,8 @@
 <?php
 
 /**
- * This file is part of the Nette Framework (https://nette.org)
- * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
+ * This file is part of the Nette Framework (http://nette.org)
+ * Copyright (c) 2004 David Grudl (http://davidgrudl.com)
  */
 
 namespace Nette\Reflection;
@@ -17,8 +17,6 @@ use Nette\Utils\Strings;
  */
 class AnnotationsParser
 {
-	use Nette\StaticClass;
-
 	/** @internal single & double quoted PHP string */
 	const RE_STRING = '\'(?:\\\\.|[^\'\\\\])*\'|"(?:\\\\.|[^"\\\\])*"';
 
@@ -32,7 +30,7 @@ class AnnotationsParser
 	public static $autoRefresh = TRUE;
 
 	/** @var array */
-	public static $inherited = ['description', 'param', 'return'];
+	public static $inherited = array('description', 'param', 'return');
 
 	/** @var array */
 	private static $cache;
@@ -42,6 +40,15 @@ class AnnotationsParser
 
 	/** @var Nette\Caching\IStorage */
 	private static $cacheStorage;
+
+
+	/**
+	 * Static class - cannot be instantiated.
+	 */
+	final public function __construct()
+	{
+		throw new Nette\StaticClassException;
+	}
 
 
 	/**
@@ -72,10 +79,6 @@ class AnnotationsParser
 			$file = $r->getDeclaringClass()->getFileName();
 		}
 
-		if (self::$useReflection === NULL) { // detects whether is reflection available
-			self::$useReflection = (bool) ClassType::from(__CLASS__)->getDocComment();
-		}
-
 		if (!self::$useReflection) { // auto-expire cache
 			if ($file && isset(self::$timestamps[$file]) && self::$timestamps[$file] !== filemtime($file)) {
 				unset(self::$cache[$type]);
@@ -87,6 +90,10 @@ class AnnotationsParser
 			return self::$cache[$type][$member];
 		}
 
+		if (self::$useReflection === NULL) { // detects whether is reflection available
+			self::$useReflection = (bool) ClassType::from(__CLASS__)->getDocComment();
+		}
+
 		if (self::$useReflection) {
 			$annotations = self::parseComment($r->getDocComment());
 
@@ -95,7 +102,7 @@ class AnnotationsParser
 
 			if (self::$cache === NULL) {
 				self::$cache = (array) $outerCache->load('list');
-				self::$timestamps = isset(self::$cache['*']) ? self::$cache['*'] : [];
+				self::$timestamps = isset(self::$cache['*']) ? self::$cache['*'] : array();
 			}
 
 			if (!isset(self::$cache[$type]) && $file) {
@@ -113,7 +120,7 @@ class AnnotationsParser
 			if (isset(self::$cache[$type][$member])) {
 				$annotations = self::$cache[$type][$member];
 			} else {
-				$annotations = [];
+				$annotations = array();
 			}
 		}
 
@@ -126,7 +133,7 @@ class AnnotationsParser
 				try {
 					$inherited = self::getAll($r->getPrototype());
 				} catch (\ReflectionException $e) {
-					$inherited = [];
+					$inherited = array();
 				}
 			}
 			$annotations += array_intersect_key($inherited, array_flip(self::$inherited));
@@ -155,13 +162,13 @@ class AnnotationsParser
 		}
 
 		$filename = $reflector->getFileName();
-		$parsed = static::getCache()->load($filename, function (&$dp) use ($filename) {
-			if (self::$autoRefresh) {
+		$parsed = static::getCache()->load($filename, function (& $dp) use ($filename) {
+			if (AnnotationsParser::$autoRefresh) {
 				$dp[Nette\Caching\Cache::FILES] = $filename;
 			}
-			return self::parsePhp(file_get_contents($filename));
+			return AnnotationsParser::parsePhp(file_get_contents($filename));
 		});
-		$uses = array_change_key_case((array) $tmp = &$parsed[$reflector->getName()]['use']);
+		$uses = array_change_key_case((array) $tmp = & $parsed[$reflector->getName()]['use']);
 		$parts = explode('\\', $name, 2);
 		$parts[0] = strtolower($parts[0]);
 		if (isset($uses[$parts[0]])) {
@@ -184,15 +191,15 @@ class AnnotationsParser
 	 */
 	private static function parseComment($comment)
 	{
-		static $tokens = ['true' => TRUE, 'false' => FALSE, 'null' => NULL, '' => TRUE];
+		static $tokens = array('true' => TRUE, 'false' => FALSE, 'null' => NULL, '' => TRUE);
 
-		$res = [];
+		$res = array();
 		$comment = preg_replace('#^\s*\*\s?#ms', '', trim($comment, '/*'));
 		$parts = preg_split('#^\s*(?=@'.self::RE_IDENTIFIER.')#m', $comment, 2);
 
 		$description = trim($parts[0]);
 		if ($description !== '') {
-			$res['description'] = [$description];
+			$res['description'] = array($description);
 		}
 
 		$matches = Strings::matchAll(
@@ -209,7 +216,7 @@ class AnnotationsParser
 			list(, $name, $value) = $match;
 
 			if (substr($value, 0, 1) === '(') {
-				$items = [];
+				$items = array();
 				$key = '';
 				$val = TRUE;
 				$value[0] = ',';
@@ -273,7 +280,7 @@ class AnnotationsParser
 
 		$tokens = @token_get_all($code);
 		$namespace = $class = $classLevel = $level = $docComment = NULL;
-		$res = $uses = [];
+		$res = $uses = array();
 
 		while (list(, $token) = each($tokens)) {
 			switch (is_array($token) ? $token[0] : $token) {
@@ -282,17 +289,16 @@ class AnnotationsParser
 					break;
 
 				case T_NAMESPACE:
-					$namespace = ltrim(self::fetch($tokens, [T_STRING, T_NS_SEPARATOR]) . '\\', '\\');
-					$uses = [];
+					$namespace = self::fetch($tokens, array(T_STRING, T_NS_SEPARATOR)) . '\\';
+					$uses = array();
 					break;
 
 				case T_CLASS:
 				case T_INTERFACE:
-				case T_TRAIT:
+				case PHP_VERSION_ID < 50400 ? -1 : T_TRAIT:
 					if ($name = self::fetch($tokens, T_STRING)) {
 						$class = $namespace . $name;
 						$classLevel = $level + 1;
-						$res[$class] = [];
 						if ($docComment) {
 							$res[$class]['class'] = $docComment;
 						}
@@ -319,24 +325,9 @@ class AnnotationsParser
 					break;
 
 				case T_USE:
-					while (!$class && ($name = self::fetch($tokens, [T_STRING, T_NS_SEPARATOR]))) {
-						$name = ltrim($name, '\\');
-						if (self::fetch($tokens, '{')) {
-							while ($suffix = self::fetch($tokens, [T_STRING, T_NS_SEPARATOR])) {
-								if (self::fetch($tokens, T_AS)) {
-									$uses[self::fetch($tokens, T_STRING)] = $name . $suffix;
-								} else {
-									$tmp = explode('\\', $suffix);
-									$uses[end($tmp)] = $name . $suffix;
-								}
-								if (!self::fetch($tokens, ',')) {
-									break;
-								}
-							}
-
-						} elseif (self::fetch($tokens, T_AS)) {
-							$uses[self::fetch($tokens, T_STRING)] = $name;
-
+					while (!$class && ($name = self::fetch($tokens, array(T_STRING, T_NS_SEPARATOR)))) {
+						if (self::fetch($tokens, T_AS)) {
+							$uses[self::fetch($tokens, T_STRING)] = ltrim($name, '\\');
 						} else {
 							$tmp = explode('\\', $name);
 							$uses[end($tmp)] = $name;
@@ -368,14 +359,14 @@ class AnnotationsParser
 	}
 
 
-	private static function fetch(&$tokens, $take)
+	private static function fetch(& $tokens, $take)
 	{
 		$res = NULL;
 		while ($token = current($tokens)) {
-			list($token, $s) = is_array($token) ? $token : [$token, $token];
+			list($token, $s) = is_array($token) ? $token : array($token, $token);
 			if (in_array($token, (array) $take, TRUE)) {
 				$res .= $s;
-			} elseif (!in_array($token, [T_DOC_COMMENT, T_WHITESPACE, T_COMMENT], TRUE)) {
+			} elseif (!in_array($token, array(T_DOC_COMMENT, T_WHITESPACE, T_COMMENT), TRUE)) {
 				break;
 			}
 			next($tokens);

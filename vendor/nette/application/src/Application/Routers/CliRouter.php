@@ -14,10 +14,8 @@ use Nette\Application;
 /**
  * The unidirectional router for CLI. (experimental)
  */
-class CliRouter implements Application\IRouter
+class CliRouter extends Nette\Object implements Application\IRouter
 {
-	use Nette\SmartObject;
-
 	const PRESENTER_KEY = 'action';
 
 	/** @var array */
@@ -27,7 +25,7 @@ class CliRouter implements Application\IRouter
 	/**
 	 * @param  array   default values
 	 */
-	public function __construct($defaults = [])
+	public function __construct($defaults = array())
 	{
 		$this->defaults = $defaults;
 	}
@@ -43,7 +41,7 @@ class CliRouter implements Application\IRouter
 			return NULL;
 		}
 
-		$names = [self::PRESENTER_KEY];
+		$names = array(self::PRESENTER_KEY);
 		$params = $this->defaults;
 		$args = $_SERVER['argv'];
 		array_shift($args);
@@ -79,10 +77,10 @@ class CliRouter implements Application\IRouter
 		if (!isset($params[self::PRESENTER_KEY])) {
 			throw new Nette\InvalidStateException('Missing presenter & action in route definition.');
 		}
-		list($module, $presenter) = Nette\Application\Helpers::splitName($params[self::PRESENTER_KEY]);
-		if ($module !== '') {
-			$params[self::PRESENTER_KEY] = $presenter;
-			$presenter = $module;
+		$presenter = $params[self::PRESENTER_KEY];
+		if ($a = strrpos($presenter, ':')) {
+			$params[self::PRESENTER_KEY] = substr($presenter, $a + 1);
+			$presenter = substr($presenter, 0, $a);
 		}
 
 		return new Application\Request(
@@ -95,10 +93,11 @@ class CliRouter implements Application\IRouter
 
 	/**
 	 * This router is only unidirectional.
-	 * @return void
+	 * @return NULL
 	 */
 	public function constructUrl(Application\Request $appRequest, Nette\Http\Url $refUrl)
 	{
+		return NULL;
 	}
 
 

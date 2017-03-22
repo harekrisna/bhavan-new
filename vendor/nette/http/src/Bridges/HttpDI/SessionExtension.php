@@ -1,8 +1,8 @@
 <?php
 
 /**
- * This file is part of the Nette Framework (https://nette.org)
- * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
+ * This file is part of the Nette Framework (http://nette.org)
+ * Copyright (c) 2004 David Grudl (http://davidgrudl.com)
  */
 
 namespace Nette\Bridges\HttpDI;
@@ -15,59 +15,55 @@ use Nette;
  */
 class SessionExtension extends Nette\DI\CompilerExtension
 {
-	public $defaults = [
+	public $defaults = array(
 		'debugger' => FALSE,
 		'autoStart' => 'smart', // true|false|smart
 		'expiration' => NULL,
-	];
+	);
 
 	/** @var bool */
 	private $debugMode;
 
-	/** @var bool */
-	private $cliMode;
 
-
-	public function __construct($debugMode = FALSE, $cliMode = FALSE)
+	public function __construct($debugMode = FALSE)
 	{
 		$this->debugMode = $debugMode;
-		$this->cliMode = $cliMode;
 	}
 
 
 	public function loadConfiguration()
 	{
-		$builder = $this->getContainerBuilder();
+		$container = $this->getContainerBuilder();
 		$config = $this->getConfig() + $this->defaults;
 		$this->setConfig($config);
 
-		$session = $builder->addDefinition($this->prefix('session'))
-			->setClass(Nette\Http\Session::class);
+		$session = $container->addDefinition($this->prefix('session'))
+			->setClass('Nette\Http\Session');
 
 		if ($config['expiration']) {
-			$session->addSetup('setExpiration', [$config['expiration']]);
+			$session->addSetup('setExpiration', array($config['expiration']));
 		}
 
 		if ($this->debugMode && $config['debugger']) {
-			$session->addSetup('@Tracy\Bar::addPanel', [
-				new Nette\DI\Statement(Nette\Bridges\HttpTracy\SessionPanel::class)
-			]);
+			$session->addSetup('@Tracy\Bar::addPanel', array(
+				new Nette\DI\Statement('Nette\Bridges\HttpTracy\SessionPanel'),
+			));
 		}
 
 		unset($config['expiration'], $config['autoStart'], $config['debugger']);
 		if (!empty($config)) {
-			$session->addSetup('setOptions', [$config]);
+			$session->addSetup('setOptions', array($config));
 		}
 
 		if ($this->name === 'session') {
-			$builder->addAlias('session', $this->prefix('session'));
+			$container->addAlias('session', $this->prefix('session'));
 		}
 	}
 
 
 	public function afterCompile(Nette\PhpGenerator\ClassType $class)
 	{
-		if ($this->cliMode) {
+		if (PHP_SAPI === 'cli') {
 			return;
 		}
 
@@ -76,10 +72,10 @@ class SessionExtension extends Nette\DI\CompilerExtension
 		$name = $this->prefix('session');
 
 		if ($config['autoStart'] === 'smart') {
-			$initialize->addBody('$this->getService(?)->exists() && $this->getService(?)->start();', [$name, $name]);
+			$initialize->addBody('$this->getService(?)->exists() && $this->getService(?)->start();', array($name, $name));
 
 		} elseif ($config['autoStart']) {
-			$initialize->addBody('$this->getService(?)->start();', [$name]);
+			$initialize->addBody('$this->getService(?)->start();', array($name));
 		}
 	}
 

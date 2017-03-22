@@ -7,17 +7,15 @@
 
 namespace Nette\Database\Conventions;
 
-use Nette;
 use Nette\Database\IConventions;
+use Nette\Object;
 
 
 /**
  * Conventions based on static definition.
  */
-class StaticConventions implements IConventions
+class StaticConventions extends Object implements IConventions
 {
-	use Nette\SmartObject;
-
 	/** @var string */
 	protected $primary;
 
@@ -51,20 +49,20 @@ class StaticConventions implements IConventions
 	public function getHasManyReference($table, $key)
 	{
 		$table = $this->getColumnFromTable($table);
-		return [
+		return array(
 			sprintf($this->table, $key, $table),
 			sprintf($this->foreign, $table, $key),
-		];
+		);
 	}
 
 
 	public function getBelongsToReference($table, $key)
 	{
 		$table = $this->getColumnFromTable($table);
-		return [
+		return array(
 			sprintf($this->table, $key, $table),
 			sprintf($this->foreign, $key, $table),
-		];
+		);
 	}
 
 

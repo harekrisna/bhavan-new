@@ -1,8 +1,8 @@
 <?php
 
 /**
- * This file is part of the Nette Framework (https://nette.org)
- * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
+ * This file is part of the Nette Framework (http://nette.org)
+ * Copyright (c) 2004 David Grudl (http://davidgrudl.com)
  */
 
 namespace Nette\Security;
@@ -15,16 +15,10 @@ use Nette;
  *
  * @property   mixed $id
  * @property   array $roles
- * @property   array $data
+ * @property-read array $data
  */
-class Identity implements IIdentity
+class Identity extends Nette\Object implements IIdentity
 {
-	use Nette\SmartObject {
-		__get as private parentGet;
-		__set as private parentSet;
-		__isset as private parentIsSet;
-	}
-
 	/** @var mixed */
 	private $id;
 
@@ -51,7 +45,7 @@ class Identity implements IIdentity
 	/**
 	 * Sets the ID of user.
 	 * @param  mixed
-	 * @return static
+	 * @return self
 	 */
 	public function setId($id)
 	{
@@ -73,7 +67,7 @@ class Identity implements IIdentity
 	/**
 	 * Sets a list of roles that the user is a member of.
 	 * @param  array
-	 * @return static
+	 * @return self
 	 */
 	public function setRoles(array $roles)
 	{
@@ -110,8 +104,8 @@ class Identity implements IIdentity
 	 */
 	public function __set($key, $value)
 	{
-		if ($this->parentIsSet($key)) {
-			$this->parentSet($key, $value);
+		if (parent::__isset($key)) {
+			parent::__set($key, $value);
 
 		} else {
 			$this->data[$key] = $value;
@@ -126,8 +120,8 @@ class Identity implements IIdentity
 	 */
 	public function &__get($key)
 	{
-		if ($this->parentIsSet($key)) {
-			return $this->parentGet($key);
+		if (parent::__isset($key)) {
+			return parent::__get($key);
 
 		} else {
 			return $this->data[$key];
@@ -142,7 +136,19 @@ class Identity implements IIdentity
 	 */
 	public function __isset($key)
 	{
-		return isset($this->data[$key]) || $this->parentIsSet($key);
+		return isset($this->data[$key]) || parent::__isset($key);
+	}
+
+
+	/**
+	 * Removes property.
+	 * @param  string  property name
+	 * @return void
+	 * @throws Nette\MemberAccessException
+	 */
+	public function __unset($name)
+	{
+		Nette\Utils\ObjectMixin::remove($this, $name);
 	}
 
 }

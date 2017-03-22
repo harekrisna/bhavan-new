@@ -15,14 +15,12 @@ use Nette\Utils\Html;
 /**
  * Forms helpers.
  */
-class Helpers
+class Helpers extends Nette\Object
 {
-	use Nette\StaticClass;
-
-	private static $unsafeNames = [
+	private static $unsafeNames = array(
 		'attributes', 'children', 'elements', 'focus', 'length', 'reset', 'style', 'submit', 'onsubmit', 'form',
 		'presenter', 'action',
-	];
+	);
 
 
 	/**
@@ -35,13 +33,13 @@ class Helpers
 	 */
 	public static function extractHttpData(array $data, $htmlName, $type)
 	{
-		$name = explode('[', str_replace(['[]', ']', '.'], ['', '', '_'], $htmlName));
+		$name = explode('[', str_replace(array('[]', ']', '.'), array('', '', '_'), $htmlName));
 		$data = Nette\Utils\Arrays::get($data, $name, NULL);
 		$itype = $type & ~Form::DATA_KEYS;
 
 		if (substr($htmlName, -2) === '[]') {
 			if (!is_array($data)) {
-				return [];
+				return array();
 			}
 			foreach ($data as $k => $v) {
 				$data[$k] = $v = static::sanitize($itype, $v);
@@ -98,7 +96,7 @@ class Helpers
 	 */
 	public static function exportRules(Rules $rules)
 	{
-		$payload = [];
+		$payload = array();
 		foreach ($rules as $rule) {
 			if (!is_string($op = $rule->validator)) {
 				if (!Nette\Utils\Callback::isStatic($op)) {
@@ -107,33 +105,27 @@ class Helpers
 				$op = Nette\Utils\Callback::toString($op);
 			}
 			if ($rule->branch) {
-				$item = [
+				$item = array(
 					'op' => ($rule->isNegative ? '~' : '') . $op,
 					'rules' => static::exportRules($rule->branch),
 					'control' => $rule->control->getHtmlName(),
-				];
+				);
 				if ($rule->branch->getToggles()) {
 					$item['toggle'] = $rule->branch->getToggles();
-				} elseif (!$item['rules']) {
-					continue;
 				}
 			} else {
-				$item = ['op' => ($rule->isNegative ? '~' : '') . $op, 'msg' => Validator::formatMessage($rule, FALSE)];
+				$item = array('op' => ($rule->isNegative ? '~' : '') . $op, 'msg' => Validator::formatMessage($rule, FALSE));
 			}
 
 			if (is_array($rule->arg)) {
-				$item['arg'] = [];
 				foreach ($rule->arg as $key => $value) {
-					$item['arg'][$key] = $value instanceof IControl ? ['control' => $value->getHtmlName()] : $value;
+					$item['arg'][$key] = $value instanceof IControl ? array('control' => $value->getHtmlName()) : $value;
 				}
 			} elseif ($rule->arg !== NULL) {
-				$item['arg'] = $rule->arg instanceof IControl ? ['control' => $rule->arg->getHtmlName()] : $rule->arg;
+				$item['arg'] = $rule->arg instanceof IControl ? array('control' => $rule->arg->getHtmlName()) : $rule->arg;
 			}
 
 			$payload[] = $item;
-		}
-		if ($payload && $rules->isOptional()) {
-			array_unshift($payload, ['op' => 'optional']);
 		}
 		return $payload;
 	}
@@ -149,7 +141,7 @@ class Helpers
 		$res = '';
 		$input = Html::el();
 		$label = Html::el();
-		list($wrapper, $wrapperEnd) = $wrapper instanceof Html ? [$wrapper->startTag(), $wrapper->endTag()] : [(string) $wrapper, ''];
+		list($wrapper, $wrapperEnd) = $wrapper instanceof Html ? array($wrapper->startTag(), $wrapper->endTag()) : array((string) $wrapper, '');
 
 		foreach ($items as $value => $caption) {
 			foreach ($inputAttrs as $k => $v) {
@@ -162,7 +154,7 @@ class Helpers
 			$res .= ($res === '' && $wrapperEnd === '' ? '' : $wrapper)
 				. $labelTag . $label->attributes() . '>'
 				. $inputTag . $input->attributes() . (Html::$xhtml ? ' />' : '>')
-				. ($caption instanceof Nette\Utils\IHtmlString ? $caption : htmlspecialchars($caption, ENT_NOQUOTES, 'UTF-8'))
+				. ($caption instanceof Html ? $caption : htmlspecialchars($caption, ENT_NOQUOTES, 'UTF-8'))
 				. '</label>'
 				. $wrapperEnd;
 		}
@@ -186,7 +178,7 @@ class Helpers
 				$res .= Html::el('optgroup')->label($group)->startTag();
 				$tmp = '</optgroup>';
 			} else {
-				$subitems = [$group => $subitems];
+				$subitems = array($group => $subitems);
 			}
 			foreach ($subitems as $value => $caption) {
 				$option->value = $value;
@@ -211,7 +203,7 @@ class Helpers
 
 	private static function prepareAttrs($attrs, $name)
 	{
-		$dynamic = [];
+		$dynamic = array();
 		foreach ((array) $attrs as $k => $v) {
 			$p = str_split($k, strlen($k) - 1);
 			if ($p[1] === '?' || $p[1] === ':') {
@@ -225,7 +217,7 @@ class Helpers
 				}
 			}
 		}
-		return [$dynamic, '<' . $name . Html::el(NULL, $attrs)->attributes()];
+		return array($dynamic, '<' . $name . Html::el(NULL, $attrs)->attributes());
 	}
 
 }

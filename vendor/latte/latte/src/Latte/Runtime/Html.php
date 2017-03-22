@@ -13,10 +13,8 @@ use Latte;
 /**
  * HTML literal.
  */
-class Html implements IHtmlString
+class Html extends Latte\Object implements IHtmlString
 {
-	use Latte\Strict;
-
 	/** @var string */
 	private $value;
 

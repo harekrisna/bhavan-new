@@ -1,8 +1,8 @@
 <?php
 
 /**
- * This file is part of the Nette Framework (https://nette.org)
- * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
+ * This file is part of the Nette Framework (http://nette.org)
+ * Copyright (c) 2004 David Grudl (http://davidgrudl.com)
  */
 
 namespace Nette\DI;
@@ -12,19 +12,9 @@ use Nette;
 
 /**
  * Definition used by ContainerBuilder.
- *
- * @property string|NULL $class
- * @property Statement|NULL $factory
- * @property Statement[] $setup
  */
-class ServiceDefinition
+class ServiceDefinition extends Nette\Object
 {
-	const
-		IMPLEMENT_MODE_CREATE = 'create',
-		IMPLEMENT_MODE_GET = 'get';
-
-	use Nette\SmartObject;
-
 	/** @var string|NULL  class or interface name */
 	private $class;
 
@@ -32,15 +22,15 @@ class ServiceDefinition
 	private $factory;
 
 	/** @var Statement[] */
-	private $setup = [];
+	private $setup = array();
 
 	/** @var array */
-	public $parameters = [];
+	public $parameters = array();
 
 	/** @var array */
-	private $tags = [];
+	private $tags = array();
 
-	/** @var bool|string[] */
+	/** @var bool */
 	private $autowired = TRUE;
 
 	/** @var bool */
@@ -50,19 +40,15 @@ class ServiceDefinition
 	private $implement;
 
 	/** @var string|NULL  create | get */
-	private $implementMode;
-
-	/** @var callable */
-	private $notifier = 'pi'; // = noop
+	private $implementType;
 
 
 	/**
-	 * @return static
+	 * @return self
 	 */
-	public function setClass($class, array $args = [])
+	public function setClass($class, array $args = array())
 	{
-		call_user_func($this->notifier);
-		$this->class = $class ? ltrim($class, '\\') : NULL;
+		$this->class = ltrim($class, '\\');
 		if ($args) {
 			$this->setFactory($class, $args);
 		}
@@ -80,11 +66,10 @@ class ServiceDefinition
 
 
 	/**
-	 * @return static
+	 * @return self
 	 */
-	public function setFactory($factory, array $args = [])
+	public function setFactory($factory, array $args = array())
 	{
-		call_user_func($this->notifier);
 		$this->factory = $factory instanceof Statement ? $factory : new Statement($factory, $args);
 		return $this;
 	}
@@ -109,9 +94,9 @@ class ServiceDefinition
 
 
 	/**
-	 * @return static
+	 * @return self
 	 */
-	public function setArguments(array $args = [])
+	public function setArguments(array $args = array())
 	{
 		if (!$this->factory) {
 			$this->factory = new Statement($this->class);
@@ -123,7 +108,7 @@ class ServiceDefinition
 
 	/**
 	 * @param  Statement[]
-	 * @return static
+	 * @return self
 	 */
 	public function setSetup(array $setup)
 	{
@@ -147,9 +132,9 @@ class ServiceDefinition
 
 
 	/**
-	 * @return static
+	 * @return self
 	 */
-	public function addSetup($entity, array $args = [])
+	public function addSetup($entity, array $args = array())
 	{
 		$this->setup[] = $entity instanceof Statement ? $entity : new Statement($entity, $args);
 		return $this;
@@ -157,7 +142,7 @@ class ServiceDefinition
 
 
 	/**
-	 * @return static
+	 * @return self
 	 */
 	public function setParameters(array $params)
 	{
@@ -176,7 +161,7 @@ class ServiceDefinition
 
 
 	/**
-	 * @return static
+	 * @return self
 	 */
 	public function setTags(array $tags)
 	{
@@ -195,7 +180,7 @@ class ServiceDefinition
 
 
 	/**
-	 * @return static
+	 * @return self
 	 */
 	public function addTag($tag, $attr = TRUE)
 	{
@@ -214,19 +199,18 @@ class ServiceDefinition
 
 
 	/**
-	 * @param  bool|string|string[]
-	 * @return static
+	 * @param  bool
+	 * @return self
 	 */
 	public function setAutowired($state = TRUE)
 	{
-		call_user_func($this->notifier);
-		$this->autowired = is_string($state) || is_array($state) ? (array) $state : (bool) $state;
+		$this->autowired = (bool) $state;
 		return $this;
 	}
 
 
 	/**
-	 * @return bool|string[]
+	 * @return bool
 	 */
 	public function isAutowired()
 	{
@@ -235,17 +219,8 @@ class ServiceDefinition
 
 
 	/**
-	 * @return bool|string[]
-	 */
-	public function getAutowired()
-	{
-		return $this->autowired;
-	}
-
-
-	/**
 	 * @param  bool
-	 * @return static
+	 * @return self
 	 */
 	public function setDynamic($state = TRUE)
 	{
@@ -265,11 +240,10 @@ class ServiceDefinition
 
 	/**
 	 * @param  string
-	 * @return static
+	 * @return self
 	 */
 	public function setImplement($interface)
 	{
-		call_user_func($this->notifier);
 		$this->implement = ltrim($interface, '\\');
 		return $this;
 	}
@@ -286,14 +260,14 @@ class ServiceDefinition
 
 	/**
 	 * @param  string
-	 * @return static
+	 * @return self
 	 */
-	public function setImplementMode($mode)
+	public function setImplementType($type)
 	{
-		if (!in_array($mode, [self::IMPLEMENT_MODE_CREATE, self::IMPLEMENT_MODE_GET], TRUE)) {
+		if (!in_array($type, array('get', 'create'), TRUE)) {
 			throw new Nette\InvalidArgumentException('Argument must be get|create.');
 		}
-		$this->implementMode = $mode;
+		$this->implementType = $type;
 		return $this;
 	}
 
@@ -301,29 +275,29 @@ class ServiceDefinition
 	/**
 	 * @return string|NULL
 	 */
-	public function getImplementMode()
-	{
-		return $this->implementMode;
-	}
-
-
-	/** @deprecated */
-	public function setImplementType($type)
-	{
-		trigger_error(__METHOD__ . '() is deprecated, use setImplementMode()', E_USER_DEPRECATED);
-		return $this->setImplementMode($type);
-	}
-
-
-	/** @deprecated */
 	public function getImplementType()
 	{
-		trigger_error(__METHOD__ . '() is deprecated, use getImplementMode()', E_USER_DEPRECATED);
-		return $this->implementMode;
+		return $this->implementType;
 	}
 
 
-	/** @return static */
+	/** @deprecated */
+	public function setShared($on)
+	{
+		trigger_error(__METHOD__ . '() is deprecated.', E_USER_DEPRECATED);
+		$this->autowired = $on ? $this->autowired : FALSE;
+		return $this;
+	}
+
+
+	/** @deprecated */
+	public function isShared()
+	{
+		trigger_error(__METHOD__ . '() is deprecated.', E_USER_DEPRECATED);
+	}
+
+
+	/** @return self */
 	public function setInject($state = TRUE)
 	{
 		//trigger_error(__METHOD__ . '() is deprecated.', E_USER_DEPRECATED);
@@ -336,23 +310,6 @@ class ServiceDefinition
 	{
 		//trigger_error(__METHOD__ . '() is deprecated.', E_USER_DEPRECATED);
 		return $this->getTag(Extensions\InjectExtension::TAG_INJECT);
-	}
-
-
-	/**
-	 * @internal
-	 */
-	public function setNotifier(callable $notifier)
-	{
-		$this->notifier = $notifier;
-	}
-
-
-	public function __clone()
-	{
-		$this->factory = unserialize(serialize($this->factory));
-		$this->setup = unserialize(serialize($this->setup));
-		$this->notifier = 'pi';
 	}
 
 }

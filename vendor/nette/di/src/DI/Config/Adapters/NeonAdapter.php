@@ -1,8 +1,8 @@
 <?php
 
 /**
- * This file is part of the Nette Framework (https://nette.org)
- * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
+ * This file is part of the Nette Framework (http://nette.org)
+ * Copyright (c) 2004 David Grudl (http://davidgrudl.com)
  */
 
 namespace Nette\DI\Config\Adapters;
@@ -16,10 +16,8 @@ use Nette\Neon;
 /**
  * Reading and generating NEON files.
  */
-class NeonAdapter implements Nette\DI\Config\IAdapter
+class NeonAdapter extends Nette\Object implements Nette\DI\Config\IAdapter
 {
-	use Nette\SmartObject;
-
 	/** @internal */
 	const INHERITING_SEPARATOR = '<', // child < parent
 		PREVENT_MERGING = '!';
@@ -35,22 +33,18 @@ class NeonAdapter implements Nette\DI\Config\IAdapter
 	}
 
 
-	/**
-	 * @return array
-	 * @throws Nette\InvalidStateException
-	 */
-	public function process(array $arr)
+	private function process(array $arr)
 	{
-		$res = [];
+		$res = array();
 		foreach ($arr as $key => $val) {
-			if (is_string($key) && substr($key, -1) === self::PREVENT_MERGING) {
+			if (substr($key, -1) === self::PREVENT_MERGING) {
 				if (!is_array($val) && $val !== NULL) {
 					throw new Nette\InvalidStateException("Replacing operator is available only for arrays, item '$key' is not array.");
 				}
 				$key = substr($key, 0, -1);
 				$val[Helpers::EXTENDS_KEY] = Helpers::OVERWRITE;
 
-			} elseif (is_string($key) && preg_match('#^(\S+)\s+' . self::INHERITING_SEPARATOR . '\s+(\S+)\z#', $key, $matches)) {
+			} elseif (preg_match('#^(\S+)\s+' . self::INHERITING_SEPARATOR . '\s+(\S+)\z#', $key, $matches)) {
 				if (!is_array($val) && $val !== NULL) {
 					throw new Nette\InvalidStateException("Inheritance operator is available only for arrays, item '$key' is not array.");
 				}
@@ -68,13 +62,13 @@ class NeonAdapter implements Nette\DI\Config\IAdapter
 					$tmp = NULL;
 					foreach ($this->process($val->attributes) as $st) {
 						$tmp = new Statement(
-							$tmp === NULL ? $st->getEntity() : [$tmp, ltrim($st->getEntity(), ':')],
+							$tmp === NULL ? $st->getEntity() : array($tmp, ltrim($st->getEntity(), ':')),
 							$st->arguments
 						);
 					}
 					$val = $tmp;
 				} else {
-					$tmp = $this->process([$val->value]);
+					$tmp = $this->process(array($val->value));
 					$val = new Statement($tmp[0], $this->process($val->attributes));
 				}
 			}
@@ -90,7 +84,7 @@ class NeonAdapter implements Nette\DI\Config\IAdapter
 	 */
 	public function dump(array $data)
 	{
-		$tmp = [];
+		$tmp = array();
 		foreach ($data as $name => $secData) {
 			if ($parent = Helpers::takeParent($secData)) {
 				$name .= ' ' . self::INHERITING_SEPARATOR . ' ' . $parent;
@@ -99,9 +93,9 @@ class NeonAdapter implements Nette\DI\Config\IAdapter
 		}
 		array_walk_recursive(
 			$tmp,
-			function (&$val) {
+			function (& $val) {
 				if ($val instanceof Statement) {
-					$val = self::statementToEntity($val);
+					$val = NeonAdapter::statementToEntity($val);
 				}
 			}
 		);
@@ -112,27 +106,28 @@ class NeonAdapter implements Nette\DI\Config\IAdapter
 
 	/**
 	 * @return Neon\Entity
+	 * @internal
 	 */
-	private static function statementToEntity(Statement $val)
+	public static function statementToEntity(Statement $val)
 	{
 		array_walk_recursive(
 			$val->arguments,
-			function (&$val) {
+			function (& $val) {
 				if ($val instanceof Statement) {
-					$val = self::statementToEntity($val);
+					$val = NeonAdapter::statementToEntity($val);
 				}
 			}
 		);
-		if (is_array($val->getEntity()) && $val->getEntity()[0] instanceof Statement) {
+		if (is_array($val->entity) && $val->entity[0] instanceof Statement) {
 			return new Neon\Entity(
 				Neon\Neon::CHAIN,
-				[
-					self::statementToEntity($val->getEntity()[0]),
-					new Neon\Entity('::' . $val->getEntity()[1], $val->arguments)
-				]
+				array(
+					self::statementToEntity($val->entity[0]),
+					new Neon\Entity('::' . $val->entity[1], $val->arguments)
+				)
 			);
 		} else {
-			return new Neon\Entity($val->getEntity(), $val->arguments);
+			return new Neon\Entity($val->entity, $val->arguments);
 		}
 	}
 

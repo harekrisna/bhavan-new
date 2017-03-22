@@ -13,65 +13,35 @@ use Latte;
 /**
  * Template loader.
  */
-class StringLoader implements Latte\ILoader
+class StringLoader extends Latte\Object implements Latte\ILoader
 {
-	use Latte\Strict;
-
-	/** @var array|NULL [name => content] */
-	private $templates;
-
-
-	public function __construct(array $templates = NULL)
-	{
-		$this->templates = $templates;
-	}
-
 
 	/**
 	 * Returns template source code.
 	 * @return string
 	 */
-	public function getContent($name)
+	public function getContent($content)
 	{
-		if ($this->templates === NULL) {
-			return $name;
-		} elseif (isset($this->templates[$name])) {
-			return $this->templates[$name];
-		} else {
-			throw new \RuntimeException("Missing template '$name'.");
-		}
+		return $content;
 	}
 
 
 	/**
 	 * @return bool
 	 */
-	public function isExpired($name, $time)
+	public function isExpired($content, $time)
 	{
 		return FALSE;
 	}
 
 
 	/**
-	 * Returns referred template name.
+	 * Returns fully qualified template name.
 	 * @return string
 	 */
-	public function getReferredName($name, $referringName)
+	public function getChildName($content, $parent = NULL)
 	{
-		if ($this->templates === NULL) {
-			throw new \LogicException("Missing template '$name'.");
-		}
-		return $name;
-	}
-
-
-	/**
-	 * Returns unique identifier for caching.
-	 * @return string
-	 */
-	public function getUniqueId($name)
-	{
-		return $this->getContent($name);
+		return $content;
 	}
 
 }

@@ -14,10 +14,8 @@ use Nette\Application;
 /**
  * The bidirectional route for trivial routing via query parameters.
  */
-class SimpleRouter implements Application\IRouter
+class SimpleRouter extends Nette\Object implements Application\IRouter
 {
-	use Nette\SmartObject;
-
 	const PRESENTER_KEY = 'presenter';
 	const MODULE_KEY = 'module';
 
@@ -35,17 +33,17 @@ class SimpleRouter implements Application\IRouter
 	 * @param  array   default values
 	 * @param  int     flags
 	 */
-	public function __construct($defaults = [], $flags = 0)
+	public function __construct($defaults = array(), $flags = 0)
 	{
 		if (is_string($defaults)) {
-			list($presenter, $action) = Nette\Application\Helpers::splitName($defaults);
-			if (!$presenter) {
+			$a = strrpos($defaults, ':');
+			if (!$a) {
 				throw new Nette\InvalidArgumentException("Argument must be array or string in format Presenter:action, '$defaults' given.");
 			}
-			$defaults = [
-				self::PRESENTER_KEY => $presenter,
-				'action' => $action === '' ? Application\UI\Presenter::DEFAULT_ACTION : $action,
-			];
+			$defaults = array(
+				self::PRESENTER_KEY => substr($defaults, 0, $a),
+				'action' => $a === strlen($defaults) - 1 ? Application\UI\Presenter::DEFAULT_ACTION : substr($defaults, $a + 1),
+			);
 		}
 
 		if (isset($defaults[self::MODULE_KEY])) {
@@ -55,9 +53,6 @@ class SimpleRouter implements Application\IRouter
 
 		$this->defaults = $defaults;
 		$this->flags = $flags;
-		if ($flags & self::SECURED) {
-			trigger_error('IRouter::SECURED is deprecated, router by default keeps the used protocol.', E_USER_DEPRECATED);
-		}
 	}
 
 
@@ -87,7 +82,7 @@ class SimpleRouter implements Application\IRouter
 			$params,
 			$httpRequest->getPost(),
 			$httpRequest->getFiles(),
-			[Application\Request::SECURED => $httpRequest->isSecured()]
+			array(Application\Request::SECURED => $httpRequest->isSecured())
 		);
 	}
 
@@ -118,7 +113,7 @@ class SimpleRouter implements Application\IRouter
 			}
 		}
 
-		$url = ($this->flags & self::SECURED ? 'https://' : $refUrl->getScheme() . '://') . $refUrl->getAuthority() . $refUrl->getPath();
+		$url = ($this->flags & self::SECURED ? 'https://' : 'http://') . $refUrl->getAuthority() . $refUrl->getPath();
 		$sep = ini_get('arg_separator.input');
 		$query = http_build_query($params, '', $sep ? $sep[0] : '&');
 		if ($query != '') { // intentionally ==

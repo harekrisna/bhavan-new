@@ -16,9 +16,8 @@ use Nette\Forms\Form;
  * Runtime helpers for Latte.
  * @internal
  */
-class Runtime
+class Runtime extends Nette\Object
 {
-	use Nette\StaticClass;
 
 	/**
 	 * Renders form begin.
@@ -26,14 +25,13 @@ class Runtime
 	 */
 	public static function renderFormBegin(Form $form, array $attrs, $withTags = TRUE)
 	{
-		$form->fireRenderEvents();
 		foreach ($form->getControls() as $control) {
 			$control->setOption('rendered', FALSE);
 		}
 		$el = $form->getElementPrototype();
 		$el->action = (string) $el->action;
 		$el = clone $el;
-		if ($form->isMethod('get')) {
+		if (strcasecmp($form->getMethod(), 'get') === 0) {
 			$el->action = preg_replace('~\?[^#]*~', '', $el->action, 1);
 		}
 		$el->addAttributes($attrs);
@@ -48,23 +46,23 @@ class Runtime
 	public static function renderFormEnd(Form $form, $withTags = TRUE)
 	{
 		$s = '';
-		if ($form->isMethod('get')) {
+		if (strcasecmp($form->getMethod(), 'get') === 0) {
 			foreach (preg_split('#[;&]#', parse_url($form->getElementPrototype()->action, PHP_URL_QUERY), NULL, PREG_SPLIT_NO_EMPTY) as $param) {
 				$parts = explode('=', $param, 2);
 				$name = urldecode($parts[0]);
 				if (!isset($form[$name])) {
-					$s .= Html::el('input', ['type' => 'hidden', 'name' => $name, 'value' => urldecode($parts[1])]);
+					$s .= Html::el('input', array('type' => 'hidden', 'name' => $name, 'value' => urldecode($parts[1])));
 				}
 			}
 		}
 
-		foreach ($form->getControls() as $control) {
-			if ($control->getOption('type') === 'hidden' && !$control->getOption('rendered')) {
+		foreach ($form->getComponents(TRUE, 'Nette\Forms\Controls\HiddenField') as $control) {
+			if (!$control->getOption('rendered')) {
 				$s .= $control->getControl();
 			}
 		}
 
-		if (iterator_count($form->getComponents(TRUE, Nette\Forms\Controls\TextInput::class)) < 2) {
+		if (iterator_count($form->getComponents(TRUE, 'Nette\Forms\Controls\TextInput')) < 2) {
 			$s .= "<!--[if IE]><input type=IEbug disabled style=\"display:none\"><![endif]-->\n";
 		}
 

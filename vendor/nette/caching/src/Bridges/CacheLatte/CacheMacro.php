@@ -1,24 +1,21 @@
 <?php
 
 /**
- * This file is part of the Nette Framework (https://nette.org)
- * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
+ * This file is part of the Nette Framework (http://nette.org)
+ * Copyright (c) 2004 David Grudl (http://davidgrudl.com)
  */
 
 namespace Nette\Bridges\CacheLatte;
 
 use Nette;
-use Nette\Caching\Cache;
 use Latte;
 
 
 /**
  * Macro {cache} ... {/cache}
  */
-class CacheMacro implements Latte\IMacro
+class CacheMacro extends Nette\Object implements Latte\IMacro
 {
-	use Nette\SmartObject;
-
 	/** @var bool */
 	private $used;
 
@@ -40,7 +37,7 @@ class CacheMacro implements Latte\IMacro
 	public function finalize()
 	{
 		if ($this->used) {
-			return ['Nette\Bridges\CacheLatte\CacheMacro::initRuntime($this);'];
+			return array('Nette\Bridges\CacheLatte\CacheMacro::initRuntime($template, $_g);');
 		}
 	}
 
@@ -51,13 +48,10 @@ class CacheMacro implements Latte\IMacro
 	 */
 	public function nodeOpened(Latte\MacroNode $node)
 	{
-		if ($node->modifiers) {
-			throw new Latte\CompileException('Modifiers are not allowed in ' . $node->getNotation());
-		}
 		$this->used = TRUE;
-		$node->empty = FALSE;
+		$node->isEmpty = FALSE;
 		$node->openingCode = Latte\PhpWriter::using($node)
-			->write('<?php if (Nette\Bridges\CacheLatte\CacheMacro::createCache($this->global->cacheStorage, %var, $this->global->cacheStack, %node.array?)) { ?>',
+			->write('<?php if (Nette\Bridges\CacheLatte\CacheMacro::createCache($netteCacheStorage, %var, $_g->caches, %node.array?)) { ?>',
 				Nette\Utils\Random::generate()
 			);
 	}
@@ -69,8 +63,7 @@ class CacheMacro implements Latte\IMacro
 	 */
 	public function nodeClosed(Latte\MacroNode $node)
 	{
-		$node->closingCode = Latte\PhpWriter::using($node)
-			->write('<?php Nette\Bridges\CacheLatte\CacheMacro::endCache($this->global->cacheStack, %node.array?); } ?>');
+		$node->closingCode = '<?php $_l->tmp = array_pop($_g->caches); if (!$_l->tmp instanceof stdClass) $_l->tmp->end(); } ?>';
 	}
 
 
@@ -80,13 +73,10 @@ class CacheMacro implements Latte\IMacro
 	/**
 	 * @return void
 	 */
-	public static function initRuntime(Latte\Runtime\Template $template)
+	public static function initRuntime(Latte\Template $template, \stdClass $global)
 	{
-		if (!empty($template->global->cacheStack)) {
-			$file = (new \ReflectionClass($template))->getFileName();
-			if (@is_file($file)) { // @ - may trigger error
-				end($template->global->cacheStack)->dependencies[Cache::FILES][] = $file;
-			}
+		if (!empty($global->caches) && $template->getEngine()->getLoader() instanceof Latte\Loaders\FileLoader) {
+			end($global->caches)->dependencies[Nette\Caching\Cache::FILES][] = $template->getName();
 		}
 	}
 
@@ -97,47 +87,35 @@ class CacheMacro implements Latte\IMacro
 	 * @param  string
 	 * @param  Nette\Caching\OutputHelper[]
 	 * @param  array
-	 * @return Nette\Caching\OutputHelper|\stdClass
+	 * @return Nette\Caching\OutputHelper
 	 */
-	public static function createCache(Nette\Caching\IStorage $cacheStorage, $key, &$parents, array $args = NULL)
+	public static function createCache(Nette\Caching\IStorage $cacheStorage, $key, & $parents, array $args = NULL)
 	{
 		if ($args) {
 			if (array_key_exists('if', $args) && !$args['if']) {
 				return $parents[] = new \stdClass;
 			}
-			$key = array_merge([$key], array_intersect_key($args, range(0, count($args))));
+			$key = array_merge(array($key), array_intersect_key($args, range(0, count($args))));
 		}
 		if ($parents) {
-			end($parents)->dependencies[Cache::ITEMS][] = $key;
+			end($parents)->dependencies[Nette\Caching\Cache::ITEMS][] = $key;
 		}
 
-		$cache = new Cache($cacheStorage, 'Nette.Templating.Cache');
+		$cache = new Nette\Caching\Cache($cacheStorage, 'Nette.Templating.Cache');
 		if ($helper = $cache->start($key)) {
-			$parents[] = $helper;
-		}
-		return $helper;
-	}
-
-
-	/**
-	 * Ends the output cache.
-	 * @param  Nette\Caching\OutputHelper[]
-	 * @return void
-	 */
-	public static function endCache(&$parents, array $args = NULL)
-	{
-		$helper = array_pop($parents);
-		if ($helper instanceof Nette\Caching\OutputHelper) {
 			if (isset($args['dependencies'])) {
 				$args += call_user_func($args['dependencies']);
 			}
 			if (isset($args['expire'])) {
 				$args['expiration'] = $args['expire']; // back compatibility
 			}
-			$helper->dependencies[Cache::TAGS] = isset($args['tags']) ? $args['tags'] : NULL;
-			$helper->dependencies[Cache::EXPIRATION] = isset($args['expiration']) ? $args['expiration'] : '+ 7 days';
-			$helper->end();
+			$helper->dependencies = array(
+				Nette\Caching\Cache::TAGS => isset($args['tags']) ? $args['tags'] : NULL,
+				Nette\Caching\Cache::EXPIRATION => isset($args['expiration']) ? $args['expiration'] : '+ 7 days',
+			);
+			$parents[] = $helper;
 		}
+		return $helper;
 	}
 
 }

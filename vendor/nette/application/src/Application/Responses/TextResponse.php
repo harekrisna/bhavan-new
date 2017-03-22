@@ -13,10 +13,8 @@ use Nette;
 /**
  * String output response.
  */
-class TextResponse implements Nette\Application\IResponse
+class TextResponse extends Nette\Object implements Nette\Application\IResponse
 {
-	use Nette\SmartObject;
-
 	/** @var mixed */
 	private $source;
 

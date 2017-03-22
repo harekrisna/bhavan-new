@@ -6,32 +6,6 @@ if (!class_exists('Phar') || ini_get('phar.readonly')) {
 	die(1);
 }
 
-
-function compressJs($s)
-{
-	if (function_exists('curl_init')) {
-		$curl = curl_init('http://closure-compiler.appspot.com/compile');
-		curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
-		curl_setopt($curl, CURLOPT_POST, 1);
-		curl_setopt($curl, CURLOPT_POSTFIELDS, 'output_info=compiled_code&js_code=' . urlencode($s));
-		$s = curl_exec($curl) ?: $s;
-		curl_close($curl);
-	}
-	return $s;
-}
-
-
-function compressCss($s)
-{
-	$s = preg_replace('#/\*.*?\*/#s', '', $s); // remove comments
-	$s = preg_replace('#[ \t\r\n]+#', ' ', $s); // compress space, ignore hard space
-	$s = preg_replace('# ([^0-9a-z.\#*-])#i', '$1', $s);
-	$s = preg_replace('#([^0-9a-z%)]) #i', '$1', $s);
-	$s = str_replace(';}', '}', $s); // remove leading semicolon
-	return trim($s);
-}
-
-
 @unlink('tracy.phar'); // @ - file may not exist
 
 $phar = new Phar('tracy.phar');
@@ -43,26 +17,36 @@ __HALT_COMPILER();
 $phar->startBuffering();
 foreach ($iterator = new RecursiveIteratorIterator(new RecursiveDirectoryIterator(__DIR__ . '/../../src', RecursiveDirectoryIterator::SKIP_DOTS)) as $file) {
 	echo "adding: {$iterator->getSubPathname()}\n";
-	$s = php_strip_whitespace($file->getPathname());
+	$s = php_strip_whitespace($file);
 
-	if ($file->getExtension() === 'js') {
-		$s = compressJs($s);
-
-	} elseif ($file->getExtension() === 'css') {
-		$s = compressCss($s);
+	if (in_array($file->getExtension(), array('js', 'css'))) {
+		continue;
 
 	} elseif ($file->getExtension() === 'phtml') {
-		$s = preg_replace_callback('#(<(script|style).*(?<![?=])>)(.*)(</)#Uis', function ($m) {
+		$s = preg_replace_callback('#<\?php (require |readfile\(|.*file_get_contents\().*?(/.+\.(js|css))\'\)* \?>#', function ($m) use ($file) {
+			return file_get_contents($file->getPath() . $m[2]);
+		}, $s);
+		$s = preg_replace_callback('#(<(script|style).*>)(.*)(</)#Uis', function ($m) {
 			list(, $begin, $type, $s, $end) = $m;
 
-			if ($s === '' || strpos($s, '<?') !== FALSE) {
+			if (strpos($s, '<?php') !== FALSE) {
 				return $m[0];
 
-			} elseif ($type === 'script') {
-				$s = compressJs($s);
+			} elseif ($type === 'script' && function_exists('curl_init')) {
+				$curl = curl_init('https://closure-compiler.appspot.com/compile');
+				curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+				curl_setopt($curl, CURLOPT_POST, 1);
+				curl_setopt($curl, CURLOPT_POSTFIELDS, 'output_info=compiled_code&js_code=' . urlencode($s));
+				$s = curl_exec($curl);
+				curl_close($curl);
 
 			} elseif ($type === 'style') {
-				$s = compressCss($s);
+				$s = preg_replace('#/\*.*?\*/#s', '', $s); // remove comments
+				$s = preg_replace('#[ \t\r\n]+#', ' ', $s); // compress space, ignore hard space
+				$s = preg_replace('# ([^0-9a-z.\#*-])#i', '$1', $s);
+				$s = preg_replace('#([^0-9a-z%)]) #i', '$1', $s);
+				$s = str_replace(';}', '}', $s); // remove leading semicolon
+				$s = trim($s);
 			}
 
 			return $begin . $s . $end;

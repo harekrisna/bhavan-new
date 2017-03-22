@@ -13,10 +13,8 @@ use Nette;
 /**
  * SQL preprocessor.
  */
-class SqlPreprocessor
+class SqlPreprocessor extends Nette\Object
 {
-	use Nette\SmartObject;
-
 	/** @var Connection */
 	private $connection;
 
@@ -52,9 +50,9 @@ class SqlPreprocessor
 		$this->params = $params;
 		$this->counter = 0;
 		$prev = -1;
-		$this->remaining = [];
+		$this->remaining = array();
 		$this->arrayMode = NULL;
-		$res = [];
+		$res = array();
 
 		while ($this->counter < count($params)) {
 			$param = $params[$this->counter++];
@@ -68,15 +66,15 @@ class SqlPreprocessor
 				$this->arrayMode = NULL;
 				$res[] = Nette\Utils\Strings::replace(
 					$param,
-					'~\'[^\']*+\'|"[^"]*+"|\?[a-z]*|^\s*+(?:INSERT|REPLACE)\b|\b(?:SET|WHERE|HAVING|ORDER BY|GROUP BY|KEY UPDATE)(?=\s*\z|\s*\?)|/\*.*?\*/|--[^\n]*~si',
-					[$this, 'callback']
+					'~\'[^\']*+\'|"[^"]*+"|\?[a-z]*|^\s*+(?:INSERT|REPLACE)\b|\b(?:SET|WHERE|HAVING|ORDER BY|GROUP BY|KEY UPDATE)(?=[\s?]*+\z)|/\*.*?\*/|--[^\n]*~si',
+					array($this, 'callback')
 				);
 			} else {
 				throw new Nette\InvalidArgumentException('There are more parameters than placeholders.');
 			}
 		}
 
-		return [implode(' ', $res), $this->remaining];
+		return array(implode(' ', $res), $this->remaining);
 	}
 
 
@@ -94,7 +92,7 @@ class SqlPreprocessor
 			return $m;
 
 		} else { // command
-			static $modes = [
+			static $modes = array(
 				'INSERT' => 'values',
 				'REPLACE' => 'values',
 				'KEY UPDATE' => 'set',
@@ -103,7 +101,7 @@ class SqlPreprocessor
 				'HAVING' => 'and',
 				'ORDER BY' => 'order',
 				'GROUP BY' => 'order',
-			];
+			);
 			$this->arrayMode = $modes[ltrim(strtoupper($m))];
 			return $m;
 		}
@@ -135,15 +133,15 @@ class SqlPreprocessor
 				return 'NULL';
 
 			} elseif ($value instanceof Table\IRow) {
-				return $this->formatValue($value->getPrimary());
+				return $value->getPrimary();
 
 			} elseif ($value instanceof SqlLiteral) {
 				$prep = clone $this;
-				list($res, $params) = $prep->process(array_merge([$value->__toString()], $value->getParameters()));
+				list($res, $params) = $prep->process(array_merge(array($value->__toString()), $value->getParameters()));
 				$this->remaining = array_merge($this->remaining, $params);
 				return $res;
 
-			} elseif ($value instanceof \DateTimeInterface) {
+			} elseif ($value instanceof \DateTime || $value instanceof \DateTimeInterface) {
 				return $this->driver->formatDateTime($value);
 
 			} elseif ($value instanceof \DateInterval) {
@@ -170,7 +168,7 @@ class SqlPreprocessor
 		}
 
 		if (is_array($value)) {
-			$vx = $kx = [];
+			$vx = $kx = array();
 			if ($mode === 'auto') {
 				$mode = $this->arrayMode;
 			}
@@ -181,7 +179,7 @@ class SqlPreprocessor
 						$kx[] = $this->delimite($k);
 					}
 					foreach ($value as $val) {
-						$vx2 = [];
+						$vx2 = array();
 						foreach ($val as $v) {
 							$vx2[] = $this->formatValue($v);
 						}
@@ -243,7 +241,7 @@ class SqlPreprocessor
 				throw new Nette\InvalidArgumentException("Unknown placeholder ?$mode.");
 			}
 
-		} elseif (in_array($mode, ['and', 'or', 'set', 'values', 'order'], TRUE)) {
+		} elseif (in_array($mode, array('and', 'or', 'set', 'values', 'order'), TRUE)) {
 			$type = gettype($value);
 			throw new Nette\InvalidArgumentException("Placeholder ?$mode expects array or Traversable object, $type given.");
 
@@ -258,7 +256,7 @@ class SqlPreprocessor
 
 	private function delimite($name)
 	{
-		return implode('.', array_map([$this->driver, 'delimite'], explode('.', $name)));
+		return implode('.', array_map(array($this->driver, 'delimite'), explode('.', $name)));
 	}
 
 }

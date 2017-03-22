@@ -22,7 +22,7 @@ abstract class ChoiceControl extends BaseControl
 	public $checkAllowedValues = TRUE;
 
 	/** @var array */
-	private $items = [];
+	private $items = array();
 
 
 	public function __construct($label = NULL, array $items = NULL)
@@ -45,7 +45,7 @@ abstract class ChoiceControl extends BaseControl
 			if (is_array($this->disabled) && isset($this->disabled[$this->value])) {
 				$this->value = NULL;
 			} else {
-				$this->value = key([$this->value => NULL]);
+				$this->value = key(array($this->value => NULL));
 			}
 		}
 	}
@@ -53,9 +53,8 @@ abstract class ChoiceControl extends BaseControl
 
 	/**
 	 * Sets selected item (by key).
-	 * @param  string|int
-	 * @return static
-	 * @internal
+	 * @param  scalar
+	 * @return self
 	 */
 	public function setValue($value)
 	{
@@ -63,14 +62,14 @@ abstract class ChoiceControl extends BaseControl
 			$set = Nette\Utils\Strings::truncate(implode(', ', array_map(function ($s) { return var_export($s, TRUE); }, array_keys($this->items))), 70, '...');
 			throw new Nette\InvalidArgumentException("Value '$value' is out of allowed set [$set] in field '{$this->name}'.");
 		}
-		$this->value = $value === NULL ? NULL : key([(string) $value => NULL]);
+		$this->value = $value === NULL ? NULL : key(array((string) $value => NULL));
 		return $this;
 	}
 
 
 	/**
 	 * Returns selected key.
-	 * @return string|int
+	 * @return scalar
 	 */
 	public function getValue()
 	{
@@ -80,7 +79,7 @@ abstract class ChoiceControl extends BaseControl
 
 	/**
 	 * Returns selected key (not checked).
-	 * @return string|int
+	 * @return scalar
 	 */
 	public function getRawValue()
 	{
@@ -102,7 +101,7 @@ abstract class ChoiceControl extends BaseControl
 	 * Sets items from which to choose.
 	 * @param  array
 	 * @param  bool
-	 * @return static
+	 * @return self
 	 */
 	public function setItems(array $items, $useKeys = TRUE)
 	{
@@ -135,7 +134,7 @@ abstract class ChoiceControl extends BaseControl
 	/**
 	 * Disables or enables control or items.
 	 * @param  bool|array
-	 * @return static
+	 * @return self
 	 */
 	public function setDisabled($value = TRUE)
 	{

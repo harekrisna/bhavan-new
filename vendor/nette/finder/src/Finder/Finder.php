@@ -1,14 +1,14 @@
 <?php
 
 /**
- * This file is part of the Nette Framework (https://nette.org)
- * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
+ * This file is part of the Nette Framework (http://nette.org)
+ * Copyright (c) 2004 David Grudl (http://davidgrudl.com)
  */
 
 namespace Nette\Utils;
 
 use Nette;
-use RecursiveDirectoryIterator;
+use FilesystemIterator;
 use RecursiveIteratorIterator;
 
 
@@ -22,18 +22,16 @@ use RecursiveIteratorIterator;
  *     ->exclude('temp');
  * </code>
  */
-class Finder implements \IteratorAggregate, \Countable
+class Finder extends Nette\Object implements \IteratorAggregate, \Countable
 {
-	use Nette\SmartObject;
-
 	/** @var array */
-	private $paths = [];
+	private $paths = array();
 
 	/** @var array of filters */
 	private $groups;
 
-	/** @var array filter for recursive traversing */
-	private $exclude = [];
+	/** @var filter for recursive traversing */
+	private $exclude = array();
 
 	/** @var int */
 	private $order = RecursiveIteratorIterator::SELF_FIRST;
@@ -48,34 +46,45 @@ class Finder implements \IteratorAggregate, \Countable
 	/**
 	 * Begins search for files matching mask and all directories.
 	 * @param  mixed
-	 * @return self
+	 * @return Finder
 	 */
-	public static function find(...$masks)
+	public static function find($mask)
 	{
-		$masks = is_array($masks[0]) ? $masks[0] : $masks;
-		return (new static)->select($masks, 'isDir')->select($masks, 'isFile');
+		if (!is_array($mask)) {
+			$mask = func_get_args();
+		}
+		$finder = new static;
+		return $finder->select($mask, 'isDir')->select($mask, 'isFile');
 	}
 
 
 	/**
 	 * Begins search for files matching mask.
 	 * @param  mixed
-	 * @return self
+	 * @return Finder
 	 */
-	public static function findFiles(...$masks)
+	public static function findFiles($mask)
 	{
-		return (new static)->select(is_array($masks[0]) ? $masks[0] : $masks, 'isFile');
+		if (!is_array($mask)) {
+			$mask = func_get_args();
+		}
+		$finder = new static;
+		return $finder->select($mask, 'isFile');
 	}
 
 
 	/**
 	 * Begins search for directories matching mask.
 	 * @param  mixed
-	 * @return self
+	 * @return Finder
 	 */
-	public static function findDirectories(...$masks)
+	public static function findDirectories($mask)
 	{
-		return (new static)->select(is_array($masks[0]) ? $masks[0] : $masks, 'isDir');
+		if (!is_array($mask)) {
+			$mask = func_get_args();
+		}
+		$finder = new static;
+		return $finder->select($mask, 'isDir');
 	}
 
 
@@ -90,7 +99,7 @@ class Finder implements \IteratorAggregate, \Countable
 		$this->cursor = & $this->groups[];
 		$pattern = self::buildPattern($masks);
 		if ($type || $pattern) {
-			$this->filter(function (RecursiveDirectoryIterator $file) use ($type, $pattern) {
+			$this->filter(function (FilesystemIterator $file) use ($type, $pattern) {
 				return !$file->isDot()
 					&& (!$type || $file->$type())
 					&& (!$pattern || preg_match($pattern, '/' . strtr($file->getSubPathName(), '\\', '/')));
@@ -105,10 +114,13 @@ class Finder implements \IteratorAggregate, \Countable
 	 * @param  string|array
 	 * @return self
 	 */
-	public function in(...$paths)
+	public function in($path)
 	{
+		if (!is_array($path)) {
+			$path = func_get_args();
+		}
 		$this->maxDepth = 0;
-		return $this->from(...$paths);
+		return $this->from($path);
 	}
 
 
@@ -117,12 +129,15 @@ class Finder implements \IteratorAggregate, \Countable
 	 * @param  string|array
 	 * @return self
 	 */
-	public function from(...$paths)
+	public function from($path)
 	{
 		if ($this->paths) {
 			throw new Nette\InvalidStateException('Directory to search has already been specified.');
 		}
-		$this->paths = is_array($paths[0]) ? $paths[0] : $paths;
+		if (!is_array($path)) {
+			$path = func_get_args();
+		}
+		$this->paths = $path;
 		$this->cursor = & $this->exclude;
 		return $this;
 	}
@@ -146,7 +161,7 @@ class Finder implements \IteratorAggregate, \Countable
 	 */
 	private static function buildPattern($masks)
 	{
-		$pattern = [];
+		$pattern = array();
 		foreach ($masks as $mask) {
 			$mask = rtrim(strtr($mask, '\\', '/'), '/');
 			$prefix = '';
@@ -161,7 +176,7 @@ class Finder implements \IteratorAggregate, \Countable
 				$prefix = '(?<=^/)';
 			}
 			$pattern[] = $prefix . strtr(preg_quote($mask, '#'),
-				['\*\*' => '.*', '\*' => '[^/]*', '\?' => '[^/]', '\[\!' => '[^', '\[' => '[', '\]' => ']', '\-' => '-']);
+				array('\*\*' => '.*', '\*' => '[^/]*', '\?' => '[^/]', '\[\!' => '[^', '\[' => '[', '\]' => ']', '\-' => '-'));
 		}
 		return $pattern ? '#/(' . implode('|', $pattern) . ')\z#i' : NULL;
 	}
@@ -194,7 +209,7 @@ class Finder implements \IteratorAggregate, \Countable
 
 		} else {
 			$iterator = new \AppendIterator();
-			$iterator->append($workaround = new \ArrayIterator(['workaround PHP bugs #49104, #63077']));
+			$iterator->append($workaround = new \ArrayIterator(array('workaround PHP bugs #49104, #63077')));
 			foreach ($this->paths as $path) {
 				$iterator->append($this->buildIterator($path));
 			}
@@ -211,12 +226,14 @@ class Finder implements \IteratorAggregate, \Countable
 	 */
 	private function buildIterator($path)
 	{
-		$iterator = new RecursiveDirectoryIterator($path, RecursiveDirectoryIterator::FOLLOW_SYMLINKS);
+		$iterator = new \RecursiveDirectoryIterator($path, \RecursiveDirectoryIterator::FOLLOW_SYMLINKS);
 
 		if ($this->exclude) {
-			$iterator = new \RecursiveCallbackFilterIterator($iterator, function ($foo, $bar, RecursiveDirectoryIterator $file) {
+			$filters = $this->exclude;
+			$iterator = new RecursiveCallbackFilterIterator($iterator, function ($foo, $bar, RecursiveCallbackFilterIterator $iterator) use ($filters) {
+				$file = $iterator->getInnerIterator();
 				if (!$file->isDot() && !$file->isFile()) {
-					foreach ($this->exclude as $filter) {
+					foreach ($filters as $filter) {
 						if (!call_user_func($filter, $file)) {
 							return FALSE;
 						}
@@ -231,21 +248,24 @@ class Finder implements \IteratorAggregate, \Countable
 			$iterator->setMaxDepth($this->maxDepth);
 		}
 
-		$iterator = new \CallbackFilterIterator($iterator, function ($foo, $bar, \Iterator $file) {
-			while ($file instanceof \OuterIterator) {
-				$file = $file->getInnerIterator();
-			}
+		if ($this->groups) {
+			$groups = $this->groups;
+			$iterator = new CallbackFilterIterator($iterator, function ($foo, $bar, CallbackFilterIterator $file) use ($groups) {
+				do {
+					$file = $file->getInnerIterator();
+				} while (!$file instanceof FilesystemIterator);
 
-			foreach ($this->groups as $filters) {
-				foreach ($filters as $filter) {
-					if (!call_user_func($filter, $file)) {
-						continue 2;
+				foreach ($groups as $filters) {
+					foreach ($filters as $filter) {
+						if (!call_user_func($filter, $file)) {
+							continue 2;
+						}
 					}
+					return TRUE;
 				}
-				return TRUE;
-			}
-			return FALSE;
-		});
+				return FALSE;
+			});
+		}
 
 		return $iterator;
 	}
@@ -260,11 +280,14 @@ class Finder implements \IteratorAggregate, \Countable
 	 * @param  mixed
 	 * @return self
 	 */
-	public function exclude(...$masks)
+	public function exclude($masks)
 	{
-		$pattern = self::buildPattern(is_array($masks[0]) ? $masks[0] : $masks);
+		if (!is_array($masks)) {
+			$masks = func_get_args();
+		}
+		$pattern = self::buildPattern($masks);
 		if ($pattern) {
-			$this->filter(function (RecursiveDirectoryIterator $file) use ($pattern) {
+			$this->filter(function (FilesystemIterator $file) use ($pattern) {
 				return !preg_match($pattern, '/' . strtr($file->getSubPathName(), '\\', '/'));
 			});
 		}
@@ -274,7 +297,7 @@ class Finder implements \IteratorAggregate, \Countable
 
 	/**
 	 * Restricts the search using callback.
-	 * @param  callable  function (RecursiveDirectoryIterator $file)
+	 * @param  callable  function (FilesystemIterator $file)
 	 * @return self
 	 */
 	public function filter($callback)
@@ -309,12 +332,12 @@ class Finder implements \IteratorAggregate, \Countable
 				throw new Nette\InvalidArgumentException('Invalid size predicate format.');
 			}
 			list(, $operator, $size, $unit) = $matches;
-			static $units = ['' => 1, 'k' => 1e3, 'm' => 1e6, 'g' => 1e9];
+			static $units = array('' => 1, 'k' => 1e3, 'm' => 1e6, 'g' => 1e9);
 			$size *= $units[strtolower($unit)];
 			$operator = $operator ? $operator : '=';
 		}
-		return $this->filter(function (RecursiveDirectoryIterator $file) use ($operator, $size) {
-			return self::compare($file->getSize(), $operator, $size);
+		return $this->filter(function (FilesystemIterator $file) use ($operator, $size) {
+			return Finder::compare($file->getSize(), $operator, $size);
 		});
 	}
 
@@ -335,8 +358,8 @@ class Finder implements \IteratorAggregate, \Countable
 			$operator = $operator ? $operator : '=';
 		}
 		$date = DateTime::from($date)->format('U');
-		return $this->filter(function (RecursiveDirectoryIterator $file) use ($operator, $date) {
-			return self::compare($file->getMTime(), $operator, $date);
+		return $this->filter(function (FilesystemIterator $file) use ($operator, $date) {
+			return Finder::compare($file->getMTime(), $operator, $date);
 		});
 	}
 
@@ -368,24 +391,6 @@ class Finder implements \IteratorAggregate, \Countable
 			default:
 				throw new Nette\InvalidArgumentException("Unknown operator $operator.");
 		}
-	}
-
-
-	/********************* extension methods ****************d*g**/
-
-
-	public function __call($name, $args)
-	{
-		if ($callback = Nette\Utils\ObjectMixin::getExtensionMethod(__CLASS__, $name)) {
-			return $callback($this, ...$args);
-		}
-		Nette\Utils\ObjectMixin::strictCall(__CLASS__, $name);
-	}
-
-
-	public static function extensionMethod($name, $callback)
-	{
-		Nette\Utils\ObjectMixin::setExtensionMethod(__CLASS__, $name, $callback);
 	}
 
 }

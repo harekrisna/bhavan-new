@@ -13,10 +13,8 @@ use Nette;
 /**
  * Supplemental SQL Server 2005 and later database driver.
  */
-class SqlsrvDriver implements Nette\Database\ISupplementalDriver
+class SqlsrvDriver extends Nette\Object implements Nette\Database\ISupplementalDriver
 {
-	use Nette\SmartObject;
-
 	/** @var Nette\Database\Connection */
 	private $connection;
 
@@ -65,7 +63,7 @@ class SqlsrvDriver implements Nette\Database\ISupplementalDriver
 	public function formatDateTime(/*\DateTimeInterface*/ $value)
 	{
 		/** @see https://msdn.microsoft.com/en-us/library/ms187819.aspx */
-		return $value->format("'Y-m-d\\TH:i:s'");
+		return $value->format("'Y-m-d H:i:s'");
 	}
 
 
@@ -84,7 +82,7 @@ class SqlsrvDriver implements Nette\Database\ISupplementalDriver
 	public function formatLike($value, $pos)
 	{
 		/** @see https://msdn.microsoft.com/en-us/library/ms179859.aspx */
-		$value = strtr($value, ["'" => "''", '%' => '[%]', '_' => '[_]', '[' => '[[]']);
+		$value = strtr($value, array("'" => "''", '%' => '[%]', '_' => '[_]', '[' => '[[]'));
 		return ($pos <= 0 ? "'%" : "'") . $value . ($pos >= 0 ? "%'" : "'");
 	}
 
@@ -92,7 +90,7 @@ class SqlsrvDriver implements Nette\Database\ISupplementalDriver
 	/**
 	 * Injects LIMIT/OFFSET to the SQL query.
 	 */
-	public function applyLimit(&$sql, $limit, $offset)
+	public function applyLimit(& $sql, $limit, $offset)
 	{
 		if ($limit < 0 || $offset < 0) {
 			throw new Nette\InvalidArgumentException('Negative offset or limit.');
@@ -133,7 +131,7 @@ class SqlsrvDriver implements Nette\Database\ISupplementalDriver
 	 */
 	public function getTables()
 	{
-		$tables = [];
+		$tables = array();
 		foreach ($this->connection->query("
 			SELECT
 				name,
@@ -146,10 +144,10 @@ class SqlsrvDriver implements Nette\Database\ISupplementalDriver
 			WHERE
 				type IN ('U', 'V')
 		") as $row) {
-			$tables[] = [
+			$tables[] = array(
 				'name' => $row->name,
 				'view' => (bool) $row->view,
-			];
+			);
 		}
 
 		return $tables;
@@ -161,7 +159,7 @@ class SqlsrvDriver implements Nette\Database\ISupplementalDriver
 	 */
 	public function getColumns($table)
 	{
-		$columns = [];
+		$columns = array();
 		foreach ($this->connection->query("
 			SELECT
 				c.name AS name,
@@ -205,7 +203,7 @@ class SqlsrvDriver implements Nette\Database\ISupplementalDriver
 	 */
 	public function getIndexes($table)
 	{
-		$indexes = [];
+		$indexes = array();
 		foreach ($this->connection->query("
 			SELECT
 				i.name AS name,
@@ -242,7 +240,7 @@ class SqlsrvDriver implements Nette\Database\ISupplementalDriver
 	public function getForeignKeys($table)
 	{
 		// Does't work with multicolumn foreign keys
-		$keys = [];
+		$keys = array();
 		foreach ($this->connection->query("
 			SELECT
 				fk.name AS name,
@@ -271,7 +269,7 @@ class SqlsrvDriver implements Nette\Database\ISupplementalDriver
 	 */
 	public function getColumnTypes(\PDOStatement $statement)
 	{
-		$types = [];
+		$types = array();
 		$count = $statement->columnCount();
 		for ($col = 0; $col < $count; $col++) {
 			$meta = $statement->getColumnMeta($col);

@@ -40,8 +40,7 @@ class CheckboxList extends MultiChoiceControl
 		$this->control->type = 'checkbox';
 		$this->container = Html::el();
 		$this->separator = Html::el('br');
-		// $this->itemLabel = Html::el('label'); back compatiblity
-		$this->setOption('type', 'checkbox');
+		$this->itemLabel = Html::el();
 	}
 
 
@@ -58,14 +57,14 @@ class CheckboxList extends MultiChoiceControl
 		return $this->container->setHtml(
 			Nette\Forms\Helpers::createInputList(
 				$this->translate($items),
-				array_merge($input->attrs, [
+				array_merge($input->attrs, array(
 					'id' => NULL,
 					'checked?' => $this->value,
 					'disabled:' => $this->disabled,
 					'required' => NULL,
-					'data-nette-rules:' => [key($items) => $input->attrs['data-nette-rules']],
-				]),
-				$this->itemLabel ? $this->itemLabel->attrs : $this->label->attrs,
+					'data-nette-rules:' => array(key($items) => $input->attrs['data-nette-rules']),
+				)),
+				$this->itemLabel->attrs,
 				$this->separator
 			)
 		);
@@ -86,16 +85,16 @@ class CheckboxList extends MultiChoiceControl
 	/**
 	 * @return Html
 	 */
-	public function getControlPart($key = NULL)
+	public function getControlPart($key)
 	{
-		$key = key([(string) $key => NULL]);
-		return parent::getControl()->addAttributes([
+		$key = key(array((string) $key => NULL));
+		return parent::getControl()->addAttributes(array(
 			'id' => $this->getHtmlId() . '-' . $key,
 			'checked' => in_array($key, (array) $this->value, TRUE),
 			'disabled' => is_array($this->disabled) ? isset($this->disabled[$key]) : $this->disabled,
 			'required' => NULL,
 			'value' => $key,
-		]);
+		));
 	}
 
 
@@ -104,9 +103,8 @@ class CheckboxList extends MultiChoiceControl
 	 */
 	public function getLabelPart($key = NULL)
 	{
-		$itemLabel = $this->itemLabel ? clone $this->itemLabel : clone $this->label;
 		return func_num_args()
-			? $itemLabel->setText($this->translate($this->items[$key]))->for($this->getHtmlId() . '-' . $key)
+			? parent::getLabel($this->items[$key])->for($this->getHtmlId() . '-' . $key)
 			: $this->getLabel();
 	}
 
@@ -137,7 +135,7 @@ class CheckboxList extends MultiChoiceControl
 	 */
 	public function getItemLabelPrototype()
 	{
-		return $this->itemLabel ?: $this->itemLabel = Html::el('label');
+		return $this->itemLabel;
 	}
 
 }

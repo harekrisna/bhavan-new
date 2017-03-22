@@ -1,8 +1,8 @@
 <?php
 
 /**
- * This file is part of the Nette Framework (https://nette.org)
- * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
+ * This file is part of the Nette Framework (http://nette.org)
+ * Copyright (c) 2004 David Grudl (http://davidgrudl.com)
  */
 
 namespace Nette\Security;
@@ -16,31 +16,34 @@ use Nette;
  * This solution is mostly based on Zend_Acl (c) Zend Technologies USA Inc. (http://www.zend.com), new BSD license
  *
  * @copyright  Copyright (c) 2005, 2007 Zend Technologies USA Inc.
+ *
+ * @property-read array $roles
+ * @property-read array $resources
+ * @property-read mixed $queriedRole
+ * @property-read mixed $queriedResource
  */
-class Permission implements IAuthorizator
+class Permission extends Nette\Object implements IAuthorizator
 {
-	use Nette\SmartObject;
-
 	/** @var array  Role storage */
-	private $roles = [];
+	private $roles = array();
 
 	/** @var array  Resource storage */
-	private $resources = [];
+	private $resources = array();
 
 	/** @var array  Access Control List rules; whitelist (deny everything to all) by default */
-	private $rules = [
-		'allResources' => [
-			'allRoles' => [
-				'allPrivileges' => [
+	private $rules = array(
+		'allResources' => array(
+			'allRoles' => array(
+				'allPrivileges' => array(
 					'type' => self::DENY,
 					'assert' => NULL,
-				],
-				'byPrivilege' => [],
-			],
-			'byRole' => [],
-		],
-		'byResource' => [],
-	];
+				),
+				'byPrivilege' => array(),
+			),
+			'byRole' => array(),
+		),
+		'byResource' => array(),
+	);
 
 	/** @var mixed */
 	private $queriedRole, $queriedResource;
@@ -56,7 +59,7 @@ class Permission implements IAuthorizator
 	 * @param  string|array
 	 * @throws Nette\InvalidArgumentException
 	 * @throws Nette\InvalidStateException
-	 * @return static
+	 * @return self
 	 */
 	public function addRole($role, $parents = NULL)
 	{
@@ -65,11 +68,11 @@ class Permission implements IAuthorizator
 			throw new Nette\InvalidStateException("Role '$role' already exists in the list.");
 		}
 
-		$roleParents = [];
+		$roleParents = array();
 
 		if ($parents !== NULL) {
 			if (!is_array($parents)) {
-				$parents = [$parents];
+				$parents = array($parents);
 			}
 
 			foreach ($parents as $parent) {
@@ -79,10 +82,10 @@ class Permission implements IAuthorizator
 			}
 		}
 
-		$this->roles[$role] = [
+		$this->roles[$role] = array(
 			'parents' => $roleParents,
-			'children' => [],
-		];
+			'children' => array(),
+		);
 
 		return $this;
 	}
@@ -175,7 +178,7 @@ class Permission implements IAuthorizator
 	 *
 	 * @param  string
 	 * @throws Nette\InvalidStateException
-	 * @return static
+	 * @return self
 	 */
 	public function removeRole($role)
 	{
@@ -214,11 +217,11 @@ class Permission implements IAuthorizator
 	/**
 	 * Removes all Roles from the list.
 	 *
-	 * @return static
+	 * @return self
 	 */
 	public function removeAllRoles()
 	{
-		$this->roles = [];
+		$this->roles = array();
 
 		foreach ($this->rules['allResources']['byRole'] as $roleCurrent => $rules) {
 			unset($this->rules['allResources']['byRole'][$roleCurrent]);
@@ -244,7 +247,7 @@ class Permission implements IAuthorizator
 	 * @param  string
 	 * @throws Nette\InvalidArgumentException
 	 * @throws Nette\InvalidStateException
-	 * @return static
+	 * @return self
 	 */
 	public function addResource($resource, $parent = NULL)
 	{
@@ -259,10 +262,10 @@ class Permission implements IAuthorizator
 			$this->resources[$parent]['children'][$resource] = TRUE;
 		}
 
-		$this->resources[$resource] = [
+		$this->resources[$resource] = array(
 			'parent' => $parent,
-			'children' => [],
-		];
+			'children' => array(),
+		);
 
 		return $this;
 	}
@@ -351,7 +354,7 @@ class Permission implements IAuthorizator
 	 *
 	 * @param  string
 	 * @throws Nette\InvalidStateException
-	 * @return static
+	 * @return self
 	 */
 	public function removeResource($resource)
 	{
@@ -362,7 +365,7 @@ class Permission implements IAuthorizator
 			unset($this->resources[$parent]['children'][$resource]);
 		}
 
-		$removed = [$resource];
+		$removed = array($resource);
 		foreach ($this->resources[$resource]['children'] as $child => $foo) {
 			$this->removeResource($child);
 			$removed[] = $child;
@@ -383,7 +386,7 @@ class Permission implements IAuthorizator
 
 	/**
 	 * Removes all Resources.
-	 * @return static
+	 * @return self
 	 */
 	public function removeAllResources()
 	{
@@ -395,7 +398,7 @@ class Permission implements IAuthorizator
 			}
 		}
 
-		$this->resources = [];
+		$this->resources = array();
 		return $this;
 	}
 
@@ -411,7 +414,7 @@ class Permission implements IAuthorizator
 	 * @param  string|array|Permission::ALL  resources
 	 * @param  string|array|Permission::ALL  privileges
 	 * @param  callable    assertion
-	 * @return static
+	 * @return self
 	 */
 	public function allow($roles = self::ALL, $resources = self::ALL, $privileges = self::ALL, $assertion = NULL)
 	{
@@ -428,7 +431,7 @@ class Permission implements IAuthorizator
 	 * @param  string|array|Permission::ALL  resources
 	 * @param  string|array|Permission::ALL  privileges
 	 * @param  callable    assertion
-	 * @return static
+	 * @return self
 	 */
 	public function deny($roles = self::ALL, $resources = self::ALL, $privileges = self::ALL, $assertion = NULL)
 	{
@@ -443,7 +446,7 @@ class Permission implements IAuthorizator
 	 * @param  string|array|Permission::ALL  roles
 	 * @param  string|array|Permission::ALL  resources
 	 * @param  string|array|Permission::ALL  privileges
-	 * @return static
+	 * @return self
 	 */
 	public function removeAllow($roles = self::ALL, $resources = self::ALL, $privileges = self::ALL)
 	{
@@ -458,7 +461,7 @@ class Permission implements IAuthorizator
 	 * @param  string|array|Permission::ALL  roles
 	 * @param  string|array|Permission::ALL  resources
 	 * @param  string|array|Permission::ALL  privileges
-	 * @return static
+	 * @return self
 	 */
 	public function removeDeny($roles = self::ALL, $resources = self::ALL, $privileges = self::ALL)
 	{
@@ -476,17 +479,17 @@ class Permission implements IAuthorizator
 	 * @param  string|array|Permission::ALL  privileges
 	 * @param  callable    assertion
 	 * @throws Nette\InvalidStateException
-	 * @return static
+	 * @return self
 	 */
 	protected function setRule($toAdd, $type, $roles, $resources, $privileges, $assertion = NULL)
 	{
 		// ensure that all specified Roles exist; normalize input to array of Roles or NULL
 		if ($roles === self::ALL) {
-			$roles = [self::ALL];
+			$roles = array(self::ALL);
 
 		} else {
 			if (!is_array($roles)) {
-				$roles = [$roles];
+				$roles = array($roles);
 			}
 
 			foreach ($roles as $role) {
@@ -496,11 +499,11 @@ class Permission implements IAuthorizator
 
 		// ensure that all specified Resources exist; normalize input to array of Resources or NULL
 		if ($resources === self::ALL) {
-			$resources = [self::ALL];
+			$resources = array(self::ALL);
 
 		} else {
 			if (!is_array($resources)) {
-				$resources = [$resources];
+				$resources = array($resources);
 			}
 
 			foreach ($resources as $resource) {
@@ -510,10 +513,10 @@ class Permission implements IAuthorizator
 
 		// normalize privileges to array
 		if ($privileges === self::ALL) {
-			$privileges = [];
+			$privileges = array();
 
 		} elseif (!is_array($privileges)) {
-			$privileges = [$privileges];
+			$privileges = array($privileges);
 		}
 
 		if ($toAdd) { // add to the rules
@@ -524,7 +527,7 @@ class Permission implements IAuthorizator
 						$rules['allPrivileges']['type'] = $type;
 						$rules['allPrivileges']['assert'] = $assertion;
 						if (!isset($rules['byPrivilege'])) {
-							$rules['byPrivilege'] = [];
+							$rules['byPrivilege'] = array();
 						}
 					} else {
 						foreach ($privileges as $privilege) {
@@ -545,13 +548,13 @@ class Permission implements IAuthorizator
 					if (count($privileges) === 0) {
 						if ($resource === self::ALL && $role === self::ALL) {
 							if ($type === $rules['allPrivileges']['type']) {
-								$rules = [
-									'allPrivileges' => [
+								$rules = array(
+									'allPrivileges' => array(
 										'type' => self::DENY,
 										'assert' => NULL,
-										],
-									'byPrivilege' => [],
-								];
+										),
+									'byPrivilege' => array(),
+								);
 							}
 							continue;
 						}
@@ -677,10 +680,10 @@ class Permission implements IAuthorizator
 	 */
 	private function searchRolePrivileges($all, $role, $resource, $privilege)
 	{
-		$dfs = [
-			'visited' => [],
-			'stack' => [$role],
-		];
+		$dfs = array(
+			'visited' => array(),
+			'stack' => array($role),
+		);
 
 		while (NULL !== ($role = array_pop($dfs['stack']))) {
 			if (isset($dfs['visited'][$role])) {
@@ -774,7 +777,7 @@ class Permission implements IAuthorizator
 				if (!$create) {
 					return $null;
 				}
-				$this->rules['byResource'][$resource] = [];
+				$this->rules['byResource'][$resource] = array();
 			}
 			$visitor = & $this->rules['byResource'][$resource];
 		}
@@ -784,7 +787,7 @@ class Permission implements IAuthorizator
 				if (!$create) {
 					return $null;
 				}
-				$visitor['allRoles']['byPrivilege'] = [];
+				$visitor['allRoles']['byPrivilege'] = array();
 			}
 			return $visitor['allRoles'];
 		}
@@ -793,7 +796,7 @@ class Permission implements IAuthorizator
 			if (!$create) {
 				return $null;
 			}
-			$visitor['byRole'][$role]['byPrivilege'] = [];
+			$visitor['byRole'][$role]['byPrivilege'] = array();
 		}
 
 		return $visitor['byRole'][$role];

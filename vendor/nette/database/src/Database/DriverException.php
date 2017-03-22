@@ -18,7 +18,7 @@ class DriverException extends \PDOException
 
 
 	/**
-	 * @return static
+	 * @returns self
 	 */
 	public static function from(\PDOException $src)
 	{
@@ -36,7 +36,7 @@ class DriverException extends \PDOException
 
 
 	/**
-	 * @return int|string|NULL  Driver-specific error code
+	 * @returns int|string|NULL  Driver-specific error code
 	 */
 	public function getDriverCode()
 	{
@@ -45,7 +45,7 @@ class DriverException extends \PDOException
 
 
 	/**
-	 * @return string|NULL  SQLSTATE error code
+	 * @returns string|NULL  SQLSTATE error code
 	 */
 	public function getSqlState()
 	{
@@ -54,7 +54,7 @@ class DriverException extends \PDOException
 
 
 	/**
-	 * @return string|NULL  SQL command
+	 * @returns string|NULL  SQL command
 	 */
 	public function getQueryString()
 	{

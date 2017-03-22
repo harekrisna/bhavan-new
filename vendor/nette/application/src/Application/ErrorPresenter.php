@@ -15,10 +15,8 @@ use Tracy\ILogger;
 /**
  * Default Error Presenter.
  */
-class ErrorPresenter implements Application\IPresenter
+class ErrorPresenter extends Nette\Object implements Application\IPresenter
 {
-	use Nette\SmartObject;
-
 	/** @var ILogger|NULL */
 	private $logger;
 
@@ -36,7 +34,7 @@ class ErrorPresenter implements Application\IPresenter
 	{
 		$e = $request->getParameter('exception');
 		if ($e instanceof Application\BadRequestException) {
-			$code = $e->getHttpCode();
+			$code = $e->getCode();
 		} else {
 			$code = 500;
 			if ($this->logger) {

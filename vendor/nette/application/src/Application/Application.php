@@ -13,10 +13,8 @@ use Nette;
 /**
  * Front Controller.
  */
-class Application
+class Application extends Nette\Object
 {
-	use Nette\SmartObject;
-
 	/** @var int */
 	public static $maxLoop = 20;
 
@@ -29,7 +27,7 @@ class Application
 	/** @var callable[]  function (Application $sender); Occurs before the application loads presenter */
 	public $onStartup;
 
-	/** @var callable[]  function (Application $sender, \Exception|\Throwable $e = NULL); Occurs before the application shuts down */
+	/** @var callable[]  function (Application $sender, \Exception $e = NULL); Occurs before the application shuts down */
 	public $onShutdown;
 
 	/** @var callable[]  function (Application $sender, Request $request); Occurs when a new request is received */
@@ -41,13 +39,13 @@ class Application
 	/** @var callable[]  function (Application $sender, IResponse $response); Occurs when a new response is ready for dispatch */
 	public $onResponse;
 
-	/** @var callable[]  function (Application $sender, \Exception|\Throwable $e); Occurs when an unhandled exception occurs in the application */
+	/** @var callable[]  function (Application $sender, \Exception $e); Occurs when an unhandled exception occurs in the application */
 	public $onError;
 
 	/** @var Request[] */
-	private $requests = [];
+	private $requests = array();
 
-	/** @var IPresenter|NULL */
+	/** @var IPresenter */
 	private $presenter;
 
 	/** @var Nette\Http\IRequest */
@@ -83,10 +81,7 @@ class Application
 			$this->processRequest($this->createInitialRequest());
 			$this->onShutdown($this);
 
-		} catch (\Throwable $e) {
 		} catch (\Exception $e) {
-		}
-		if (isset($e)) {
 			$this->onError($this, $e);
 			if ($this->catchExceptions && $this->errorPresenter) {
 				try {
@@ -94,8 +89,6 @@ class Application
 					$this->onShutdown($this, $e);
 					return;
 
-				} catch (\Throwable $e) {
-					$this->onError($this, $e);
 				} catch (\Exception $e) {
 					$this->onError($this, $e);
 				}
@@ -112,9 +105,21 @@ class Application
 	public function createInitialRequest()
 	{
 		$request = $this->router->match($this->httpRequest);
+
 		if (!$request instanceof Request) {
 			throw new BadRequestException('No route for HTTP request.');
+
+		} elseif (strcasecmp($request->getPresenterName(), $this->errorPresenter) === 0) {
+			throw new BadRequestException('Invalid request. Presenter is not achievable.');
 		}
+
+		try {
+			$name = $request->getPresenterName();
+			$this->presenterFactory->getPresenterClass($name);
+		} catch (InvalidPresenterException $e) {
+			throw new BadRequestException($e->getMessage(), 0, $e);
+		}
+
 		return $request;
 	}
 
@@ -124,7 +129,6 @@ class Application
 	 */
 	public function processRequest(Request $request)
 	{
-		process:
 		if (count($this->requests) > self::$maxLoop) {
 			throw new ApplicationException('Too many loops detected in application life cycle.');
 		}
@@ -132,21 +136,12 @@ class Application
 		$this->requests[] = $request;
 		$this->onRequest($this, $request);
 
-		if (!$request->isMethod($request::FORWARD) && !strcasecmp($request->getPresenterName(), $this->errorPresenter)) {
-			throw new BadRequestException('Invalid request. Presenter is not achievable.');
-		}
-
-		try {
-			$this->presenter = $this->presenterFactory->createPresenter($request->getPresenterName());
-		} catch (InvalidPresenterException $e) {
-			throw count($this->requests) > 1 ? $e : new BadRequestException($e->getMessage(), 0, $e);
-		}
+		$this->presenter = $this->presenterFactory->createPresenter($request->getPresenterName());
 		$this->onPresenter($this, $this->presenter);
-		$response = $this->presenter->run(clone $request);
+		$response = $this->presenter->run($request);
 
 		if ($response instanceof Responses\ForwardResponse) {
-			$request = $response->getRequest();
-			goto process;
+			$this->processRequest($response->getRequest());
 
 		} elseif ($response) {
 			$this->onResponse($this, $response);
@@ -156,19 +151,18 @@ class Application
 
 
 	/**
-	 * @param  \Exception|\Throwable
 	 * @return void
 	 */
-	public function processException($e)
+	public function processException(\Exception $e)
 	{
 		if (!$e instanceof BadRequestException && $this->httpResponse instanceof Nette\Http\Response) {
 			$this->httpResponse->warnOnBuffer = FALSE;
 		}
 		if (!$this->httpResponse->isSent()) {
-			$this->httpResponse->setCode($e instanceof BadRequestException ? ($e->getHttpCode() ?: 404) : 500);
+			$this->httpResponse->setCode($e instanceof BadRequestException ? ($e->getCode() ?: 404) : 500);
 		}
 
-		$args = ['exception' => $e, 'request' => end($this->requests) ?: NULL];
+		$args = array('exception' => $e, 'request' => end($this->requests) ?: NULL);
 		if ($this->presenter instanceof UI\Presenter) {
 			try {
 				$this->presenter->forward(":$this->errorPresenter:", $args);
@@ -193,7 +187,7 @@ class Application
 
 	/**
 	 * Returns current presenter.
-	 * @return IPresenter|NULL
+	 * @return IPresenter
 	 */
 	public function getPresenter()
 	{

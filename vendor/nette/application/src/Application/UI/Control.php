@@ -15,7 +15,7 @@ use Nette;
  *
  * @property-read ITemplate $template
  */
-abstract class Control extends Component implements IRenderable
+abstract class Control extends PresenterComponent implements IRenderable
 {
 	/** @var ITemplateFactory */
 	private $templateFactory;
@@ -24,7 +24,7 @@ abstract class Control extends Component implements IRenderable
 	private $template;
 
 	/** @var array */
-	private $invalidSnippets = [];
+	private $invalidSnippets = array();
 
 	/** @var bool */
 	public $snippetMode;
@@ -86,10 +86,10 @@ abstract class Control extends Component implements IRenderable
 	{
 		$id = $this->getParameterId('flash');
 		$messages = $this->getPresenter()->getFlashSession()->$id;
-		$messages[] = $flash = (object) [
+		$messages[] = $flash = (object) array(
 			'message' => $message,
 			'type' => $type,
-		];
+		);
 		$this->getTemplate()->flashes = $messages;
 		$this->getPresenter()->getFlashSession()->$id = $messages;
 		return $flash;
@@ -109,10 +109,10 @@ abstract class Control extends Component implements IRenderable
 			$this->invalidSnippets[$snippet === NULL ? "\0" : $snippet] = TRUE;
 
 		} elseif ($snippet === NULL) {
-			$this->invalidSnippets = [];
+			$this->invalidSnippets = array();
 
 		} else {
-			$this->invalidSnippets[$snippet] = FALSE;
+			unset($this->invalidSnippets[$snippet]);
 		}
 	}
 
@@ -120,14 +120,12 @@ abstract class Control extends Component implements IRenderable
 	/** @deprecated */
 	function invalidateControl($snippet = NULL)
 	{
-		trigger_error(__METHOD__ . '() is deprecated; use $this->redrawControl($snippet) instead.', E_USER_DEPRECATED);
 		$this->redrawControl($snippet);
 	}
 
 	/** @deprecated */
 	function validateControl($snippet = NULL)
 	{
-		trigger_error(__METHOD__ . '() is deprecated; use $this->redrawControl($snippet, FALSE) instead.', E_USER_DEPRECATED);
 		$this->redrawControl($snippet, FALSE);
 	}
 
@@ -144,7 +142,7 @@ abstract class Control extends Component implements IRenderable
 				return TRUE;
 
 			} else {
-				$queue = [$this];
+				$queue = array($this);
 				do {
 					foreach (array_shift($queue)->getComponents() as $component) {
 						if ($component instanceof IRenderable) {
@@ -162,10 +160,8 @@ abstract class Control extends Component implements IRenderable
 				return FALSE;
 			}
 
-		} elseif (isset($this->invalidSnippets[$snippet])) {
-			return $this->invalidSnippets[$snippet];
 		} else {
-			return isset($this->invalidSnippets["\0"]);
+			return isset($this->invalidSnippets["\0"]) || isset($this->invalidSnippets[$snippet]);
 		}
 	}
 

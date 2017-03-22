@@ -13,10 +13,8 @@ use Nette;
 /**
  * Method parameter description.
  */
-class Parameter
+class Parameter extends Nette\Object
 {
-	use Nette\SmartObject;
-
 	/** @var string */
 	private $name = '';
 
@@ -27,22 +25,39 @@ class Parameter
 	private $typeHint;
 
 	/** @var bool */
-	private $nullable = FALSE;
-
-	/** @var bool */
-	private $hasDefaultValue = FALSE;
+	private $optional = FALSE;
 
 	/** @var mixed */
 	public $defaultValue;
 
 
 	/**
-	 * @deprecated
-	 * @return static
+	 * @return self
 	 */
 	public static function from(\ReflectionParameter $from)
 	{
-		return (new Factory)->fromParameterReflection($from);
+		$param = new static($from->getName());
+		$param->reference = $from->isPassedByReference();
+		if (PHP_VERSION_ID >= 70000) {
+			$param->typeHint = $from->hasType() ? (string) $from->getType() : NULL;
+		} elseif ($from->isArray()) {
+			$param->typeHint = 'array';
+		} elseif (PHP_VERSION_ID >= 50400 && $from->isCallable()) {
+			$param->typeHint = 'callable';
+		} else {
+			try {
+				$param->typeHint = $from->getClass() ? $from->getClass()->getName() : NULL;
+			} catch (\ReflectionException $e) {
+				if (preg_match('#Class (.+) does not exist#', $e->getMessage(), $m)) {
+					$param->typeHint = $m[1];
+				} else {
+					throw $e;
+				}
+			}
+		}
+		$param->optional = PHP_VERSION_ID < 50407 ? $from->isOptional() || ($param->typeHint && $from->allowsNull()) : $from->isDefaultValueAvailable();
+		$param->defaultValue = (PHP_VERSION_ID === 50316 ? $from->isOptional() : $from->isDefaultValueAvailable()) ? $from->getDefaultValue() : NULL;
+		return $param;
 	}
 
 
@@ -55,7 +70,10 @@ class Parameter
 	}
 
 
-	/** @deprecated */
+	/**
+	 * @param  string  without $
+	 * @return self
+	 */
 	public function setName($name)
 	{
 		$this->name = (string) $name;
@@ -74,7 +92,7 @@ class Parameter
 
 	/**
 	 * @param  bool
-	 * @return static
+	 * @return self
 	 */
 	public function setReference($state = TRUE)
 	{
@@ -94,7 +112,7 @@ class Parameter
 
 	/**
 	 * @param  string|NULL
-	 * @return static
+	 * @return self
 	 */
 	public function setTypeHint($hint)
 	{
@@ -114,47 +132,26 @@ class Parameter
 
 	/**
 	 * @param  bool
-	 * @return static
+	 * @return self
 	 */
 	public function setOptional($state = TRUE)
 	{
-		$this->hasDefaultValue = (bool) $state;
+		$this->optional = (bool) $state;
 		return $this;
 	}
 
 
 	/**
-	 * @deprecated  use hasDefaultValue()
 	 * @return bool
 	 */
 	public function isOptional()
 	{
-		return $this->hasDefaultValue;
+		return $this->optional;
 	}
 
 
 	/**
-	 * @param  bool
-	 * @return static
-	 */
-	public function setNullable($state = TRUE)
-	{
-		$this->nullable = (bool) $state;
-		return $this;
-	}
-
-
-	/**
-	 * @return bool
-	 */
-	public function isNullable()
-	{
-		return $this->nullable;
-	}
-
-
-	/**
-	 * @return static
+	 * @return self
 	 */
 	public function setDefaultValue($val)
 	{
@@ -169,15 +166,6 @@ class Parameter
 	public function getDefaultValue()
 	{
 		return $this->defaultValue;
-	}
-
-
-	/**
-	 * @return bool
-	 */
-	public function hasDefaultValue()
-	{
-		return $this->hasDefaultValue;
 	}
 
 }

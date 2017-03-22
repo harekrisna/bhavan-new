@@ -1,8 +1,8 @@
 <?php
 
 /**
- * This file is part of the Nette Framework (https://nette.org)
- * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
+ * This file is part of the Nette Framework (http://nette.org)
+ * Copyright (c) 2004 David Grudl (http://davidgrudl.com)
  */
 
 namespace Nette\Caching;
@@ -13,10 +13,8 @@ use Nette;
 /**
  * Output caching helper.
  */
-class OutputHelper
+class OutputHelper extends Nette\Object
 {
-	use Nette\SmartObject;
-
 	/** @var array */
 	public $dependencies;
 
@@ -37,6 +35,7 @@ class OutputHelper
 
 	/**
 	 * Stops and saves the cache.
+	 * @param  array  dependencies
 	 * @return void
 	 */
 	public function end(array $dependencies = NULL)

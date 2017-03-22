@@ -13,34 +13,32 @@ use Nette;
 /**
  * Validation utilities.
  */
-class Validators
+class Validators extends Nette\Object
 {
-	use Nette\StaticClass;
-
-	protected static $validators = [
+	protected static $validators = array(
 		'bool' => 'is_bool',
 		'boolean' => 'is_bool',
 		'int' => 'is_int',
 		'integer' => 'is_int',
 		'float' => 'is_float',
-		'number' => [__CLASS__, 'isNumber'],
-		'numeric' => [__CLASS__, 'isNumeric'],
-		'numericint' => [__CLASS__, 'isNumericInt'],
+		'number' => NULL, // is_int || is_float,
+		'numeric' => array(__CLASS__, 'isNumeric'),
+		'numericint' => array(__CLASS__, 'isNumericInt'),
 		'string' => 'is_string',
-		'unicode' => [__CLASS__, 'isUnicode'],
+		'unicode' => array(__CLASS__, 'isUnicode'),
 		'array' => 'is_array',
-		'list' => [Arrays::class, 'isList'],
+		'list' => array('Nette\Utils\Arrays', 'isList'),
 		'object' => 'is_object',
 		'resource' => 'is_resource',
 		'scalar' => 'is_scalar',
-		'callable' => [__CLASS__, 'isCallable'],
+		'callable' => array(__CLASS__, 'isCallable'),
 		'null' => 'is_null',
-		'email' => [__CLASS__, 'isEmail'],
-		'url' => [__CLASS__, 'isUrl'],
-		'uri' => [__CLASS__, 'isUri'],
-		'none' => [__CLASS__, 'isNone'],
-		'type' => [__CLASS__, 'isType'],
-		'identifier' => [__CLASS__, 'isPhpIdentifier'],
+		'email' => array(__CLASS__, 'isEmail'),
+		'url' => array(__CLASS__, 'isUrl'),
+		'uri' => array(__CLASS__, 'isUri'),
+		'none' => array(__CLASS__, 'isNone'),
+		'type' => array(__CLASS__, 'isType'),
+		'identifier' => array(__CLASS__, 'isPhpIdentifier'),
 		'pattern' => NULL,
 		'alnum' => 'ctype_alnum',
 		'alpha' => 'ctype_alpha',
@@ -49,12 +47,11 @@ class Validators
 		'upper' => 'ctype_upper',
 		'space' => 'ctype_space',
 		'xdigit' => 'ctype_xdigit',
-		'iterable' => [__CLASS__, 'isIterable'],
-	];
+	);
 
-	protected static $counters = [
+	protected static $counters = array(
 		'string' => 'strlen',
-		'unicode' => [Strings::class, 'length'],
+		'unicode' => array('Nette\Utils\Strings', 'length'),
 		'array' => 'count',
 		'list' => 'count',
 		'alnum' => 'strlen',
@@ -64,7 +61,7 @@ class Validators
 		'space' => 'strlen',
 		'upper' => 'strlen',
 		'xdigit' => 'strlen',
-	];
+	);
 
 
 	/**
@@ -77,7 +74,7 @@ class Validators
 	public static function assert($value, $expected, $label = 'variable')
 	{
 		if (!static::is($value, $expected)) {
-			$expected = str_replace(['|', ':'], [' or ', ' in range '], $expected);
+			$expected = str_replace(array('|', ':'), array(' or ', ' in range '), $expected);
 			if (is_array($value)) {
 				$type = 'array(' . count($value) . ')';
 			} elseif (is_object($value)) {
@@ -121,16 +118,13 @@ class Validators
 	public static function is($value, $expected)
 	{
 		foreach (explode('|', $expected) as $item) {
-			if (substr($item, -2) === '[]') {
-				if (self::everyIs($value, substr($item, 0, -2))) {
-					return TRUE;
-				}
-				continue;
-			}
-
 			list($type) = $item = explode(':', $item, 2);
 			if (isset(static::$validators[$type])) {
 				if (!call_user_func(static::$validators[$type], $value)) {
+					continue;
+				}
+			} elseif ($type === 'number') {
+				if (!is_int($value) && !is_float($value)) {
 					continue;
 				}
 			} elseif ($type === 'pattern') {
@@ -143,51 +137,20 @@ class Validators
 			}
 
 			if (isset($item[1])) {
-				$length = $value;
 				if (isset(static::$counters[$type])) {
-					$length = call_user_func(static::$counters[$type], $value);
+					$value = call_user_func(static::$counters[$type], $value);
 				}
 				$range = explode('..', $item[1]);
 				if (!isset($range[1])) {
 					$range[1] = $range[0];
 				}
-				if (($range[0] !== '' && $length < $range[0]) || ($range[1] !== '' && $length > $range[1])) {
+				if (($range[0] !== '' && $value < $range[0]) || ($range[1] !== '' && $value > $range[1])) {
 					continue;
 				}
 			}
 			return TRUE;
 		}
 		return FALSE;
-	}
-
-
-	/**
-	 * Finds whether all values are of expected type.
-	 * @param  array|\Traversable
-	 * @param  string  expected types separated by pipe with optional ranges
-	 * @return bool
-	 */
-	public static function everyIs($values, $expected)
-	{
-		if (!self::isIterable($values)) {
-			return FALSE;
-		}
-		foreach ($values as $value) {
-			if (!static::is($value, $expected)) {
-				return FALSE;
-			}
-		}
-		return TRUE;
-	}
-
-
-	/**
-	 * Finds whether a value is an integer or a float.
-	 * @return bool
-	 */
-	public static function isNumber($value)
-	{
-		return is_int($value) || is_float($value);
 	}
 
 
@@ -323,7 +286,7 @@ class Validators
 	 */
 	public static function isType($type)
 	{
-		return class_exists($type) || interface_exists($type) || trait_exists($type);
+		return class_exists($type) || interface_exists($type) || (PHP_VERSION_ID >= 50400 && trait_exists($type));
 	}
 
 
@@ -334,16 +297,6 @@ class Validators
 	public static function isPhpIdentifier($value)
 	{
 		return is_string($value) && preg_match('#^[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*\z#', $value);
-	}
-
-
-	/**
-	 * Returns true if value is iterable (array or instance of Traversable).
-	 * @return bool
-	 */
-	private static function isIterable($value)
-	{
-		return is_array($value) || $value instanceof \Traversable;
 	}
 
 }

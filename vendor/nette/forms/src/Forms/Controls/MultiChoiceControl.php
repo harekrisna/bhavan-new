@@ -22,7 +22,7 @@ abstract class MultiChoiceControl extends BaseControl
 	public $checkAllowedValues = TRUE;
 
 	/** @var array */
-	private $items = [];
+	private $items = array();
 
 
 	public function __construct($label = NULL, array $items = NULL)
@@ -50,8 +50,7 @@ abstract class MultiChoiceControl extends BaseControl
 	/**
 	 * Sets selected items (by keys).
 	 * @param  array
-	 * @return static
-	 * @internal
+	 * @return self
 	 */
 	public function setValue($values)
 	{
@@ -60,7 +59,7 @@ abstract class MultiChoiceControl extends BaseControl
 		} elseif (!is_array($values)) {
 			throw new Nette\InvalidArgumentException(sprintf("Value must be array or NULL, %s given in field '%s'.", gettype($values), $this->name));
 		}
-		$flip = [];
+		$flip = array();
 		foreach ($values as $value) {
 			if (!is_scalar($value) && !method_exists($value, '__toString')) {
 				throw new Nette\InvalidArgumentException(sprintf("Values must be scalar, %s given in field '%s'.", gettype($value), $this->name));
@@ -104,7 +103,7 @@ abstract class MultiChoiceControl extends BaseControl
 	 */
 	public function isFilled()
 	{
-		return $this->getValue() !== [];
+		return $this->getValue() !== array();
 	}
 
 
@@ -112,7 +111,7 @@ abstract class MultiChoiceControl extends BaseControl
 	 * Sets items from which to choose.
 	 * @param  array
 	 * @param  bool
-	 * @return static
+	 * @return self
 	 */
 	public function setItems(array $items, $useKeys = TRUE)
 	{
@@ -144,7 +143,7 @@ abstract class MultiChoiceControl extends BaseControl
 	/**
 	 * Disables or enables control or items.
 	 * @param  bool|array
-	 * @return static
+	 * @return self
 	 */
 	public function setDisabled($value = TRUE)
 	{

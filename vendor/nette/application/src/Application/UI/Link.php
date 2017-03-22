@@ -11,14 +11,12 @@ use Nette;
 
 
 /**
- * Lazy encapsulation of Component::link().
- * Do not instantiate directly, use Component::lazyLink()
+ * Lazy encapsulation of PresenterComponent::link().
+ * Do not instantiate directly, use PresenterComponent::lazyLink()
  */
-class Link
+class Link extends Nette\Object
 {
-	use Nette\SmartObject;
-
-	/** @var Component */
+	/** @var PresenterComponent */
 	private $component;
 
 	/** @var string */
@@ -31,7 +29,7 @@ class Link
 	/**
 	 * Link specification.
 	 */
-	public function __construct(Component $component, $destination, array $params = [])
+	public function __construct(PresenterComponent $component, $destination, array $params)
 	{
 		$this->component = $component;
 		$this->destination = $destination;
@@ -53,7 +51,7 @@ class Link
 	 * Changes link parameter.
 	 * @param  string
 	 * @param  mixed
-	 * @return static
+	 * @return self
 	 */
 	public function setParameter($key, $value)
 	{
@@ -92,10 +90,7 @@ class Link
 		try {
 			return (string) $this->component->link($this->destination, $this->params);
 
-		} catch (\Throwable $e) {
 		} catch (\Exception $e) {
-		}
-		if (isset($e)) {
 			if (func_num_args()) {
 				throw $e;
 			}

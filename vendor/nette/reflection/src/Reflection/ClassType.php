@@ -1,13 +1,14 @@
 <?php
 
 /**
- * This file is part of the Nette Framework (https://nette.org)
- * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
+ * This file is part of the Nette Framework (http://nette.org)
+ * Copyright (c) 2004 David Grudl (http://davidgrudl.com)
  */
 
 namespace Nette\Reflection;
 
 use Nette;
+use Nette\Utils\ObjectMixin;
 
 
 /**
@@ -43,11 +44,11 @@ use Nette;
  */
 class ClassType extends \ReflectionClass
 {
-	use Nette\SmartObject;
+
 
 	/**
 	 * @param  string|object
-	 * @return static
+	 * @return self
 	 */
 	public static function from($class)
 	{
@@ -67,7 +68,7 @@ class ClassType extends \ReflectionClass
 	 */
 	public function is($type)
 	{
-		return is_a($this->getName(), $type, TRUE);
+		return $this->isSubclassOf($type) || strcasecmp($this->getName(), ltrim($type, '\\')) === 0;
 	}
 
 
@@ -93,11 +94,11 @@ class ClassType extends \ReflectionClass
 
 
 	/**
-	 * @return static[]
+	 * @return self[]
 	 */
 	public function getInterfaces()
 	{
-		$res = [];
+		$res = array();
 		foreach (parent::getInterfaceNames() as $val) {
 			$res[$val] = new static($val);
 		}
@@ -127,7 +128,7 @@ class ClassType extends \ReflectionClass
 
 
 	/**
-	 * @return static|NULL
+	 * @return self|NULL
 	 */
 	public function getParentClass()
 	{
@@ -200,6 +201,39 @@ class ClassType extends \ReflectionClass
 	public function getDescription()
 	{
 		return $this->getAnnotation('description');
+	}
+
+
+	/********************* Nette\Object behaviour ****************d*g**/
+
+
+	public function __call($name, $args)
+	{
+		return ObjectMixin::call($this, $name, $args);
+	}
+
+
+	public function &__get($name)
+	{
+		return ObjectMixin::get($this, $name);
+	}
+
+
+	public function __set($name, $value)
+	{
+		ObjectMixin::set($this, $name, $value);
+	}
+
+
+	public function __isset($name)
+	{
+		return ObjectMixin::has($this, $name);
+	}
+
+
+	public function __unset($name)
+	{
+		ObjectMixin::remove($this, $name);
 	}
 
 }

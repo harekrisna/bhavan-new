@@ -47,7 +47,6 @@ use Nette;
  * @method void copyMergeGray(Image $src, $dstX, $dstY, $srcX, $srcY, $srcW, $srcH, $opacity)
  * @method void copyResampled(Image $src, $dstX, $dstY, $srcX, $srcY, $dstW, $dstH, $srcW, $srcH)
  * @method void copyResized(Image $src, $dstX, $dstY, $srcX, $srcY, $dstW, $dstH, $srcW, $srcH)
- * @method Image cropAuto(int $mode = -1, float $threshold = .5, int $color = -1)
  * @method void dashedLine($x1, $y1, $x2, $y2, $color)
  * @method void ellipse($cx, $cy, $w, $h, $color)
  * @method void fill($x, $y, $color)
@@ -57,7 +56,6 @@ use Nette;
  * @method void filledRectangle($x1, $y1, $x2, $y2, $color)
  * @method void fillToBorder($x, $y, $border, $color)
  * @method void filter($filtertype)
- * @method void flip(int $mode)
  * @method array ftText($size, $angle, $x, $y, $col, string $fontFile, string $text, array $extrainfo = NULL)
  * @method void gammaCorrect(float $inputgamma, float $outputgamma)
  * @method int interlace($interlace = NULL)
@@ -65,13 +63,11 @@ use Nette;
  * @method void layerEffect($effect)
  * @method void line($x1, $y1, $x2, $y2, $color)
  * @method void paletteCopy(Image $source)
- * @method void paletteToTrueColor()
  * @method void polygon(array $points, $numPoints, $color)
  * @method array psText(string $text, $font, $size, $color, $backgroundColor, $x, $y, $space = NULL, $tightness = NULL, float $angle = NULL, $antialiasSteps = NULL)
  * @method void rectangle($x1, $y1, $x2, $y2, $col)
  * @method Image rotate(float $angle, $backgroundColor)
  * @method void saveAlpha(bool $saveflag)
- * @method Image scale(int $newWidth, int $newHeight = -1, int $mode = IMG_BILINEAR_FIXED)
  * @method void setBrush(Image $brush)
  * @method void setPixel($x, $y, $color)
  * @method void setStyle(array $style)
@@ -85,38 +81,32 @@ use Nette;
  * @property-read int $height
  * @property-read resource $imageResource
  */
-class Image
+class Image extends Nette\Object
 {
-	use Nette\SmartObject;
-
 	/** {@link resize()} only shrinks images */
-	const SHRINK_ONLY = 0b0001;
+	const SHRINK_ONLY = 1;
 
 	/** {@link resize()} will ignore aspect ratio */
-	const STRETCH = 0b0010;
+	const STRETCH = 2;
 
 	/** {@link resize()} fits in given area so its dimensions are less than or equal to the required dimensions */
-	const FIT = 0b0000;
+	const FIT = 0;
 
 	/** {@link resize()} fills given area so its dimensions are greater than or equal to the required dimensions */
-	const FILL = 0b0100;
+	const FILL = 4;
 
 	/** {@link resize()} fills given area exactly */
-	const EXACT = 0b1000;
+	const EXACT = 8;
 
 	/** image types */
-	const
-		JPEG = IMAGETYPE_JPEG,
+	const JPEG = IMAGETYPE_JPEG,
 		PNG = IMAGETYPE_PNG,
-		GIF = IMAGETYPE_GIF,
-		WEBP = 18; // IMAGETYPE_WEBP is available as of PHP 7.1
+		GIF = IMAGETYPE_GIF;
 
 	const EMPTY_GIF = "GIF89a\x01\x00\x01\x00\x80\x00\x00\x00\x00\x00\x00\x00\x00!\xf9\x04\x01\x00\x00\x00\x00,\x00\x00\x00\x00\x01\x00\x01\x00\x00\x02\x02D\x01\x00;";
 
 	/** @deprecated */
 	const ENLARGE = 0;
-
-	private static $formats = [self::JPEG => 'jpeg', self::PNG => 'png', self::GIF => 'gif', self::WEBP => 'webp'];
 
 	/** @var resource */
 	private $image;
@@ -132,12 +122,12 @@ class Image
 	 */
 	public static function rgb($red, $green, $blue, $transparency = 0)
 	{
-		return [
+		return array(
 			'red' => max(0, min(255, (int) $red)),
 			'green' => max(0, min(255, (int) $green)),
 			'blue' => max(0, min(255, (int) $blue)),
 			'alpha' => max(0, min(127, (int) $transparency)),
-		];
+		);
 	}
 
 
@@ -147,25 +137,40 @@ class Image
 	 * @param  mixed  detected image format
 	 * @throws Nette\NotSupportedException if gd extension is not loaded
 	 * @throws UnknownImageFileException if file not found or file type is not known
-	 * @return static
+	 * @return self
 	 */
-	public static function fromFile($file, &$format = NULL)
+	public static function fromFile($file, & $format = NULL)
 	{
 		if (!extension_loaded('gd')) {
 			throw new Nette\NotSupportedException('PHP extension GD is not loaded.');
 		}
 
-		$format = @getimagesize($file)[2]; // @ - files smaller than 12 bytes causes read error
-		if (!$format && PHP_VERSION_ID < 70100 && @file_get_contents($file, FALSE, NULL, 8, 4) === 'WEBP') { // @ - may not exists
-			$format = self::WEBP;
-		}
-		if (!isset(self::$formats[$format])) {
-			$format = NULL;
+		static $funcs = array(
+			self::JPEG => 'imagecreatefromjpeg',
+			self::PNG => 'imagecreatefrompng',
+			self::GIF => 'imagecreatefromgif',
+		);
+		$info = @getimagesize($file); // @ - files smaller than 12 bytes causes read error
+		$format = $info[2];
+
+		if (!isset($funcs[$format])) {
 			throw new UnknownImageFileException(is_file($file) ? "Unknown type of file '$file'." : "File '$file' not found.");
 		}
-		return new static(Callback::invokeSafe('imagecreatefrom' . self::$formats[$format], [$file], function ($message) {
+		return new static(Callback::invokeSafe($funcs[$format], array($file), function ($message) {
 			throw new ImageException($message);
 		}));
+	}
+
+
+	/**
+	 * @deprecated
+	 */
+	public static function getFormatFromString($s)
+	{
+		trigger_error(__METHOD__ . '() is deprecated; use finfo_buffer() instead.', E_USER_DEPRECATED);
+		$types = array('image/jpeg' => self::JPEG, 'image/gif' => self::GIF, 'image/png' => self::PNG);
+		$type = finfo_buffer(finfo_open(FILEINFO_MIME_TYPE), $s);
+		return isset($types[$type]) ? $types[$type] : NULL;
 	}
 
 
@@ -173,21 +178,20 @@ class Image
 	 * Create a new image from the image stream in the string.
 	 * @param  string
 	 * @param  mixed  detected image format
-	 * @return static
+	 * @return self
 	 * @throws ImageException
 	 */
-	public static function fromString($s, &$format = NULL)
+	public static function fromString($s, & $format = NULL)
 	{
 		if (!extension_loaded('gd')) {
 			throw new Nette\NotSupportedException('PHP extension GD is not loaded.');
 		}
 
 		if (func_num_args() > 1) {
-			$tmp = @getimagesizefromstring($s)[2]; // @ - strings smaller than 12 bytes causes read error
-			$format = isset(self::$formats[$tmp]) ? $tmp : NULL;
+			$format = @static::getFormatFromString($s); // @ suppress trigger_error
 		}
 
-		return new static(Callback::invokeSafe('imagecreatefromstring', [$s], function ($message) {
+		return new static(Callback::invokeSafe('imagecreatefromstring', array($s), function ($message) {
 			throw new ImageException($message);
 		}));
 	}
@@ -198,7 +202,7 @@ class Image
 	 * @param  int
 	 * @param  int
 	 * @param  array
-	 * @return static
+	 * @return self
 	 */
 	public static function fromBlank($width, $height, $color = NULL)
 	{
@@ -214,7 +218,7 @@ class Image
 
 		$image = imagecreatetruecolor($width, $height);
 		if (is_array($color)) {
-			$color += ['alpha' => 0];
+			$color += array('alpha' => 0);
 			$color = imagecolorresolvealpha($image, $color['red'], $color['green'], $color['blue'], $color['alpha']);
 			imagealphablending($image, FALSE);
 			imagefilledrectangle($image, 0, 0, $width - 1, $height - 1, $color);
@@ -258,7 +262,7 @@ class Image
 	/**
 	 * Sets image resource.
 	 * @param  resource
-	 * @return static
+	 * @return self
 	 */
 	protected function setImageResource($image)
 	{
@@ -285,7 +289,7 @@ class Image
 	 * @param  mixed  width in pixels or percent
 	 * @param  mixed  height in pixels or percent
 	 * @param  int    flags
-	 * @return static
+	 * @return self
 	 */
 	public function resize($width, $height, $flags = self::FIT)
 	{
@@ -305,8 +309,14 @@ class Image
 			$this->image = $newImage;
 		}
 
-		if ($width < 0 || $height < 0) {
-			imageflip($this->image, $width < 0 ? ($height < 0 ? IMG_FLIP_BOTH : IMG_FLIP_HORIZONTAL) : IMG_FLIP_VERTICAL);
+		if ($width < 0 || $height < 0) { // flip is processed in two steps for better quality
+			$newImage = static::fromBlank($newWidth, $newHeight, self::RGB(0, 0, 0, 127))->getImageResource();
+			imagecopyresampled(
+				$newImage, $this->image,
+				0, 0, $width < 0 ? $newWidth - 1 : 0, $height < 0 ? $newHeight - 1 : 0,
+				$newWidth, $newHeight, $width < 0 ? -$newWidth : $newWidth, $height < 0 ? -$newHeight : $newHeight
+			);
+			$this->image = $newImage;
 		}
 		return $this;
 	}
@@ -323,15 +333,15 @@ class Image
 	 */
 	public static function calculateSize($srcWidth, $srcHeight, $newWidth, $newHeight, $flags = self::FIT)
 	{
-		if (is_string($newWidth) && substr($newWidth, -1) === '%') {
-			$newWidth = (int) round($srcWidth / 100 * abs(substr($newWidth, 0, -1)));
+		if (substr($newWidth, -1) === '%') {
+			$newWidth = round($srcWidth / 100 * abs($newWidth));
 			$percents = TRUE;
 		} else {
 			$newWidth = (int) abs($newWidth);
 		}
 
-		if (is_string($newHeight) && substr($newHeight, -1) === '%') {
-			$newHeight = (int) round($srcHeight / 100 * abs(substr($newHeight, 0, -1)));
+		if (substr($newHeight, -1) === '%') {
+			$newHeight = round($srcHeight / 100 * abs($newHeight));
 			$flags |= empty($percents) ? 0 : self::STRETCH;
 		} else {
 			$newHeight = (int) abs($newHeight);
@@ -343,8 +353,8 @@ class Image
 			}
 
 			if ($flags & self::SHRINK_ONLY) {
-				$newWidth = (int) round($srcWidth * min(1, $newWidth / $srcWidth));
-				$newHeight = (int) round($srcHeight * min(1, $newHeight / $srcHeight));
+				$newWidth = round($srcWidth * min(1, $newWidth / $srcWidth));
+				$newHeight = round($srcHeight * min(1, $newHeight / $srcHeight));
 			}
 
 		} else {  // proportional
@@ -352,7 +362,7 @@ class Image
 				throw new Nette\InvalidArgumentException('At least width or height must be specified.');
 			}
 
-			$scale = [];
+			$scale = array();
 			if ($newWidth > 0) { // fit width
 				$scale[] = $newWidth / $srcWidth;
 			}
@@ -362,7 +372,7 @@ class Image
 			}
 
 			if ($flags & self::FILL) {
-				$scale = [max($scale)];
+				$scale = array(max($scale));
 			}
 
 			if ($flags & self::SHRINK_ONLY) {
@@ -370,11 +380,11 @@ class Image
 			}
 
 			$scale = min($scale);
-			$newWidth = (int) round($srcWidth * $scale);
-			$newHeight = (int) round($srcHeight * $scale);
+			$newWidth = round($srcWidth * $scale);
+			$newHeight = round($srcHeight * $scale);
 		}
 
-		return [max($newWidth, 1), max($newHeight, 1)];
+		return array(max((int) $newWidth, 1), max((int) $newHeight, 1));
 	}
 
 
@@ -384,19 +394,14 @@ class Image
 	 * @param  mixed  y-offset in pixels or percent
 	 * @param  mixed  width in pixels or percent
 	 * @param  mixed  height in pixels or percent
-	 * @return static
+	 * @return self
 	 */
 	public function crop($left, $top, $width, $height)
 	{
-		list($r['x'], $r['y'], $r['width'], $r['height'])
-			= static::calculateCutout($this->getWidth(), $this->getHeight(), $left, $top, $width, $height);
-		if (PHP_VERSION_ID > 50611) { // PHP bug #67447
-			$this->image = imagecrop($this->image, $r);
-		} else {
-			$newImage = static::fromBlank($r['width'], $r['height'], self::RGB(0, 0, 0, 127))->getImageResource();
-			imagecopy($newImage, $this->image, 0, 0, $r['x'], $r['y'], $r['width'], $r['height']);
-			$this->image = $newImage;
-		}
+		list($left, $top, $width, $height) = static::calculateCutout($this->getWidth(), $this->getHeight(), $left, $top, $width, $height);
+		$newImage = static::fromBlank($width, $height, self::RGB(0, 0, 0, 127))->getImageResource();
+		imagecopy($newImage, $this->image, 0, 0, $left, $top, $width, $height);
+		$this->image = $newImage;
 		return $this;
 	}
 
@@ -413,17 +418,17 @@ class Image
 	 */
 	public static function calculateCutout($srcWidth, $srcHeight, $left, $top, $newWidth, $newHeight)
 	{
-		if (is_string($newWidth) && substr($newWidth, -1) === '%') {
-			$newWidth = (int) round($srcWidth / 100 * substr($newWidth, 0, -1));
+		if (substr($newWidth, -1) === '%') {
+			$newWidth = round($srcWidth / 100 * $newWidth);
 		}
-		if (is_string($newHeight) && substr($newHeight, -1) === '%') {
-			$newHeight = (int) round($srcHeight / 100 * substr($newHeight, 0, -1));
+		if (substr($newHeight, -1) === '%') {
+			$newHeight = round($srcHeight / 100 * $newHeight);
 		}
-		if (is_string($left) && substr($left, -1) === '%') {
-			$left = (int) round(($srcWidth - $newWidth) / 100 * substr($left, 0, -1));
+		if (substr($left, -1) === '%') {
+			$left = round(($srcWidth - $newWidth) / 100 * $left);
 		}
-		if (is_string($top) && substr($top, -1) === '%') {
-			$top = (int) round(($srcHeight - $newHeight) / 100 * substr($top, 0, -1));
+		if (substr($top, -1) === '%') {
+			$top = round(($srcHeight - $newHeight) / 100 * $top);
 		}
 		if ($left < 0) {
 			$newWidth += $left;
@@ -433,23 +438,23 @@ class Image
 			$newHeight += $top;
 			$top = 0;
 		}
-		$newWidth = min($newWidth, $srcWidth - $left);
-		$newHeight = min($newHeight, $srcHeight - $top);
-		return [$left, $top, $newWidth, $newHeight];
+		$newWidth = min((int) $newWidth, $srcWidth - $left);
+		$newHeight = min((int) $newHeight, $srcHeight - $top);
+		return array($left, $top, $newWidth, $newHeight);
 	}
 
 
 	/**
 	 * Sharpen image.
-	 * @return static
+	 * @return self
 	 */
 	public function sharpen()
 	{
-		imageconvolution($this->image, [ // my magic numbers ;)
-			[-1, -1, -1],
-			[-1, 24, -1],
-			[-1, -1, -1],
-		], 16, 0);
+		imageconvolution($this->image, array( // my magic numbers ;)
+			array(-1, -1, -1),
+			array(-1, 24, -1),
+			array(-1, -1, -1),
+		), 16, 0);
 		return $this;
 	}
 
@@ -460,53 +465,43 @@ class Image
 	 * @param  mixed  x-coordinate in pixels or percent
 	 * @param  mixed  y-coordinate in pixels or percent
 	 * @param  int  opacity 0..100
-	 * @return static
+	 * @return self
 	 */
 	public function place(Image $image, $left = 0, $top = 0, $opacity = 100)
 	{
 		$opacity = max(0, min(100, (int) $opacity));
-		if ($opacity === 0) {
-			return $this;
+
+		if (substr($left, -1) === '%') {
+			$left = round(($this->getWidth() - $image->getWidth()) / 100 * $left);
 		}
 
-		$width = $image->getWidth();
-		$height = $image->getHeight();
-
-		if (is_string($left) && substr($left, -1) === '%') {
-			$left = (int) round(($this->getWidth() - $width) / 100 * substr($left, 0, -1));
+		if (substr($top, -1) === '%') {
+			$top = round(($this->getHeight() - $image->getHeight()) / 100 * $top);
 		}
 
-		if (is_string($top) && substr($top, -1) === '%') {
-			$top = (int) round(($this->getHeight() - $height) / 100 * substr($top, 0, -1));
+		if ($opacity === 100) {
+			imagecopy(
+				$this->image, $image->getImageResource(),
+				$left, $top, 0, 0, $image->getWidth(), $image->getHeight()
+			);
+
+		} elseif ($opacity != 0) {
+			$cutting = imagecreatetruecolor($image->getWidth(), $image->getHeight());
+			imagecopy(
+				$cutting, $this->image,
+				0, 0, $left, $top, $image->getWidth(), $image->getHeight()
+			);
+			imagecopy(
+				$cutting, $image->getImageResource(),
+				0, 0, 0, 0, $image->getWidth(), $image->getHeight()
+			);
+
+			imagecopymerge(
+				$this->image, $cutting,
+				$left, $top, 0, 0, $image->getWidth(), $image->getHeight(),
+				$opacity
+			);
 		}
-
-		$output = $input = $image->image;
-		if ($opacity < 100) {
-			for ($i = 0; $i < 128; $i++) {
-				$tbl[$i] = round(127 - (127 - $i) * $opacity / 100);
-			}
-
-			$output = imagecreatetruecolor($width, $height);
-			imagealphablending($output, FALSE);
-			if (!$image->isTrueColor()) {
-				$input = $output;
-				imagefilledrectangle($output, 0, 0, $width, $height, imagecolorallocatealpha($output, 0, 0, 0, 127));
-				imagecopy($output, $image->image, 0, 0, 0, 0, $width, $height);
-			}
-			for ($x = 0; $x < $width; $x++) {
-				for ($y = 0; $y < $height; $y++) {
-					$c = \imagecolorat($input, $x, $y);
-					$c = ($c & 0xFFFFFF) + ($tbl[$c >> 24] << 24);
-					\imagesetpixel($output, $x, $y, $c);
-				}
-			}
-			imagealphablending($output, TRUE);
-		}
-
-		imagecopy(
-			$this->image, $output,
-			$left, $top, 0, 0, $width, $height
-		);
 		return $this;
 	}
 
@@ -514,19 +509,27 @@ class Image
 	/**
 	 * Saves image to the file.
 	 * @param  string  filename
-	 * @param  int  quality (0..100 for JPEG and WEBP, 0..9 for PNG)
+	 * @param  int  quality 0..100 (for JPEG and PNG)
 	 * @param  int  optional image type
 	 * @return bool TRUE on success or FALSE on failure.
 	 */
 	public function save($file = NULL, $quality = NULL, $type = NULL)
 	{
 		if ($type === NULL) {
-			$extensions = array_flip(self::$formats) + ['jpg' => self::JPEG];
-			$ext = strtolower(pathinfo($file, PATHINFO_EXTENSION));
-			if (!isset($extensions[$ext])) {
+			switch (strtolower($ext = pathinfo($file, PATHINFO_EXTENSION))) {
+				case 'jpg':
+				case 'jpeg':
+					$type = self::JPEG;
+					break;
+				case 'png':
+					$type = self::PNG;
+					break;
+				case 'gif':
+					$type = self::GIF;
+					break;
+				default:
 					throw new Nette\InvalidArgumentException("Unsupported file extension '$ext'.");
 			}
-			$type = $extensions[$ext];
 		}
 
 		switch ($type) {
@@ -541,10 +544,6 @@ class Image
 			case self::GIF:
 				return imagegif($this->image, $file);
 
-			case self::WEBP:
-				$quality = $quality === NULL ? 80 : max(0, min(100, (int) $quality));
-				return imagewebp($this->image, $file, $quality);
-
 			default:
 				throw new Nette\InvalidArgumentException("Unsupported image type '$type'.");
 		}
@@ -554,12 +553,12 @@ class Image
 	/**
 	 * Outputs image to string.
 	 * @param  int  image type
-	 * @param  int  quality (0..100 for JPEG and WEBP, 0..9 for PNG)
+	 * @param  int  quality 0..100 (for JPEG and PNG)
 	 * @return string
 	 */
 	public function toString($type = self::JPEG, $quality = NULL)
 	{
-		ob_start(function () {});
+		ob_start();
 		$this->save(NULL, $quality, $type);
 		return ob_get_clean();
 	}
@@ -573,10 +572,7 @@ class Image
 	{
 		try {
 			return $this->toString();
-		} catch (\Throwable $e) {
 		} catch (\Exception $e) {
-		}
-		if (isset($e)) {
 			if (func_num_args()) {
 				throw $e;
 			}
@@ -588,15 +584,15 @@ class Image
 	/**
 	 * Outputs image to browser.
 	 * @param  int  image type
-	 * @param  int  quality (0..100 for JPEG and WEBP, 0..9 for PNG)
+	 * @param  int  quality 0..100 (for JPEG and PNG)
 	 * @return bool TRUE on success or FALSE on failure.
 	 */
 	public function send($type = self::JPEG, $quality = NULL)
 	{
-		if (!isset(self::$formats[$type])) {
+		if (!in_array($type, array(self::JPEG, self::PNG, self::GIF), TRUE)) {
 			throw new Nette\InvalidArgumentException("Unsupported image type '$type'.");
 		}
-		header('Content-Type: image/' . self::$formats[$type]);
+		header('Content-Type: ' . image_type_to_mime_type($type));
 		return $this->save(NULL, $quality, $type);
 	}
 
@@ -613,7 +609,7 @@ class Image
 	{
 		$function = 'image' . $name;
 		if (!function_exists($function)) {
-			ObjectMixin::strictCall(get_class($this), $name);
+			return parent::__call($name, $args);
 		}
 
 		foreach ($args as $key => $value) {
@@ -630,14 +626,16 @@ class Image
 				);
 			}
 		}
-		$res = $function($this->image, ...$args);
+		array_unshift($args, $this->image);
+
+		$res = call_user_func_array($function, $args);
 		return is_resource($res) && get_resource_type($res) === 'gd' ? $this->setImageResource($res) : $res;
 	}
 
 
 	public function __clone()
 	{
-		ob_start(function () {});
+		ob_start();
 		imagegd2($this->image);
 		$this->setImageResource(imagecreatefromstring(ob_get_clean()));
 	}

@@ -16,22 +16,21 @@ use Tracy;
  */
 class Helpers
 {
-	use Nette\StaticClass;
-
 	/** @var int maximum SQL length */
 	public static $maxLength = 100;
 
 	/** @var array */
-	public static $typePatterns = [
+	public static $typePatterns = array(
 		'^_' => IStructure::FIELD_TEXT, // PostgreSQL arrays
-		'(TINY|SMALL|SHORT|MEDIUM|BIG|LONG)(INT)?|INT(EGER|\d+| IDENTITY)?|(SMALL|BIG|)SERIAL\d*|COUNTER|YEAR|BYTE|LONGLONG|UNSIGNED BIG INT' => IStructure::FIELD_INTEGER,
-		'(NEW)?DEC(IMAL)?(\(.*)?|NUMERIC|REAL|DOUBLE( PRECISION)?|FLOAT\d*|(SMALL)?MONEY|CURRENCY|NUMBER' => IStructure::FIELD_FLOAT,
-		'BOOL(EAN)?' => IStructure::FIELD_BOOL,
-		'TIME' => IStructure::FIELD_TIME,
+		'BYTEA|BLOB|BIN' => IStructure::FIELD_BINARY,
+		'TEXT|CHAR|POINT|INTERVAL' => IStructure::FIELD_TEXT,
+		'YEAR|BYTE|COUNTER|SERIAL|INT|LONG|SHORT|^TINY$' => IStructure::FIELD_INTEGER,
+		'CURRENCY|REAL|MONEY|FLOAT|DOUBLE|DECIMAL|NUMERIC|NUMBER' => IStructure::FIELD_FLOAT,
+		'^TIME$' => IStructure::FIELD_TIME,
+		'TIME' => IStructure::FIELD_DATETIME, // DATETIME, TIMESTAMP
 		'DATE' => IStructure::FIELD_DATE,
-		'(SMALL)?DATETIME(OFFSET)?\d*|TIME(STAMP)?' => IStructure::FIELD_DATETIME,
-		'BYTEA|(TINY|MEDIUM|LONG|)BLOB|(LONG )?(VAR)?BINARY|IMAGE' => IStructure::FIELD_BINARY,
-	];
+		'BOOL' => IStructure::FIELD_BOOL,
+	);
 
 
 	/**
@@ -119,7 +118,7 @@ class Helpers
 
 			} elseif (is_string($param)) {
 				$length = Nette\Utils\Strings::length($param);
-				$truncated = Nette\Utils\Strings::truncate($param, self::$maxLength);
+				$truncated = Nette\Utils\Strings::truncate($param, Helpers::$maxLength);
 				$text = htmlspecialchars($connection ? $connection->quote($truncated) : '\'' . $truncated . '\'', ENT_NOQUOTES, 'UTF-8');
 				return '<span title="Length ' . $length . ' characters">' . $text . '</span>';
 
@@ -146,7 +145,7 @@ class Helpers
 	 */
 	public static function detectTypes(\PDOStatement $statement)
 	{
-		$types = [];
+		$types = array();
 		$count = $statement->columnCount(); // driver must be meta-aware, see PHP bugs #53782, #54695
 		for ($col = 0; $col < $count; $col++) {
 			$meta = $statement->getColumnMeta($col);
@@ -170,7 +169,7 @@ class Helpers
 		if (!isset($cache[$type])) {
 			$cache[$type] = 'string';
 			foreach (self::$typePatterns as $s => $val) {
-				if (preg_match("#^($s)$#i", $type)) {
+				if (preg_match("#$s#i", $type)) {
 					return $cache[$type] = $val;
 				}
 			}
@@ -237,7 +236,7 @@ class Helpers
 	public static function toPairs(array $rows, $key = NULL, $value = NULL)
 	{
 		if (!$rows) {
-			return [];
+			return array();
 		}
 
 		$keys = array_keys((array) reset($rows));
@@ -252,7 +251,7 @@ class Helpers
 			}
 		}
 
-		$return = [];
+		$return = array();
 		if ($key === NULL) {
 			foreach ($rows as $row) {
 				$return[] = ($value === NULL ? $row : $row[$value]);
@@ -264,29 +263,6 @@ class Helpers
 		}
 
 		return $return;
-	}
-
-
-	/**
-	 * Finds duplicate columns in select statement
-	 * @param  \PDOStatement
-	 * @return string
-	 */
-	public static function findDuplicates(\PDOStatement $statement)
-	{
-		$cols = [];
-		for ($i = 0; $i < $statement->columnCount(); $i++) {
-			$meta = $statement->getColumnMeta($i);
-			$cols[$meta['name']][] = isset($meta['table']) ? $meta['table'] : '';
-		}
-		$duplicates = [];
-		foreach ($cols as $name => $tables) {
-			if (count($tables) > 1) {
-				$tables = array_filter(array_unique($tables));
-				$duplicates[] = "'$name'" . ($tables ? ' (from ' . implode(', ', $tables) . ')' : '');
-			}
-		}
-		return implode(', ', $duplicates);
 	}
 
 }

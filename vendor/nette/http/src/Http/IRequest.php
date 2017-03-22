@@ -1,8 +1,8 @@
 <?php
 
 /**
- * This file is part of the Nette Framework (https://nette.org)
- * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
+ * This file is part of the Nette Framework (http://nette.org)
+ * Copyright (c) 2004 David Grudl (http://davidgrudl.com)
  */
 
 namespace Nette\Http;
@@ -19,9 +19,7 @@ interface IRequest
 		POST = 'POST',
 		HEAD = 'HEAD',
 		PUT = 'PUT',
-		DELETE = 'DELETE',
-		PATCH = 'PATCH',
-		OPTIONS = 'OPTIONS';
+		DELETE = 'DELETE';
 
 	/**
 	 * Returns URL object.

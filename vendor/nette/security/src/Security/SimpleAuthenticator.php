@@ -1,8 +1,8 @@
 <?php
 
 /**
- * This file is part of the Nette Framework (https://nette.org)
- * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
+ * This file is part of the Nette Framework (http://nette.org)
+ * Copyright (c) 2004 David Grudl (http://davidgrudl.com)
  */
 
 namespace Nette\Security;
@@ -13,10 +13,8 @@ use Nette;
 /**
  * Trivial implementation of IAuthenticator.
  */
-class SimpleAuthenticator implements IAuthenticator
+class SimpleAuthenticator extends Nette\Object implements IAuthenticator
 {
-	use Nette\SmartObject;
-
 	/** @var array */
 	private $userlist;
 
@@ -28,7 +26,7 @@ class SimpleAuthenticator implements IAuthenticator
 	 * @param  array  list of pairs username => password
 	 * @param  array  list of pairs username => role[]
 	 */
-	public function __construct(array $userlist, array $usersRoles = [])
+	public function __construct(array $userlist, array $usersRoles = array())
 	{
 		$this->userlist = $userlist;
 		$this->usersRoles = $usersRoles;

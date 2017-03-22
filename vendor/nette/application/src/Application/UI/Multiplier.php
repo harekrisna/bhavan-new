@@ -13,16 +13,19 @@ use Nette;
 /**
  * Component multiplier.
  */
-class Multiplier extends Component
+class Multiplier extends PresenterComponent
 {
 	/** @var callable */
 	private $factory;
 
 
-	public function __construct(callable $factory)
+	/**
+	 * @param callable
+	 */
+	public function __construct($factory)
 	{
 		parent::__construct();
-		$this->factory = $factory;
+		$this->factory = Nette\Utils\Callback::check($factory);
 	}
 
 

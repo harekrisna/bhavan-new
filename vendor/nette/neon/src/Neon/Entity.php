@@ -1,8 +1,8 @@
 <?php
 
 /**
- * This file is part of the Nette Framework (https://nette.org)
- * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
+ * This file is part of the Nette Framework (http://nette.org)
+ * Copyright (c) 2004 David Grudl (http://davidgrudl.com)
  */
 
 namespace Nette\Neon;
@@ -24,11 +24,6 @@ class Entity extends \stdClass
 	{
 		$this->value = $value;
 		$this->attributes = (array) $attrs;
-	}
-
-	public static function __set_state(array $properties)
-	{
-		return new self($properties['value'], $properties['attributes']);
 	}
 
 }

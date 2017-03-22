@@ -27,15 +27,9 @@ interface ILoader
 	function isExpired($name, $time);
 
 	/**
-	 * Returns referred template name.
+	 * Returns fully qualified template name.
 	 * @return string
 	 */
-	function getReferredName($name, $referringName);
-
-	/**
-	 * Returns unique identifier for caching.
-	 * @return string
-	 */
-	function getUniqueId($name);
+	function getChildName($name, $parent = NULL);
 
 }

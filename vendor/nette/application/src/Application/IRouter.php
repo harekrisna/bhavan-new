@@ -16,10 +16,10 @@ use Nette;
 interface IRouter
 {
 	/** only matching route */
-	const ONE_WAY = 0b0001;
+	const ONE_WAY = 1;
 
-	/** @deprecated */
-	const SECURED = 0b0010;
+	/** HTTPS route */
+	const SECURED = 2;
 
 	/**
 	 * Maps HTTP request to a Request object.

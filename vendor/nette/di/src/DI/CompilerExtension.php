@@ -1,8 +1,8 @@
 <?php
 
 /**
- * This file is part of the Nette Framework (https://nette.org)
- * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
+ * This file is part of the Nette Framework (http://nette.org)
+ * Copyright (c) 2004 David Grudl (http://davidgrudl.com)
  */
 
 namespace Nette\DI;
@@ -13,10 +13,8 @@ use Nette;
 /**
  * Configurator compiling extension.
  */
-abstract class CompilerExtension
+abstract class CompilerExtension extends Nette\Object
 {
-	use Nette\SmartObject;
-
 	/** @var Compiler */
 	protected $compiler;
 
@@ -24,12 +22,9 @@ abstract class CompilerExtension
 	protected $name;
 
 	/** @var array */
-	protected $config = [];
+	protected $config = array();
 
 
-	/**
-	 * @return static
-	 */
 	public function setCompiler(Compiler $compiler, $name)
 	{
 		$this->compiler = $compiler;
@@ -38,9 +33,6 @@ abstract class CompilerExtension
 	}
 
 
-	/**
-	 * @return static
-	 */
 	public function setConfig(array $config)
 	{
 		$this->config = $config;
@@ -73,9 +65,8 @@ abstract class CompilerExtension
 		}
 		if ($extra = array_diff_key((array) $config, $expected)) {
 			$name = $name ?: $this->name;
-			$hint = Nette\Utils\ObjectMixin::getSuggestion(array_keys($expected), key($extra));
-			$extra = $hint ? key($extra) : implode(", $name.", array_keys($extra));
-			throw new Nette\InvalidStateException("Unknown configuration option $name.$extra" . ($hint ? ", did you mean $name.$hint?" : '.'));
+			$extra = implode(", $name.", array_keys($extra));
+			throw new Nette\InvalidStateException("Unknown configuration option $name.$extra.");
 		}
 		return Config\Helpers::merge($config, $expected);
 	}

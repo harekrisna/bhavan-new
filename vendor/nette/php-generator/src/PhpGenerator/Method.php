@@ -12,22 +12,26 @@ use Nette;
 
 /**
  * Method or function description.
- *
- * @property string $body
  */
-class Method extends Member
+class Method extends Nette\Object
 {
+	/** @var string|NULL */
+	private $name;
+
 	/** @var array of name => Parameter */
-	private $parameters = [];
+	private $parameters = array();
 
 	/** @var array of name => bool */
-	private $uses = [];
+	private $uses = array();
 
 	/** @var string|FALSE */
 	private $body = '';
 
 	/** @var bool */
 	private $static = FALSE;
+
+	/** @var string|NULL  public|protected|private */
+	private $visibility;
 
 	/** @var bool */
 	private $final = FALSE;
@@ -41,24 +45,47 @@ class Method extends Member
 	/** @var bool */
 	private $variadic = FALSE;
 
+	/** @var string[] */
+	private $documents = array();
+
 	/** @var PhpNamespace|NULL */
 	private $namespace;
 
 	/** @var string|NULL */
 	private $returnType;
 
-	/** @var bool */
-	private $returnNullable;
-
 
 	/**
-	 * @return static
+	 * @return self
 	 */
 	public static function from($from)
 	{
-		return (new Factory)->fromFunctionReflection(
-			$from instanceof \ReflectionFunctionAbstract ? $from : Nette\Utils\Callback::toReflection($from)
-		);
+		if (is_string($from) && strpos($from, '::')) {
+			$from = new \ReflectionMethod($from);
+		} elseif (is_array($from)) {
+			$from = new \ReflectionMethod($from[0], $from[1]);
+		} elseif (!$from instanceof \ReflectionFunctionAbstract) {
+			$from = new \ReflectionFunction($from);
+		}
+
+		$method = new static($from->isClosure() ? NULL : $from->getName());
+		foreach ($from->getParameters() as $param) {
+			$method->parameters[$param->getName()] = Parameter::from($param);
+		}
+		if ($from instanceof \ReflectionMethod) {
+			$method->static = $from->isStatic();
+			$method->visibility = $from->isPrivate() ? 'private' : ($from->isProtected() ? 'protected' : NULL);
+			$method->final = $from->isFinal();
+			$method->abstract = $from->isAbstract() && !$from->getDeclaringClass()->isInterface();
+			$method->body = $from->isAbstract() ? FALSE : '';
+		}
+		$method->returnReference = $from->returnsReference();
+		$method->variadic = PHP_VERSION_ID >= 50600 && $from->isVariadic();
+		$method->documents = $from->getDocComment() ? array(preg_replace('#^\s*\* ?#m', '', trim($from->getDocComment(), "/* \r\n\t"))) : array();
+		if (PHP_VERSION_ID >= 70000 && $from->hasReturnType()) {
+			$method->returnType = (string) $from->getReturnType();
+		}
+		return $method;
 	}
 
 
@@ -76,45 +103,65 @@ class Method extends Member
 	 */
 	public function __toString()
 	{
-		$parameters = [];
+		$namespace = $this->namespace ?: new PhpNamespace;
+		$parameters = array();
 		foreach ($this->parameters as $param) {
 			$variadic = $this->variadic && $param === end($this->parameters);
-			$hint = $param->getTypeHint();
-			$parameters[] = ($hint ? ($param->isNullable() ? '?' : '') . ($this->namespace ? $this->namespace->unresolveName($hint) : $hint) . ' ' : '')
+
+			$parameters[] = ($param->getTypeHint() ? $namespace->unresolveName($param->getTypeHint()) . ' ' : '')
 				. ($param->isReference() ? '&' : '')
 				. ($variadic ? '...' : '')
 				. '$' . $param->getName()
-				. ($param->hasDefaultValue() && !$variadic ? ' = ' . Helpers::dump($param->defaultValue) : '');
+				. ($param->isOptional() && !$variadic ? ' = ' . Helpers::dump($param->defaultValue) : '');
 		}
-		$uses = [];
+		$uses = array();
 		foreach ($this->uses as $param) {
 			$uses[] = ($param->isReference() ? '&' : '') . '$' . $param->getName();
 		}
 
-		return Helpers::formatDocComment($this->getComment() . "\n")
+		return ($this->documents ? str_replace("\n", "\n * ", "/**\n" . implode("\n", $this->documents)) . "\n */\n" : '')
 			. ($this->abstract ? 'abstract ' : '')
 			. ($this->final ? 'final ' : '')
-			. ($this->getVisibility() ? $this->getVisibility() . ' ' : '')
+			. ($this->visibility ? $this->visibility . ' ' : '')
 			. ($this->static ? 'static ' : '')
-			. 'function '
-			. ($this->returnReference ? '&' : '')
-			. $this->getName()
+			. 'function'
+			. ($this->returnReference ? ' &' : '')
+			. ' ' . $this->name
 			. '(' . implode(', ', $parameters) . ')'
 			. ($this->uses ? ' use (' . implode(', ', $uses) . ')' : '')
-			. ($this->returnType ? ': ' . ($this->returnNullable ? '?' : '')
-				. ($this->namespace ? $this->namespace->unresolveName($this->returnType) : $this->returnType) : '')
+			. ($this->returnType ? ': ' . $namespace->unresolveName($this->returnType) : '')
 			. ($this->abstract || $this->body === FALSE ? ';'
-				: ($this->getName() ? "\n" : ' ') . "{\n" . Nette\Utils\Strings::indent(ltrim(rtrim($this->body) . "\n"), 1) . '}');
+				: ($this->name ? "\n" : ' ') . "{\n" . Nette\Utils\Strings::indent(ltrim(rtrim($this->body) . "\n"), 1) . '}');
+	}
+
+
+	/**
+	 * @param  string|NULL
+	 * @return self
+	 */
+	public function setName($name)
+	{
+		$this->name = $name ? (string) $name : NULL;
+		return $this;
+	}
+
+
+	/**
+	 * @return string|NULL
+	 */
+	public function getName()
+	{
+		return $this->name;
 	}
 
 
 	/**
 	 * @param  Parameter[]
-	 * @return static
+	 * @return self
 	 */
 	public function setParameters(array $val)
 	{
-		$this->parameters = [];
+		$this->parameters = array();
 		foreach ($val as $v) {
 			if (!$v instanceof Parameter) {
 				throw new Nette\InvalidArgumentException('Argument must be Nette\PhpGenerator\Parameter[].');
@@ -149,7 +196,7 @@ class Method extends Member
 
 
 	/**
-	 * @return static
+	 * @return self
 	 */
 	public function setUses(array $val)
 	{
@@ -177,11 +224,11 @@ class Method extends Member
 
 
 	/**
-	 * @return static
+	 * @return self
 	 */
-	public function setBody($code, array $args = NULL)
+	public function setBody($statement, array $args = NULL)
 	{
-		$this->body = $args === NULL ? $code : Helpers::formatArgs($code, $args);
+		$this->body = func_num_args() > 1 ? Helpers::formatArgs($statement, $args) : $statement;
 		return $this;
 	}
 
@@ -196,18 +243,18 @@ class Method extends Member
 
 
 	/**
-	 * @return static
+	 * @return self
 	 */
-	public function addBody($code, array $args = NULL)
+	public function addBody($statement, array $args = NULL)
 	{
-		$this->body .= ($args === NULL ? $code : Helpers::formatArgs($code, $args)) . "\n";
+		$this->body .= (func_num_args() > 1 ? Helpers::formatArgs($statement, $args) : $statement) . "\n";
 		return $this;
 	}
 
 
 	/**
 	 * @param  bool
-	 * @return static
+	 * @return self
 	 */
 	public function setStatic($val)
 	{
@@ -226,8 +273,31 @@ class Method extends Member
 
 
 	/**
+	 * @param  string|NULL  public|protected|private
+	 * @return self
+	 */
+	public function setVisibility($val)
+	{
+		if (!in_array($val, array('public', 'protected', 'private', NULL), TRUE)) {
+			throw new Nette\InvalidArgumentException('Argument must be public|protected|private|NULL.');
+		}
+		$this->visibility = $val ? (string) $val : NULL;
+		return $this;
+	}
+
+
+	/**
+	 * @return string|NULL
+	 */
+	public function getVisibility()
+	{
+		return $this->visibility;
+	}
+
+
+	/**
 	 * @param  bool
-	 * @return static
+	 * @return self
 	 */
 	public function setFinal($val)
 	{
@@ -247,7 +317,7 @@ class Method extends Member
 
 	/**
 	 * @param  bool
-	 * @return static
+	 * @return self
 	 */
 	public function setAbstract($val)
 	{
@@ -267,7 +337,7 @@ class Method extends Member
 
 	/**
 	 * @param  bool
-	 * @return static
+	 * @return self
 	 */
 	public function setReturnReference($val)
 	{
@@ -287,27 +357,7 @@ class Method extends Member
 
 	/**
 	 * @param  bool
-	 * @return static
-	 */
-	public function setReturnNullable($val)
-	{
-		$this->returnNullable = (bool) $val;
-		return $this;
-	}
-
-
-	/**
-	 * @return bool
-	 */
-	public function getReturnNullable()
-	{
-		return $this->returnNullable;
-	}
-
-
-	/**
-	 * @param  bool
-	 * @return static
+	 * @return self
 	 */
 	public function setVariadic($val)
 	{
@@ -326,7 +376,38 @@ class Method extends Member
 
 
 	/**
-	 * @return static
+	 * @param  string[]
+	 * @return self
+	 */
+	public function setDocuments(array $val)
+	{
+		$this->documents = $val;
+		return $this;
+	}
+
+
+	/**
+	 * @return string[]
+	 */
+	public function getDocuments()
+	{
+		return $this->documents;
+	}
+
+
+	/**
+	 * @param  string
+	 * @return self
+	 */
+	public function addDocument($val)
+	{
+		$this->documents[] = (string) $val;
+		return $this;
+	}
+
+
+	/**
+	 * @return self
 	 */
 	public function setNamespace(PhpNamespace $val = NULL)
 	{
@@ -337,7 +418,7 @@ class Method extends Member
 
 	/**
 	 * @param  string|NULL
-	 * @return static
+	 * @return self
 	 */
 	public function setReturnType($val)
 	{

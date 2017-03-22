@@ -18,10 +18,8 @@ use Nette;
  * @property-read string $name
  * @property-read IContainer|NULL $parent
  */
-abstract class Component implements IComponent
+abstract class Component extends Nette\Object implements IComponent
 {
-	use Nette\SmartObject;
-
 	/** @var IContainer */
 	private $parent;
 
@@ -29,12 +27,11 @@ abstract class Component implements IComponent
 	private $name;
 
 	/** @var array of [type => [obj, depth, path, is_monitored?]] */
-	private $monitors = [];
+	private $monitors = array();
 
 
-	public function __construct()
+	public function __construct(IContainer $parent = NULL, $name = NULL)
 	{
-		list($parent, $name) = func_get_args() + [NULL, NULL];
 		if ($parent !== NULL) {
 			$parent->addComponent($this, $name);
 
@@ -70,10 +67,10 @@ abstract class Component implements IComponent
 			}
 
 			if ($obj) {
-				$this->monitors[$type] = [$obj, $depth, substr($path, 1), FALSE];
+				$this->monitors[$type] = array($obj, $depth, substr($path, 1), FALSE);
 
 			} else {
-				$this->monitors[$type] = [NULL, NULL, NULL, FALSE]; // not found
+				$this->monitors[$type] = array(NULL, NULL, NULL, FALSE); // not found
 			}
 		}
 
@@ -206,7 +203,7 @@ abstract class Component implements IComponent
 				$this->name = $name;
 			}
 
-			$tmp = [];
+			$tmp = array();
 			$this->refreshMonitors(0, $tmp);
 		}
 		return $this;
@@ -231,7 +228,7 @@ abstract class Component implements IComponent
 	 * @param  array
 	 * @return void
 	 */
-	private function refreshMonitors($depth, & $missing = NULL, & $listeners = [])
+	private function refreshMonitors($depth, & $missing = NULL, & $listeners = array())
 	{
 		if ($this instanceof IContainer) {
 			foreach ($this->getComponents() as $component) {
@@ -245,8 +242,8 @@ abstract class Component implements IComponent
 			foreach ($this->monitors as $type => $rec) {
 				if (isset($rec[1]) && $rec[1] > $depth) {
 					if ($rec[3]) { // monitored
-						$this->monitors[$type] = [NULL, NULL, NULL, TRUE];
-						$listeners[] = [$this, $rec[0]];
+						$this->monitors[$type] = array(NULL, NULL, NULL, TRUE);
+						$listeners[] = array($this, $rec[0]);
 					} else { // not monitored, just randomly cached
 						unset($this->monitors[$type]);
 					}
@@ -262,12 +259,12 @@ abstract class Component implements IComponent
 					unset($this->monitors[$type]);
 
 				} elseif (isset($missing[$type])) { // known from previous lookup
-					$this->monitors[$type] = [NULL, NULL, NULL, TRUE];
+					$this->monitors[$type] = array(NULL, NULL, NULL, TRUE);
 
 				} else {
 					$this->monitors[$type] = NULL; // forces re-lookup
 					if ($obj = $this->lookup($type, FALSE)) {
-						$listeners[] = [$this, $obj];
+						$listeners[] = array($this, $obj);
 					} else {
 						$missing[$type] = TRUE;
 					}
@@ -278,7 +275,7 @@ abstract class Component implements IComponent
 
 		if ($depth === 0) { // call listeners
 			$method = $missing === NULL ? 'detached' : 'attached';
-			$prev = [];
+			$prev = array();
 			foreach ($listeners as $item) {
 				if (!in_array($item, $prev, TRUE)) {
 					$item[0]->$method($item[1]);

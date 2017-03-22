@@ -14,12 +14,10 @@ use Nette\Utils\Strings;
 /**
  * MIME message part.
  *
- * @property   string $body
+ * @property   mixed $body
  */
-class MimePart
+class MimePart extends Nette\Object
 {
-	use Nette\SmartObject;
-
 	/** encoding */
 	const ENCODING_BASE64 = 'base64',
 		ENCODING_7BIT = '7bit',
@@ -31,13 +29,13 @@ class MimePart
 	const LINE_LENGTH = 76;
 
 	/** @var array */
-	private $headers = [];
+	private $headers = array();
 
 	/** @var array */
-	private $parts = [];
+	private $parts = array();
 
 	/** @var string */
-	private $body = '';
+	private $body;
 
 
 	/**
@@ -45,7 +43,7 @@ class MimePart
 	 * @param  string
 	 * @param  string|array  value or pair email => name
 	 * @param  bool
-	 * @return static
+	 * @return self
 	 */
 	public function setHeader($name, $value, $append = FALSE)
 	{
@@ -59,17 +57,16 @@ class MimePart
 			}
 
 		} elseif (is_array($value)) { // email
-			$tmp = &$this->headers[$name];
+			$tmp = & $this->headers[$name];
 			if (!$append || !is_array($tmp)) {
-				$tmp = [];
+				$tmp = array();
 			}
 
 			foreach ($value as $email => $recipient) {
-				if ($recipient === NULL) {
-					// continue
-				} elseif (!Strings::checkEncoding($recipient)) {
+				if ($recipient !== NULL && !Strings::checkEncoding($recipient)) {
 					Nette\Utils\Validators::assert($recipient, 'unicode', "header '$name'");
-				} elseif (preg_match('#[\r\n]#', $recipient)) {
+				}
+				if (preg_match('#[\r\n]#', $recipient)) {
 					throw new Nette\InvalidArgumentException('Name must not contain line separator.');
 				}
 				Nette\Utils\Validators::assert($email, 'email', "header '$name'");
@@ -101,7 +98,7 @@ class MimePart
 	/**
 	 * Removes a header.
 	 * @param  string
-	 * @return static
+	 * @return self
 	 */
 	public function clearHeader($name)
 	{
@@ -113,7 +110,8 @@ class MimePart
 	/**
 	 * Returns an encoded header.
 	 * @param  string
-	 * @return string|NULL
+	 * @param  string
+	 * @return string
 	 */
 	public function getEncodedHeader($name)
 	{
@@ -157,7 +155,7 @@ class MimePart
 	 * Sets Content-Type header.
 	 * @param  string
 	 * @param  string
-	 * @return static
+	 * @return self
 	 */
 	public function setContentType($contentType, $charset = NULL)
 	{
@@ -169,7 +167,7 @@ class MimePart
 	/**
 	 * Sets Content-Transfer-Encoding header.
 	 * @param  string
-	 * @return static
+	 * @return self
 	 */
 	public function setEncoding($encoding)
 	{
@@ -190,7 +188,7 @@ class MimePart
 
 	/**
 	 * Adds or creates new multipart.
-	 * @return self
+	 * @return MimePart
 	 */
 	public function addPart(MimePart $part = NULL)
 	{
@@ -200,8 +198,7 @@ class MimePart
 
 	/**
 	 * Sets textual body.
-	 * @param  string
-	 * @return static
+	 * @return self
 	 */
 	public function setBody($body)
 	{
@@ -212,7 +209,7 @@ class MimePart
 
 	/**
 	 * Gets textual body.
-	 * @return string
+	 * @return mixed
 	 */
 	public function getBody()
 	{
@@ -241,7 +238,7 @@ class MimePart
 		}
 		$output .= self::EOL;
 
-		$body = $this->body;
+		$body = (string) $this->body;
 		if ($body !== '') {
 			switch ($this->getEncoding()) {
 				case self::ENCODING_QUOTED_PRINTABLE:
@@ -257,7 +254,7 @@ class MimePart
 					// break intentionally omitted
 
 				case self::ENCODING_8BIT:
-					$body = str_replace(["\x00", "\r"], '', $body);
+					$body = str_replace(array("\x00", "\r"), '', $body);
 					$body = str_replace("\n", self::EOL, $body);
 					$output .= $body;
 					break;
@@ -291,7 +288,7 @@ class MimePart
 	 * @param  bool
 	 * @return string
 	 */
-	private static function encodeHeader($s, &$offset = 0, $quotes = FALSE)
+	private static function encodeHeader($s, & $offset = 0, $quotes = FALSE)
 	{
 		if (strspn($s, "!\"#$%&\'()*+,-./0123456789:;<>@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^`abcdefghijklmnopqrstuvwxyz{|}~=? _\r\n\t") === strlen($s)) {
 			if ($quotes && preg_match('#[^ a-zA-Z0-9!\#$%&\'*+/?^_`{|}~-]#', $s)) { // RFC 2822 atext except =
@@ -306,11 +303,11 @@ class MimePart
 			$offset = 1;
 		}
 
-		$s = iconv_mime_encode(str_repeat(' ', $old = $offset), $s, [
+		$s = iconv_mime_encode(str_repeat(' ', $old = $offset), $s, array(
 			'scheme' => 'B', // Q is broken
 			'input-charset' => 'UTF-8',
 			'output-charset' => 'UTF-8',
-		]);
+		));
 
 		$offset = strlen($s) - strrpos($s, "\n");
 		$s = str_replace("\n ", "\n\t", substr($s, $old + 2)); // adds ': '
@@ -318,7 +315,7 @@ class MimePart
 	}
 
 
-	private static function append($s, &$offset = 0)
+	private static function append($s, & $offset = 0)
 	{
 		if ($offset + strlen($s) > self::LINE_LENGTH) {
 			$offset = 1;

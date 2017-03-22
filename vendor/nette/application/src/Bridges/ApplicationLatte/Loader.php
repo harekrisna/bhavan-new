@@ -22,7 +22,6 @@ class Loader extends Latte\Loaders\FileLoader
 
 	public function __construct(Nette\Application\UI\Presenter $presenter)
 	{
-		parent::__construct();
 		$this->presenter = $presenter;
 	}
 

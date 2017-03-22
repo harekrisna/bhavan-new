@@ -13,9 +13,8 @@ use Nette;
 /**
  * Supplemental MS SQL database driver.
  */
-class MsSqlDriver implements Nette\Database\ISupplementalDriver
+class MsSqlDriver extends Nette\Object implements Nette\Database\ISupplementalDriver
 {
-	use Nette\SmartObject;
 
 	public function convertException(\PDOException $e)
 	{
@@ -32,7 +31,7 @@ class MsSqlDriver implements Nette\Database\ISupplementalDriver
 	public function delimite($name)
 	{
 		// @see https://msdn.microsoft.com/en-us/library/ms176027.aspx
-		return '[' . str_replace(['[', ']'], ['[[', ']]'], $name) . ']';
+		return '[' . str_replace(array('[', ']'), array('[[', ']]'), $name) . ']';
 	}
 
 
@@ -68,7 +67,7 @@ class MsSqlDriver implements Nette\Database\ISupplementalDriver
 	 */
 	public function formatLike($value, $pos)
 	{
-		$value = strtr($value, ["'" => "''", '%' => '[%]', '_' => '[_]', '[' => '[[]']);
+		$value = strtr($value, array("'" => "''", '%' => '[%]', '_' => '[_]', '[' => '[[]'));
 		return ($pos <= 0 ? "'%" : "'") . $value . ($pos >= 0 ? "%'" : "'");
 	}
 
@@ -76,7 +75,7 @@ class MsSqlDriver implements Nette\Database\ISupplementalDriver
 	/**
 	 * Injects LIMIT/OFFSET to the SQL query.
 	 */
-	public function applyLimit(&$sql, $limit, $offset)
+	public function applyLimit(& $sql, $limit, $offset)
 	{
 		if ($offset) {
 			throw new Nette\NotSupportedException('Offset is not supported by this database.');

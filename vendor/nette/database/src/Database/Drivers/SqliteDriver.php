@@ -13,10 +13,8 @@ use Nette;
 /**
  * Supplemental SQLite3 database driver.
  */
-class SqliteDriver implements Nette\Database\ISupplementalDriver
+class SqliteDriver extends Nette\Object implements Nette\Database\ISupplementalDriver
 {
-	use Nette\SmartObject;
-
 	/** @var Nette\Database\Connection */
 	private $connection;
 
@@ -112,7 +110,7 @@ class SqliteDriver implements Nette\Database\ISupplementalDriver
 	/**
 	 * Injects LIMIT/OFFSET to the SQL query.
 	 */
-	public function applyLimit(&$sql, $limit, $offset)
+	public function applyLimit(& $sql, $limit, $offset)
 	{
 		if ($limit < 0 || $offset < 0) {
 			throw new Nette\InvalidArgumentException('Negative offset or limit.');
@@ -148,17 +146,17 @@ class SqliteDriver implements Nette\Database\ISupplementalDriver
 	 */
 	public function getTables()
 	{
-		$tables = [];
+		$tables = array();
 		foreach ($this->connection->query("
 			SELECT name, type = 'view' as view FROM sqlite_master WHERE type IN ('table', 'view') AND name NOT LIKE 'sqlite_%'
 			UNION ALL
 			SELECT name, type = 'view' as view FROM sqlite_temp_master WHERE type IN ('table', 'view') AND name NOT LIKE 'sqlite_%'
 			ORDER BY name
 		") as $row) {
-			$tables[] = [
+			$tables[] = array(
 				'name' => $row->name,
 				'view' => (bool) $row->view,
-			];
+			);
 		}
 
 		return $tables;
@@ -176,12 +174,12 @@ class SqliteDriver implements Nette\Database\ISupplementalDriver
 			SELECT sql FROM sqlite_temp_master WHERE type = 'table' AND name = {$this->connection->quote($table)}
 		")->fetch();
 
-		$columns = [];
+		$columns = array();
 		foreach ($this->connection->query("PRAGMA table_info({$this->delimite($table)})") as $row) {
 			$column = $row['name'];
 			$pattern = "/(\"$column\"|\[$column\]|$column)\\s+[^,]+\\s+PRIMARY\\s+KEY\\s+AUTOINCREMENT/Ui";
 			$type = explode('(', $row['type']);
-			$columns[] = [
+			$columns[] = array(
 				'name' => $column,
 				'table' => $table,
 				'nativetype' => strtoupper($type[0]),
@@ -192,7 +190,7 @@ class SqliteDriver implements Nette\Database\ISupplementalDriver
 				'autoincrement' => (bool) preg_match($pattern, $meta['sql']),
 				'primary' => $row['pk'] > 0,
 				'vendor' => (array) $row,
-			];
+			);
 		}
 		return $columns;
 	}
@@ -203,7 +201,7 @@ class SqliteDriver implements Nette\Database\ISupplementalDriver
 	 */
 	public function getIndexes($table)
 	{
-		$indexes = [];
+		$indexes = array();
 		foreach ($this->connection->query("PRAGMA index_list({$this->delimite($table)})") as $row) {
 			$indexes[$row['name']]['name'] = $row['name'];
 			$indexes[$row['name']]['unique'] = (bool) $row['unique'];
@@ -212,7 +210,7 @@ class SqliteDriver implements Nette\Database\ISupplementalDriver
 
 		foreach ($indexes as $index => $values) {
 			$res = $this->connection->query("PRAGMA index_info({$this->delimite($index)})");
-			while ($row = $res->fetch()) {
+			while ($row = $res->fetch(TRUE)) {
 				$indexes[$index]['columns'][$row['seqno']] = $row['name'];
 			}
 		}
@@ -230,12 +228,12 @@ class SqliteDriver implements Nette\Database\ISupplementalDriver
 		if (!$indexes) { // @see http://www.sqlite.org/lang_createtable.html#rowid
 			foreach ($columns as $column) {
 				if ($column['vendor']['pk']) {
-					$indexes[] = [
+					$indexes[] = array(
 						'name' => 'ROWID',
 						'unique' => TRUE,
 						'primary' => TRUE,
-						'columns' => [$column['name']],
-					];
+						'columns' => array($column['name']),
+					);
 					break;
 				}
 			}
@@ -250,7 +248,7 @@ class SqliteDriver implements Nette\Database\ISupplementalDriver
 	 */
 	public function getForeignKeys($table)
 	{
-		$keys = [];
+		$keys = array();
 		foreach ($this->connection->query("PRAGMA foreign_key_list({$this->delimite($table)})") as $row) {
 			$keys[$row['id']]['name'] = $row['id']; // foreign key name
 			$keys[$row['id']]['local'] = $row['from']; // local columns
@@ -272,12 +270,12 @@ class SqliteDriver implements Nette\Database\ISupplementalDriver
 	 */
 	public function getColumnTypes(\PDOStatement $statement)
 	{
-		$types = [];
+		$types = array();
 		$count = $statement->columnCount();
 		for ($col = 0; $col < $count; $col++) {
 			$meta = $statement->getColumnMeta($col);
 			if (isset($meta['sqlite:decl_type'])) {
-				if (in_array($meta['sqlite:decl_type'], ['DATE', 'DATETIME'], TRUE)) {
+				if ($meta['sqlite:decl_type'] === 'DATE') {
 					$types[$meta['name']] = Nette\Database\IStructure::FIELD_UNIX_TIMESTAMP;
 				} else {
 					$types[$meta['name']] = Nette\Database\Helpers::detectType($meta['sqlite:decl_type']);

@@ -2,7 +2,7 @@
 
 /**
  * This file is part of the Nette Tester.
- * Copyright (c) 2009 David Grudl (https://davidgrudl.com)
+ * Copyright (c) 2009 David Grudl (http://davidgrudl.com)
  */
 
 namespace Tester;
@@ -24,20 +24,15 @@ class FileMock
 	/** @var int */
 	private $pos;
 
-	/** @var bool */
-	private $isReadable;
-
-	/** @var bool */
-	private $isWritable;
-
 
 	/**
 	 * @return string  file name
 	 */
 	public static function create($content, $extension = NULL)
 	{
-		self::register();
-
+		if (!self::$files) {
+			stream_wrapper_register(self::PROTOCOL, __CLASS__);
+		}
 		static $id;
 		$name = self::PROTOCOL . '://' . (++$id) . '.' . $extension;
 		self::$files[$name] = $content;
@@ -45,50 +40,16 @@ class FileMock
 	}
 
 
-	public static function register()
-	{
-		if (!in_array(self::PROTOCOL, stream_get_wrappers(), TRUE)) {
-			stream_wrapper_register(self::PROTOCOL, __CLASS__);
-		}
-	}
-
-
 	public function stream_open($path, $mode)
 	{
-		if (!preg_match('#^([rwaxc]).*?(\+)?#', $mode, $m)) {
-			// Windows: failed to open stream: Bad file descriptor
-			// Linux: failed to open stream: Illegal seek
-			$this->warning("failed to open stream: Invalid mode '$mode'");
-			return FALSE;
-
-		} elseif ($m[1] === 'x' && isset(self::$files[$path])) {
-			$this->warning('failed to open stream: File exists');
-			return FALSE;
-
-		} elseif ($m[1] === 'r' && !isset(self::$files[$path])) {
-			$this->warning('failed to open stream: No such file or directory');
-			return FALSE;
-
-		} elseif ($m[1] === 'w' || $m[1] === 'x') {
-			self::$files[$path] = '';
-		}
-
 		$this->content = & self::$files[$path];
-		$this->pos = $m[1] === 'a' ? strlen($this->content) : 0;
-
-		$this->isReadable = isset($m[2]) || $m[1] === 'r';
-		$this->isWritable = isset($m[2]) || $m[1] !== 'r';
-
+		$this->pos = strpos($mode, 'a') === FALSE ? 0 : strlen($this->content);
 		return TRUE;
 	}
 
 
 	public function stream_read($len)
 	{
-		if (!$this->isReadable) {
-			return '';
-		}
-
 		$res = substr($this->content, $this->pos, $len);
 		$this->pos += strlen($res);
 		return $res;
@@ -97,10 +58,6 @@ class FileMock
 
 	public function stream_write($data)
 	{
-		if (!$this->isWritable) {
-			return 0;
-		}
-
 		$this->content = substr($this->content, 0, $this->pos)
 			. str_repeat("\x00", max(0, $this->pos - strlen($this->content)))
 			. $data
@@ -163,29 +120,6 @@ class FileMock
 	public function stream_lock($operation)
 	{
 		return FALSE;
-	}
-
-
-	public function unlink($path)
-	{
-		if (isset(self::$files[$path])) {
-			unset(self::$files[$path]);
-			return TRUE;
-		}
-
-		$this->warning('No such file');
-		return FALSE;
-	}
-
-
-	private function warning($message)
-	{
-		$bt = PHP_VERSION_ID < 50400 ? debug_backtrace(FALSE) : debug_backtrace(0, 3);
-		if (isset($bt[2]['function'])) {
-			$message = $bt[2]['function'] . '(' . @$bt[2]['args'][0] . '): ' . $message;
-		}
-
-		trigger_error($message, E_USER_WARNING);
 	}
 
 }

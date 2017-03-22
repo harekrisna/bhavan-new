@@ -16,12 +16,13 @@ use Nette\Utils\Strings;
  * The bidirectional route is responsible for mapping
  * HTTP request to a Request object for dispatch and vice-versa.
  */
-class Route implements Application\IRouter
+class Route extends Nette\Object implements Application\IRouter
 {
-	use Nette\SmartObject;
-
 	const PRESENTER_KEY = 'presenter';
 	const MODULE_KEY = 'module';
+
+	/** @deprecated */
+	const CASE_SENSITIVE = 256;
 
 	/** @internal url type */
 	const HOST = 1,
@@ -41,39 +42,39 @@ class Route implements Application\IRouter
 		PATH_OPTIONAL = 1,
 		CONSTANT = 2;
 
-	/** @deprecated */
+	/** @var int */
 	public static $defaultFlags = 0;
 
 	/** @var array */
-	public static $styles = [
-		'#' => [ // default style for path parameters
+	public static $styles = array(
+		'#' => array( // default style for path parameters
 			self::PATTERN => '[^/]+',
-			self::FILTER_OUT => [__CLASS__, 'param2path'],
-		],
-		'?#' => [ // default style for query parameters
-		],
-		'module' => [
+			self::FILTER_OUT => array(__CLASS__, 'param2path'),
+		),
+		'?#' => array( // default style for query parameters
+		),
+		'module' => array(
 			self::PATTERN => '[a-z][a-z0-9.-]*',
-			self::FILTER_IN => [__CLASS__, 'path2presenter'],
-			self::FILTER_OUT => [__CLASS__, 'presenter2path'],
-		],
-		'presenter' => [
+			self::FILTER_IN => array(__CLASS__, 'path2presenter'),
+			self::FILTER_OUT => array(__CLASS__, 'presenter2path'),
+		),
+		'presenter' => array(
 			self::PATTERN => '[a-z][a-z0-9.-]*',
-			self::FILTER_IN => [__CLASS__, 'path2presenter'],
-			self::FILTER_OUT => [__CLASS__, 'presenter2path'],
-		],
-		'action' => [
+			self::FILTER_IN => array(__CLASS__, 'path2presenter'),
+			self::FILTER_OUT => array(__CLASS__, 'presenter2path'),
+		),
+		'action' => array(
 			self::PATTERN => '[a-z][a-z0-9-]*',
-			self::FILTER_IN => [__CLASS__, 'path2action'],
-			self::FILTER_OUT => [__CLASS__, 'action2path'],
-		],
-		'?module' => [
-		],
-		'?presenter' => [
-		],
-		'?action' => [
-		],
-	];
+			self::FILTER_IN => array(__CLASS__, 'path2action'),
+			self::FILTER_OUT => array(__CLASS__, 'action2path'),
+		),
+		'?module' => array(
+		),
+		'?presenter' => array(
+		),
+		'?action' => array(
+		),
+	);
 
 	/** @var string */
 	private $mask;
@@ -88,16 +89,13 @@ class Route implements Application\IRouter
 	private $aliases;
 
 	/** @var array of [value & fixity, filterIn, filterOut] */
-	private $metadata = [];
+	private $metadata = array();
 
 	/** @var array  */
 	private $xlat;
 
 	/** @var int HOST, PATH, RELATIVE */
 	private $type;
-
-	/** @var string  http | https */
-	private $scheme;
 
 	/** @var int */
 	private $flags;
@@ -114,35 +112,26 @@ class Route implements Application\IRouter
 	 * @param  array|string|\Closure  default values or metadata or callback for NetteModule\MicroPresenter
 	 * @param  int     flags
 	 */
-	public function __construct($mask, $metadata = [], $flags = 0)
+	public function __construct($mask, $metadata = array(), $flags = 0)
 	{
 		if (is_string($metadata)) {
-			list($presenter, $action) = Nette\Application\Helpers::splitName($metadata);
-			if (!$presenter) {
+			$a = strrpos($metadata, ':');
+			if (!$a) {
 				throw new Nette\InvalidArgumentException("Second argument must be array or string in format Presenter:action, '$metadata' given.");
 			}
-			$metadata = [self::PRESENTER_KEY => $presenter];
-			if ($action !== '') {
-				$metadata['action'] = $action;
-			}
+			$metadata = array(
+				self::PRESENTER_KEY => substr($metadata, 0, $a),
+				'action' => $a === strlen($metadata) - 1 ? NULL : substr($metadata, $a + 1),
+			);
 		} elseif ($metadata instanceof \Closure || $metadata instanceof Nette\Callback) {
-			if ($metadata instanceof Nette\Callback) {
-				trigger_error('Nette\Callback is deprecated, use Nette\Utils\Callback::closure().', E_USER_DEPRECATED);
-			}
-			$metadata = [
+			$metadata = array(
 				self::PRESENTER_KEY => 'Nette:Micro',
 				'callback' => $metadata,
-			];
+			);
 		}
 
 		$this->flags = $flags | static::$defaultFlags;
 		$this->setMask($mask, $metadata);
-		if (static::$defaultFlags) {
-			trigger_error('Route::$defaultFlags is deprecated, router by default keeps the used protocol.', E_USER_DEPRECATED);
-		} elseif ($flags & self::SECURED) {
-			trigger_error('Router::SECURED is deprecated, specify scheme in mask.', E_USER_DEPRECATED);
-			$this->scheme = 'https';
-		}
 	}
 
 
@@ -161,14 +150,12 @@ class Route implements Application\IRouter
 		if ($this->type === self::HOST) {
 			$host = $url->getHost();
 			$path = '//' . $host . $url->getPath();
-			$parts = ip2long($host) ? [$host] : array_reverse(explode('.', $host));
-			$re = strtr($re, [
+			$host = ip2long($host) ? array($host) : array_reverse(explode('.', $host));
+			$re = strtr($re, array(
 				'/%basePath%/' => preg_quote($url->getBasePath(), '#'),
-				'%tld%' => preg_quote($parts[0], '#'),
-				'%domain%' => preg_quote(isset($parts[1]) ? "$parts[1].$parts[0]" : $parts[0], '#'),
-				'%sld%' => preg_quote(isset($parts[1]) ? $parts[1] : '', '#'),
-				'%host%' => preg_quote($host, '#'),
-			]);
+				'%tld%' => preg_quote($host[0], '#'),
+				'%domain%' => preg_quote(isset($host[1]) ? "$host[1].$host[0]" : $host[0], '#'),
+			));
 
 		} elseif ($this->type === self::RELATIVE) {
 			$basePath = $url->getBasePath();
@@ -191,7 +178,7 @@ class Route implements Application\IRouter
 		}
 
 		// assigns matched values to parameters
-		$params = [];
+		$params = array();
 		foreach ($matches as $k => $v) {
 			if (is_string($k) && $v !== '') {
 				$params[$this->aliases[$k]] = $v;
@@ -251,12 +238,16 @@ class Route implements Application\IRouter
 		} elseif (!is_string($params[self::PRESENTER_KEY])) {
 			return NULL;
 		}
-		$presenter = $params[self::PRESENTER_KEY];
-		unset($params[self::PRESENTER_KEY]);
-
 		if (isset($this->metadata[self::MODULE_KEY])) {
-			$presenter = (isset($params[self::MODULE_KEY]) ? $params[self::MODULE_KEY] . ':' : '') . $presenter;
-			unset($params[self::MODULE_KEY]);
+			if (!isset($params[self::MODULE_KEY])) {
+				throw new Nette\InvalidStateException('Missing module in route definition.');
+			}
+			$presenter = $params[self::MODULE_KEY] . ':' . $params[self::PRESENTER_KEY];
+			unset($params[self::MODULE_KEY], $params[self::PRESENTER_KEY]);
+
+		} else {
+			$presenter = $params[self::PRESENTER_KEY];
+			unset($params[self::PRESENTER_KEY]);
 		}
 
 		return new Application\Request(
@@ -265,7 +256,7 @@ class Route implements Application\IRouter
 			$params,
 			$httpRequest->getPost(),
 			$httpRequest->getFiles(),
-			[Application\Request::SECURED => $httpRequest->isSecured()]
+			array(Application\Request::SECURED => $httpRequest->isSecured())
 		);
 	}
 
@@ -286,6 +277,13 @@ class Route implements Application\IRouter
 		$presenter = $appRequest->getPresenterName();
 		$params[self::PRESENTER_KEY] = $presenter;
 
+		if (isset($metadata[NULL][self::FILTER_OUT])) {
+			$params = call_user_func($metadata[NULL][self::FILTER_OUT], $params);
+			if ($params === NULL) {
+				return NULL;
+			}
+		}
+
 		if (isset($metadata[self::MODULE_KEY])) { // try split into module and [submodule:]presenter parts
 			$module = $metadata[self::MODULE_KEY];
 			if (isset($module['fixity']) && strncmp($presenter, $module[self::VALUE] . ':', strlen($module[self::VALUE]) + 1) === 0) {
@@ -294,17 +292,10 @@ class Route implements Application\IRouter
 				$a = strrpos($presenter, ':');
 			}
 			if ($a === FALSE) {
-				$params[self::MODULE_KEY] = isset($module[self::VALUE]) ? '' : NULL;
+				$params[self::MODULE_KEY] = '';
 			} else {
 				$params[self::MODULE_KEY] = substr($presenter, 0, $a);
 				$params[self::PRESENTER_KEY] = substr($presenter, $a + 1);
-			}
-		}
-
-		if (isset($metadata[NULL][self::FILTER_OUT])) {
-			$params = call_user_func($metadata[NULL][self::FILTER_OUT], $params);
-			if ($params === NULL) {
-				return NULL;
 			}
 		}
 
@@ -346,7 +337,7 @@ class Route implements Application\IRouter
 
 		// compositing path
 		$sequence = $this->sequence;
-		$brackets = [];
+		$brackets = array();
 		$required = NULL; // NULL for auto-optional
 		$url = '';
 		$i = count($sequence) - 1;
@@ -392,29 +383,28 @@ class Route implements Application\IRouter
 			}
 		} while (TRUE);
 
-		$scheme = $this->scheme ?: $refUrl->getScheme();
 
-		if ($this->type === self::HOST) {
-			$host = $refUrl->getHost();
-			$parts = ip2long($host) ? [$host] : array_reverse(explode('.', $host));
-			$url = strtr($url, [
-				'/%basePath%/' => $refUrl->getBasePath(),
-				'%tld%' => $parts[0],
-				'%domain%' => isset($parts[1]) ? "$parts[1].$parts[0]" : $parts[0],
-				'%sld%' => isset($parts[1]) ? $parts[1] : '',
-				'%host%' => $host,
-			]);
-			$url = $scheme . ':' . $url;
-		} else {
+		if ($this->type !== self::HOST) {
 			if ($this->lastRefUrl !== $refUrl) {
+				$scheme = ($this->flags & self::SECURED ? 'https://' : 'http://');
 				$basePath = ($this->type === self::RELATIVE ? $refUrl->getBasePath() : '');
-				$this->lastBaseUrl = $scheme . '://' . $refUrl->getAuthority() . $basePath;
+				$this->lastBaseUrl = $scheme . $refUrl->getAuthority() . $basePath;
 				$this->lastRefUrl = $refUrl;
 			}
 			$url = $this->lastBaseUrl . $url;
+
+		} else {
+			$host = $refUrl->getHost();
+			$host = ip2long($host) ? array($host) : array_reverse(explode('.', $host));
+			$url = strtr($url, array(
+				'/%basePath%/' => $refUrl->getBasePath(),
+				'%tld%' => $host[0],
+				'%domain%' => isset($host[1]) ? "$host[1].$host[0]" : $host[0],
+			));
+			$url = ($this->flags & self::SECURED ? 'https:' : 'http:') . $url;
 		}
 
-		if (strpos($url, '//', strlen($scheme) + 3) !== FALSE) {
+		if (strpos($url, '//', 7) !== FALSE) {
 			return NULL;
 		}
 
@@ -444,9 +434,8 @@ class Route implements Application\IRouter
 		$this->mask = $mask;
 
 		// detect '//host/path' vs. '/abs. path' vs. 'relative path'
-		if (preg_match('#(?:(https?):)?(//.*)#A', $mask, $m)) {
+		if (substr($mask, 0, 2) === '//') {
 			$this->type = self::HOST;
-			list(, $this->scheme, $mask) = $m;
 
 		} elseif (substr($mask, 0, 1) === '/') {
 			$this->type = self::PATH;
@@ -457,7 +446,7 @@ class Route implements Application\IRouter
 
 		foreach ($metadata as $name => $meta) {
 			if (!is_array($meta)) {
-				$metadata[$name] = $meta = [self::VALUE => $meta];
+				$metadata[$name] = $meta = array(self::VALUE => $meta);
 			}
 
 			if (array_key_exists(self::VALUE, $meta)) {
@@ -468,28 +457,37 @@ class Route implements Application\IRouter
 			}
 		}
 
-		if (strpbrk($mask, '?<>[]') === FALSE) {
+		if (strpbrk($mask, '?<[') === FALSE) {
 			$this->re = '#' . preg_quote($mask, '#') . '/?\z#A';
-			$this->sequence = [$mask];
+			$this->sequence = array($mask);
 			$this->metadata = $metadata;
 			return;
 		}
 
 		// PARSE MASK
-		// <parameter-name[=default] [pattern]> or [ or ] or ?...
-		$parts = Strings::split($mask, '/<([^<>= ]+)(=[^<> ]*)? *([^<>]*)>|(\[!?|\]|\s*\?.*)/');
+		// <parameter-name[=default] [pattern] [#class]> or [ or ] or ?...
+		$parts = Strings::split($mask, '/<([^>#= ]+)(=[^># ]*)? *([^>#]*)(#?[^>\[\]]*)>|(\[!?|\]|\s*\?.*)/');
 
-		$this->xlat = [];
+		$this->xlat = array();
 		$i = count($parts) - 1;
 
 		// PARSE QUERY PART OF MASK
 		if (isset($parts[$i - 1]) && substr(ltrim($parts[$i - 1]), 0, 1) === '?') {
-			// name=<parameter-name [pattern]>
-			$matches = Strings::matchAll($parts[$i - 1], '/(?:([a-zA-Z0-9_.-]+)=)?<([^> ]+) *([^>]*)>/');
+			// name=<parameter-name [pattern][#class]>
+			$matches = Strings::matchAll($parts[$i - 1], '/(?:([a-zA-Z0-9_.-]+)=)?<([^># ]+) *([^>#]*)(#?[^>]*)>/');
 
-			foreach ($matches as list(, $param, $name, $pattern)) { // $pattern is not used
-				if (isset(static::$styles['?' . $name])) {
+			foreach ($matches as $match) {
+				list(, $param, $name, $pattern, $class) = $match;  // $pattern is not used
+
+				if ($class !== '') {
+					if (!isset(static::$styles[$class])) {
+						throw new Nette\InvalidStateException("Parameter '$name' has '$class' flag, but Route::\$styles['$class'] is not set.");
+					}
+					$meta = static::$styles[$class];
+
+				} elseif (isset(static::$styles['?' . $name])) {
 					$meta = static::$styles['?' . $name];
+
 				} else {
 					$meta = static::$styles['?#'];
 				}
@@ -510,22 +508,18 @@ class Route implements Application\IRouter
 					$this->xlat[$name] = $param;
 				}
 			}
-			$i -= 5;
+			$i -= 6;
 		}
 
 		// PARSE PATH PART OF MASK
 		$brackets = 0; // optional level
 		$re = '';
-		$sequence = [];
+		$sequence = array();
 		$autoOptional = TRUE;
-		$aliases = [];
+		$aliases = array();
 		do {
-			$part = $parts[$i]; // part of path
-			if (strpbrk($part, '<>') !== FALSE) {
-				throw new Nette\InvalidArgumentException("Unexpected '$part' in mask '$mask'.");
-			}
-			array_unshift($sequence, $part);
-			$re = preg_quote($part, '#') . $re;
+			array_unshift($sequence, $parts[$i]);
+			$re = preg_quote($parts[$i], '#') . $re;
 			if ($i === 0) {
 				break;
 			}
@@ -539,10 +533,11 @@ class Route implements Application\IRouter
 				}
 				array_unshift($sequence, $part);
 				$re = ($part[0] === '[' ? '(?:' : ')?') . $re;
-				$i -= 4;
+				$i -= 5;
 				continue;
 			}
 
+			$class = $parts[$i]; $i--; // validation class
 			$pattern = trim($parts[$i]); $i--; // validation condition (as regexp)
 			$default = $parts[$i]; $i--; // default value
 			$name = $parts[$i]; $i--; // parameter name
@@ -556,8 +551,15 @@ class Route implements Application\IRouter
 			}
 
 			// pattern, condition & metadata
-			if (isset(static::$styles[$name])) {
+			if ($class !== '') {
+				if (!isset(static::$styles[$class])) {
+					throw new Nette\InvalidStateException("Parameter '$name' has '$class' flag, but Route::\$styles['$class'] is not set.");
+				}
+				$meta = static::$styles[$class];
+
+			} elseif (isset(static::$styles[$name])) {
 				$meta = static::$styles[$name];
+
 			} else {
 				$meta = static::$styles['#'];
 			}
@@ -613,7 +615,7 @@ class Route implements Application\IRouter
 		} while (TRUE);
 
 		if ($brackets) {
-			throw new Nette\InvalidArgumentException("Missing '[' in mask '$mask'.");
+			throw new Nette\InvalidArgumentException("Missing closing ']' in mask '$mask'.");
 		}
 
 		$this->aliases = $aliases;
@@ -639,7 +641,7 @@ class Route implements Application\IRouter
 	 */
 	public function getDefaults()
 	{
-		$defaults = [];
+		$defaults = array();
 		foreach ($this->metadata as $name => $meta) {
 			if (isset($meta['fixity'])) {
 				$defaults[$name] = $meta[self::VALUE];
@@ -670,7 +672,7 @@ class Route implements Application\IRouter
 	public function getTargetPresenters()
 	{
 		if ($this->flags & self::ONE_WAY) {
-			return [];
+			return array();
 		}
 
 		$m = $this->metadata;
@@ -685,7 +687,7 @@ class Route implements Application\IRouter
 		}
 
 		if (isset($m[self::PRESENTER_KEY]['fixity']) && $m[self::PRESENTER_KEY]['fixity'] === self::CONSTANT) {
-			return [$module . $m[self::PRESENTER_KEY][self::VALUE]];
+			return array($module . $m[self::PRESENTER_KEY][self::VALUE]);
 		}
 		return NULL;
 	}
@@ -703,7 +705,7 @@ class Route implements Application\IRouter
 			return $arr;
 		}
 
-		$res = [];
+		$res = array();
 		$occupied = array_flip($xlat);
 		foreach ($arr as $k => $v) {
 			if (isset($xlat[$k])) {
@@ -786,6 +788,44 @@ class Route implements Application\IRouter
 	private static function param2path($s)
 	{
 		return str_replace('%2F', '/', rawurlencode($s));
+	}
+
+
+	/********************* Route::$styles manipulator ****************d*g**/
+
+
+	/**
+	 * @deprecated
+	 */
+	public static function addStyle($style, $parent = '#')
+	{
+		trigger_error(__METHOD__ . '() is deprecated.', E_USER_DEPRECATED);
+		if (isset(static::$styles[$style])) {
+			throw new Nette\InvalidArgumentException("Style '$style' already exists.");
+		}
+
+		if ($parent !== NULL) {
+			if (!isset(static::$styles[$parent])) {
+				throw new Nette\InvalidArgumentException("Parent style '$parent' doesn't exist.");
+			}
+			static::$styles[$style] = static::$styles[$parent];
+
+		} else {
+			static::$styles[$style] = array();
+		}
+	}
+
+
+	/**
+	 * @deprecated
+	 */
+	public static function setStyleProperty($style, $key, $value)
+	{
+		trigger_error(__METHOD__ . '() is deprecated.', E_USER_DEPRECATED);
+		if (!isset(static::$styles[$style])) {
+			throw new Nette\InvalidArgumentException("Style '$style' doesn't exist.");
+		}
+		static::$styles[$style][$key] = $value;
 	}
 
 }

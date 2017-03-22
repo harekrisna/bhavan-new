@@ -13,10 +13,8 @@ use Nette;
 /**
  * Supplemental Oracle database driver.
  */
-class OciDriver implements Nette\Database\ISupplementalDriver
+class OciDriver extends Nette\Object implements Nette\Database\ISupplementalDriver
 {
-	use Nette\SmartObject;
-
 	/** @var Nette\Database\Connection */
 	private $connection;
 
@@ -34,13 +32,13 @@ class OciDriver implements Nette\Database\ISupplementalDriver
 	public function convertException(\PDOException $e)
 	{
 		$code = isset($e->errorInfo[1]) ? $e->errorInfo[1] : NULL;
-		if (in_array($code, [1, 2299, 38911], TRUE)) {
+		if (in_array($code, array(1, 2299, 38911), TRUE)) {
 			return Nette\Database\UniqueConstraintViolationException::from($e);
 
-		} elseif (in_array($code, [1400], TRUE)) {
+		} elseif (in_array($code, array(1400), TRUE)) {
 			return Nette\Database\NotNullConstraintViolationException::from($e);
 
-		} elseif (in_array($code, [2266, 2291, 2292], TRUE)) {
+		} elseif (in_array($code, array(2266, 2291, 2292), TRUE)) {
 			return Nette\Database\ForeignKeyConstraintViolationException::from($e);
 
 		} else {
@@ -101,7 +99,7 @@ class OciDriver implements Nette\Database\ISupplementalDriver
 	/**
 	 * Injects LIMIT/OFFSET to the SQL query.
 	 */
-	public function applyLimit(&$sql, $limit, $offset)
+	public function applyLimit(& $sql, $limit, $offset)
 	{
 		if ($limit < 0 || $offset < 0) {
 			throw new Nette\InvalidArgumentException('Negative offset or limit.');
@@ -135,13 +133,13 @@ class OciDriver implements Nette\Database\ISupplementalDriver
 	 */
 	public function getTables()
 	{
-		$tables = [];
+		$tables = array();
 		foreach ($this->connection->query('SELECT * FROM cat') as $row) {
 			if ($row[1] === 'TABLE' || $row[1] === 'VIEW') {
-				$tables[] = [
+				$tables[] = array(
 					'name' => $row[0],
 					'view' => $row[1] === 'VIEW',
-				];
+				);
 			}
 		}
 		return $tables;

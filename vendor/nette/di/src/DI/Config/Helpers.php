@@ -1,13 +1,11 @@
 <?php
 
 /**
- * This file is part of the Nette Framework (https://nette.org)
- * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
+ * This file is part of the Nette Framework (http://nette.org)
+ * Copyright (c) 2004 David Grudl (http://davidgrudl.com)
  */
 
 namespace Nette\DI\Config;
-
-use Nette;
 
 
 /**
@@ -15,11 +13,9 @@ use Nette;
  */
 class Helpers
 {
-	use Nette\StaticClass;
-
-	const
-		EXTENDS_KEY = '_extends',
+	const EXTENDS_KEY = '_extends',
 		OVERWRITE = TRUE;
+
 
 	/**
 	 * Merges configurations. Left has higher priority than right one.
@@ -57,7 +53,7 @@ class Helpers
 	 * Finds out and removes information about the parent.
 	 * @return mixed
 	 */
-	public static function takeParent(&$data)
+	public static function takeParent(& $data)
 	{
 		if (is_array($data) && isset($data[self::EXTENDS_KEY])) {
 			$parent = $data[self::EXTENDS_KEY];
@@ -70,7 +66,7 @@ class Helpers
 	/**
 	 * @return bool
 	 */
-	public static function isOverwriting(&$data)
+	public static function isOverwriting(& $data)
 	{
 		return is_array($data) && isset($data[self::EXTENDS_KEY]) && $data[self::EXTENDS_KEY] === self::OVERWRITE;
 	}
@@ -79,7 +75,7 @@ class Helpers
 	/**
 	 * @return bool
 	 */
-	public static function isInheriting(&$data)
+	public static function isInheriting(& $data)
 	{
 		return is_array($data) && isset($data[self::EXTENDS_KEY]) && $data[self::EXTENDS_KEY] !== self::OVERWRITE;
 	}

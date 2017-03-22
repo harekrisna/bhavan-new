@@ -7,8 +7,6 @@
 
 namespace Nette\Application;
 
-use Nette\Http;
-
 
 /**
  * The exception that is thrown when user attempts to terminate the current presenter or application.
@@ -41,21 +39,12 @@ class InvalidPresenterException extends \Exception
 class BadRequestException extends \Exception
 {
 	/** @var int */
-	protected $code = Http\IResponse::S404_NOT_FOUND;
+	protected $code = 404;
 
 
-	public function __construct($message = '', $httpCode = 0, \Exception $previous = NULL)
+	public function __construct($message = '', $code = 0, \Exception $previous = NULL)
 	{
-		parent::__construct($message, $httpCode ?: $this->code, $previous);
-	}
-
-
-	/**
-	 * @return int
-	 */
-	public function getHttpCode()
-	{
-		return $this->code;
+		parent::__construct($message, $code < 200 || $code > 504 ? $this->code : $code, $previous);
 	}
 
 }
@@ -67,6 +56,6 @@ class BadRequestException extends \Exception
 class ForbiddenRequestException extends BadRequestException
 {
 	/** @var int */
-	protected $code = Http\IResponse::S403_FORBIDDEN;
+	protected $code = 403;
 
 }

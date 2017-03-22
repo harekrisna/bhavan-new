@@ -13,10 +13,8 @@ use Nette;
 /**
  * Supplemental PostgreSQL database driver.
  */
-class PgSqlDriver implements Nette\Database\ISupplementalDriver
+class PgSqlDriver extends Nette\Object implements Nette\Database\ISupplementalDriver
 {
-	use Nette\SmartObject;
-
 	/** @var Nette\Database\Connection */
 	private $connection;
 
@@ -96,9 +94,9 @@ class PgSqlDriver implements Nette\Database\ISupplementalDriver
 	 */
 	public function formatLike($value, $pos)
 	{
-		$bs = substr($this->connection->quote('\\'), 1, -1); // standard_conforming_strings = on/off
-		$value = substr($this->connection->quote($value), 1, -1);
-		$value = strtr($value, ['%' => $bs . '%', '_' => $bs . '_', '\\' => '\\\\']);
+		$bs = substr($this->connection->quote('\\', \PDO::PARAM_STR), 1, -1); // standard_conforming_strings = on/off
+		$value = substr($this->connection->quote($value, \PDO::PARAM_STR), 1, -1);
+		$value = strtr($value, array('%' => $bs . '%', '_' => $bs . '_', '\\' => '\\\\'));
 		return ($pos <= 0 ? "'%" : "'") . $value . ($pos >= 0 ? "%'" : "'");
 	}
 
@@ -106,7 +104,7 @@ class PgSqlDriver implements Nette\Database\ISupplementalDriver
 	/**
 	 * Injects LIMIT/OFFSET to the SQL query.
 	 */
-	public function applyLimit(&$sql, $limit, $offset)
+	public function applyLimit(& $sql, $limit, $offset)
 	{
 		if ($limit < 0 || $offset < 0) {
 			throw new Nette\InvalidArgumentException('Negative offset or limit.');
@@ -137,17 +135,17 @@ class PgSqlDriver implements Nette\Database\ISupplementalDriver
 	 */
 	public function getTables()
 	{
-		$tables = [];
+		$tables = array();
 		foreach ($this->connection->query("
 			SELECT DISTINCT ON (c.relname)
 				c.relname::varchar AS name,
-				c.relkind IN ('v', 'm') AS view,
+				c.relkind = 'v' AS view,
 				n.nspname::varchar || '.' || c.relname::varchar AS \"fullName\"
 			FROM
 				pg_catalog.pg_class AS c
 				JOIN pg_catalog.pg_namespace AS n ON n.oid = c.relnamespace
 			WHERE
-				c.relkind IN ('r', 'v', 'm')
+				c.relkind IN ('r', 'v')
 				AND n.nspname = ANY (pg_catalog.current_schemas(FALSE))
 			ORDER BY
 				c.relname
@@ -164,7 +162,7 @@ class PgSqlDriver implements Nette\Database\ISupplementalDriver
 	 */
 	public function getColumns($table)
 	{
-		$columns = [];
+		$columns = array();
 		foreach ($this->connection->query("
 			SELECT
 				a.attname::varchar AS name,
@@ -207,7 +205,7 @@ class PgSqlDriver implements Nette\Database\ISupplementalDriver
 	 */
 	public function getIndexes($table)
 	{
-		$indexes = [];
+		$indexes = array();
 		foreach ($this->connection->query("
 			SELECT
 				c2.relname::varchar AS name,
@@ -286,7 +284,7 @@ class PgSqlDriver implements Nette\Database\ISupplementalDriver
 	 */
 	private function delimiteFQN($name)
 	{
-		return implode('.', array_map([$this, 'delimite'], explode('.', $name)));
+		return implode('.', array_map(array($this, 'delimite'), explode('.', $name)));
 	}
 
 }

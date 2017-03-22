@@ -13,10 +13,8 @@ use Nette;
 /**
  * Forwards to new request.
  */
-class ForwardResponse implements Nette\Application\IResponse
+class ForwardResponse extends Nette\Object implements Nette\Application\IResponse
 {
-	use Nette\SmartObject;
-
 	/** @var Nette\Application\Request */
 	private $request;
 

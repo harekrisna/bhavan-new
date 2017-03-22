@@ -1,13 +1,14 @@
 <?php
 
 /**
- * This file is part of the Nette Framework (https://nette.org)
- * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
+ * This file is part of the Nette Framework (http://nette.org)
+ * Copyright (c) 2004 David Grudl (http://davidgrudl.com)
  */
 
 namespace Nette\Reflection;
 
 use Nette;
+use Nette\Utils\ObjectMixin;
 
 
 /**
@@ -28,7 +29,6 @@ use Nette;
  */
 class Property extends \ReflectionProperty
 {
-	use Nette\SmartObject;
 
 	public function __toString()
 	{
@@ -92,6 +92,39 @@ class Property extends \ReflectionProperty
 	public function getDescription()
 	{
 		return $this->getAnnotation('description');
+	}
+
+
+	/********************* Nette\Object behaviour ****************d*g**/
+
+
+	public function __call($name, $args)
+	{
+		return ObjectMixin::call($this, $name, $args);
+	}
+
+
+	public function &__get($name)
+	{
+		return ObjectMixin::get($this, $name);
+	}
+
+
+	public function __set($name, $value)
+	{
+		ObjectMixin::set($this, $name, $value);
+	}
+
+
+	public function __isset($name)
+	{
+		return ObjectMixin::has($this, $name);
+	}
+
+
+	public function __unset($name)
+	{
+		ObjectMixin::remove($this, $name);
 	}
 
 }

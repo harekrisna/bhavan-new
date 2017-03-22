@@ -7,8 +7,8 @@
 
 namespace Nette\PhpGenerator;
 
-use Nette;
 use Nette\InvalidStateException;
+use Nette\Object;
 use Nette\Utils\Strings;
 
 
@@ -20,10 +20,8 @@ use Nette\Utils\Strings;
  * - variable amount of use statements
  * - one or more class declarations
  */
-class PhpNamespace
+class PhpNamespace extends Object
 {
-	use Nette\SmartObject;
-
 	/** @var string */
 	private $name;
 
@@ -31,10 +29,10 @@ class PhpNamespace
 	private $bracketedSyntax = FALSE;
 
 	/** @var string[] */
-	private $uses = [];
+	private $uses = array();
 
 	/** @var ClassType[] */
-	private $classes = [];
+	private $classes = array();
 
 
 	public function __construct($name = NULL)
@@ -43,7 +41,10 @@ class PhpNamespace
 	}
 
 
-	/** @deprecated */
+	/**
+	 * @param  string|NULL
+	 * @return self
+	 */
 	public function setName($name)
 	{
 		$this->name = (string) $name;
@@ -62,7 +63,7 @@ class PhpNamespace
 
 	/**
 	 * @param  bool
-	 * @return static
+	 * @return self
 	 * @internal
 	 */
 	public function setBracketedSyntax($state = TRUE)
@@ -86,7 +87,7 @@ class PhpNamespace
 	 * @param  string
 	 * @param  string
 	 * @throws InvalidStateException
-	 * @return static
+	 * @return self
 	 */
 	public function addUse($name, $alias = NULL, &$aliasOut = NULL)
 	{
@@ -133,7 +134,7 @@ class PhpNamespace
 	 */
 	public function unresolveName($name)
 	{
-		if (in_array(strtolower($name), ['self', 'parent', 'array', 'callable', 'string', 'bool', 'float', 'int', ''], TRUE)) {
+		if (in_array(strtolower($name), array('self', 'parent', 'array', 'callable', 'string', 'bool', 'float', 'int', ''), TRUE)) {
 			return $name;
 		}
 		$name = ltrim($name, '\\');
@@ -204,7 +205,7 @@ class PhpNamespace
 	 */
 	public function __toString()
 	{
-		$uses = [];
+		$uses = array();
 		asort($this->uses);
 		foreach ($this->uses as $alias => $name) {
 			$useNamespace = Helpers::extractNamespace($name);

@@ -14,11 +14,13 @@ use PDOException;
 
 /**
  * Represents a connection between PHP and a database server.
+ *
+ * @property-read  ISupplementalDriver  $supplementalDriver
+ * @property-read  string               $dsn
+ * @property-read  PDO                  $pdo
  */
-class Connection
+class Connection extends Nette\Object
 {
-	use Nette\SmartObject;
-
 	/** @var callable[]  function (Connection $connection); Occurs after connection is established */
 	public $onConnect;
 
@@ -44,10 +46,9 @@ class Connection
 	public function __construct($dsn, $user = NULL, $password = NULL, array $options = NULL)
 	{
 		if (func_num_args() > 4) { // compatibility
-			trigger_error(__METHOD__ . " fifth argument is deprecated, use \$options['driverClass'].", E_USER_DEPRECATED);
 			$options['driverClass'] = func_get_arg(4);
 		}
-		$this->params = [$dsn, $user, $password];
+		$this->params = array($dsn, $user, $password);
 		$this->options = (array) $options;
 
 		if (empty($options['lazy'])) {
@@ -124,8 +125,7 @@ class Connection
 	public function getInsertId($name = NULL)
 	{
 		try {
-			$res = $this->getPdo()->lastInsertId($name);
-			return $res === FALSE ? '0' : $res;
+			return $this->getPdo()->lastInsertId($name);
 		} catch (PDOException $e) {
 			throw $this->driver->convertException($e);
 		}
@@ -171,11 +171,18 @@ class Connection
 	/**
 	 * Generates and executes SQL query.
 	 * @param  string
+	 * @param  mixed   [parameters, ...]
 	 * @return ResultSet
 	 */
-	public function query($sql, ...$params)
+	public function query($sql)
 	{
-		list($sql, $params) = $this->preprocess($sql, ...$params);
+		$this->connect();
+
+		$args = is_array($sql) ? $sql : func_get_args(); // accepts arrays only internally
+		list($sql, $params) = count($args) > 1
+			? $this->preprocessor->process($args)
+			: array($args[0], array());
+
 		try {
 			$result = new ResultSet($this, $sql, $params);
 		} catch (PDOException $e) {
@@ -193,19 +200,20 @@ class Connection
 	 */
 	public function queryArgs($sql, array $params)
 	{
-		return $this->query($sql, ...$params);
+		array_unshift($params, $sql);
+		return $this->query($params);
 	}
 
 
 	/**
 	 * @return [string, array]
 	 */
-	public function preprocess($sql, ...$params)
+	public function preprocess($sql)
 	{
 		$this->connect();
-		return $params
+		return func_num_args() > 1
 			? $this->preprocessor->process(func_get_args())
-			: [$sql, []];
+			: array($sql, array());
 	}
 
 
@@ -215,52 +223,58 @@ class Connection
 	/**
 	 * Shortcut for query()->fetch()
 	 * @param  string
+	 * @param  mixed   [parameters, ...]
 	 * @return Row
 	 */
-	public function fetch($sql, ...$params)
+	public function fetch($args)
 	{
-		return $this->query($sql, ...$params)->fetch();
+		return $this->query(func_get_args())->fetch();
 	}
 
 
 	/**
 	 * Shortcut for query()->fetchField()
 	 * @param  string
+	 * @param  mixed   [parameters, ...]
 	 * @return mixed
 	 */
-	public function fetchField($sql, ...$params)
+	public function fetchField($args)
 	{
-		return $this->query($sql, ...$params)->fetchField();
+		return $this->query(func_get_args())->fetchField();
 	}
 
 
 	/**
 	 * Shortcut for query()->fetchPairs()
 	 * @param  string
+	 * @param  mixed   [parameters, ...]
 	 * @return array
 	 */
-	public function fetchPairs($sql, ...$params)
+	public function fetchPairs($args)
 	{
-		return $this->query($sql, ...$params)->fetchPairs();
+		return $this->query(func_get_args())->fetchPairs();
 	}
 
 
 	/**
 	 * Shortcut for query()->fetchAll()
 	 * @param  string
+	 * @param  mixed   [parameters, ...]
 	 * @return array
 	 */
-	public function fetchAll($sql, ...$params)
+	public function fetchAll($args)
 	{
-		return $this->query($sql, ...$params)->fetchAll();
+		return $this->query(func_get_args())->fetchAll();
 	}
 
 
 	/**
 	 * @return SqlLiteral
 	 */
-	public static function literal($value, ...$params)
+	public static function literal($value)
 	{
-		return new SqlLiteral($value, $params);
+		$args = func_get_args();
+		return new SqlLiteral(array_shift($args), $args);
 	}
+
 }

@@ -23,7 +23,6 @@ class TextArea extends TextBase
 	{
 		parent::__construct($label);
 		$this->control->setName('textarea');
-		$this->setOption('type', 'textarea');
 	}
 
 
@@ -33,8 +32,12 @@ class TextArea extends TextBase
 	 */
 	public function getControl()
 	{
+		$value = $this->getValue();
+		if ($value === '') {
+			$value = $this->translate($this->emptyValue);
+		}
 		return parent::getControl()
-			->setText($this->getRenderedValue());
+			->setText($value);
 	}
 
 }

@@ -15,7 +15,7 @@ use Nette;
  */
 class TracyExtension extends Nette\DI\CompilerExtension
 {
-	public $defaults = [
+	public $defaults = array(
 		'email' => NULL,
 		'fromEmail' => NULL,
 		'logSeverity' => NULL,
@@ -23,43 +23,37 @@ class TracyExtension extends Nette\DI\CompilerExtension
 		'browser' => NULL,
 		'errorTemplate' => NULL,
 		'strictMode' => NULL,
-		'showBar' => NULL,
 		'maxLen' => NULL,
 		'maxDepth' => NULL,
 		'showLocation' => NULL,
 		'scream' => NULL,
-		'bar' => [], // of class name
-		'blueScreen' => [], // of callback
-		'editorMapping' => [],
-	];
+		'bar' => array(), // of class name
+		'blueScreen' => array(), // of callback
+	);
 
 	/** @var bool */
 	private $debugMode;
 
-	/** @var bool */
-	private $cliMode;
 
-
-	public function __construct($debugMode = FALSE, $cliMode = FALSE)
+	public function __construct($debugMode = FALSE)
 	{
 		$this->debugMode = $debugMode;
-		$this->cliMode = $cliMode;
 	}
 
 
 	public function loadConfiguration()
 	{
 		$this->validateConfig($this->defaults);
-		$builder = $this->getContainerBuilder();
+		$container = $this->getContainerBuilder();
 
-		$builder->addDefinition($this->prefix('logger'))
+		$container->addDefinition($this->prefix('logger'))
 			->setClass('Tracy\ILogger')
 			->setFactory('Tracy\Debugger::getLogger');
 
-		$builder->addDefinition($this->prefix('blueScreen'))
+		$container->addDefinition($this->prefix('blueScreen'))
 			->setFactory('Tracy\Debugger::getBlueScreen');
 
-		$builder->addDefinition($this->prefix('bar'))
+		$container->addDefinition($this->prefix('bar'))
 			->setFactory('Tracy\Debugger::getBar');
 	}
 
@@ -67,53 +61,36 @@ class TracyExtension extends Nette\DI\CompilerExtension
 	public function afterCompile(Nette\PhpGenerator\ClassType $class)
 	{
 		$initialize = $class->getMethod('initialize');
-		$builder = $this->getContainerBuilder();
-		$class = method_exists('Nette\DI\Helpers', 'filterArguments') ? 'Nette\DI\Helpers' : 'Nette\DI\Compiler';
+		$container = $this->getContainerBuilder();
 
 		$options = $this->config;
 		unset($options['bar'], $options['blueScreen']);
-		if (isset($options['logSeverity'])) {
-			$res = 0;
-			foreach ((array) $options['logSeverity'] as $level) {
-				$res |= is_int($level) ? $level : constant($level);
-			}
-			$options['logSeverity'] = $res;
-		}
 		foreach ($options as $key => $value) {
 			if ($value !== NULL) {
 				$key = ($key === 'fromEmail' ? 'getLogger()->' : '$') . $key;
-				$initialize->addBody($builder->formatPhp(
+				$initialize->addBody($container->formatPhp(
 					'Tracy\Debugger::' . $key . ' = ?;',
-					$class::filterArguments([$value])
+					Nette\DI\Compiler::filterArguments(array($value))
 				));
 			}
-		}
-
-		$logger = $builder->getDefinition($this->prefix('logger'));
-		if ($logger->getFactory()->getEntity() !== 'Tracy\Debugger::getLogger') {
-			$initialize->addBody($builder->formatPhp('Tracy\Debugger::setLogger(?);', [$logger]));
 		}
 
 		if ($this->debugMode) {
 			foreach ((array) $this->config['bar'] as $item) {
-				$initialize->addBody($builder->formatPhp(
+				$initialize->addBody($container->formatPhp(
 					'$this->getService(?)->addPanel(?);',
-					$class::filterArguments([
+					Nette\DI\Compiler::filterArguments(array(
 						$this->prefix('bar'),
 						is_string($item) ? new Nette\DI\Statement($item) : $item,
-					])
+					))
 				));
-			}
-
-			if (!$this->cliMode) {
-				$initialize->addBody('if ($tmp = $this->getByType("Nette\Http\Session", FALSE)) { $tmp->start(); Tracy\Debugger::dispatch(); };');
 			}
 		}
 
 		foreach ((array) $this->config['blueScreen'] as $item) {
-			$initialize->addBody($builder->formatPhp(
+			$initialize->addBody($container->formatPhp(
 				'$this->getService(?)->addPanel(?);',
-				$class::filterArguments([$this->prefix('blueScreen'), $item])
+				Nette\DI\Compiler::filterArguments(array($this->prefix('blueScreen'), $item))
 			));
 		}
 	}

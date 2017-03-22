@@ -27,19 +27,11 @@ fieldset {
 	border: 1px solid #B2D1EB;
 }
 
-textarea,
-select,
-input:not([type="checkbox"]):not([type="radio"]):not([type="submit"]):not([type="image"]):not([type="range"]) {
+textarea, select, input:not([type="checkbox"]):not([type="radio"]):not([type="submit"]):not([type="image"]):not([type="range"]) {
 	padding: .3em .5em;
 	color: black;
 	background: white;
 	border: 1px solid silver;
-}
-
-.has-error textarea,
-.has-error select,
-.has-error input:not([type="checkbox"]):not([type="radio"]):not([type="submit"]):not([type="image"]):not([type="range"]) {
-	border-color: #E22;
 }
 
 select {
@@ -63,7 +55,6 @@ th {
 .error {
 	color: #E22;
 	font-weight: bold;
-	margin-left: 1em;
 }
 
 footer a {
