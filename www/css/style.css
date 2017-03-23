@@ -320,7 +320,15 @@ footer p {
   font: 20px "PT Sans", sans-serif;
   margin: 10px 0 0 25px;
 }
-#news .news-slideshow a {
+#news .news-slideshow {
+  width: 310px;
+  height: 270px;
+}
+#news .news-slideshow div[u=slides] {
+  width: 310px;
+  height: 270px;
+}
+#news .news-slideshow a.new-link {
   width: 300px;
   height: 75px;
   color: #12323d;
@@ -328,7 +336,7 @@ footer p {
   display: inline-block;
   transition: 0.3s;
 }
-#news .news-slideshow a img {
+#news .news-slideshow a.new-link img.new-image {
   width: 65px;
   height: 65px;
   border-top-right-radius: 0;
@@ -339,7 +347,7 @@ footer p {
   margin: 5px 20px 0 15px;
   float: left;
 }
-#news .news-slideshow a div {
+#news .news-slideshow a.new-link div.new-title {
   height: 22px;
   font-size: 16px;
   white-space: nowrap;
@@ -348,10 +356,37 @@ footer p {
   margin-top: 11px;
   position: relative;
 }
-#news .news-slideshow a span {
+#news .news-slideshow a.new-link span.new-description {
   font-size: 14px;
 }
-#news .news-slideshow a:hover[href] {
+#news .news-slideshow a.new-link:hover[href] {
+  color: #eb8c3a;
+  transition: 0.3s;
+}
+#news button.news-nav-button {
+  font-size: 13px;
+  background-color: transparent;
+  border: 0;
+  cursor: pointer;
+  display: none;
+  transition: 0.3s;
+}
+#news button.news-nav-button.prev {
+  float: left;
+}
+#news button.news-nav-button.prev:before {
+  content: "« ";
+  font-size: 14px;
+}
+#news button.news-nav-button.next {
+  margin-right: 20px;
+  float: right;
+}
+#news button.news-nav-button.next:after {
+  content: " »";
+  font-size: 14px;
+}
+#news button.news-nav-button:hover {
   color: #eb8c3a;
   transition: 0.3s;
 }
@@ -374,4 +409,7 @@ a:hover {
 }
 .bold {
   font-weight: bold;
+}
+button:focus {
+  outline: 0;
 }
