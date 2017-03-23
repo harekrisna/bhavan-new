@@ -80,10 +80,10 @@
                 </div>
             </div>
         </div>
-        <div class="row" id="news">
+        <div class="row news-section visible-lg">
             <div class="col-md-4">
                 <h2><a class="link" n:href="Actuality:default">Akce:</a></h2>
-                <div id="events_slider" n:class="$event_news->count() == 2 ? slideshow, news-slideshow">
+                <div id="events_slider_lg" n:class="slideshow, news-slideshow">
                     <div u="slides">
                         <div>
                             <a class="new-link" n:href="Actuality:sunday">
@@ -114,13 +114,13 @@
                     </div>
                 </div>
                 {if $event_news->count() != 1}
-                <button class="news-nav-button prev" onclick="events_slider.$Prev()">předchozí</button>
-                <button class="news-nav-button next" onclick="events_slider.$Next()">nadcházející</button>
+                <button class="news-nav-button prev" onclick="prevSlide('events_slider')">předchozí</button>
+                <button class="news-nav-button next" onclick="nextSlide('events_slider')">nadcházející</button>
                 {/if}
             </div>
             <div class="col-md-4">
                 <h2><a class="link" n:href="Galery:galeries">Foto:<a/></h2>
-	            <div id="photos_slider" n:class="slideshow, news-slideshow">
+	            <div id="photos_slider_lg" n:class="slideshow, news-slideshow">
                     <div u="slides">
                         <div>
                         {foreach $photo_news as $new}
@@ -144,13 +144,13 @@
                     </div>
                 </div>
                 {if $photo_news->count() != 1}
-                <button class="news-nav-button prev" onclick="photos_slider.$Prev()">předchozí</button>
-                <button class="news-nav-button next" onclick="photos_slider.$Next()">nadcházející</button>
+                <button class="news-nav-button prev" onclick="prevSlide('photos_slider')">novější</button>
+                <button class="news-nav-button next" onclick="nextSlide('photos_slider')">starší</button>
                 {/if}
             </div>
             <div class="col-md-4">
                 <h2><a class="link" n:href="Audio:latest">Audio:<a/></h2>
-	            <div id="audio_slider" n:class="slideshow, news-slideshow">
+	            <div id="audio_slider_lg" n:class="slideshow, news-slideshow">
 			    	<div u="slides">
 			        	<div>
 		        		{foreach $audio_news as $new}
@@ -167,8 +167,192 @@
 						</div>
 			    	</div>
 		    	</div>
-				<button class="news-nav-button prev" onclick="audio_slider.$Prev()">novější</button>
-				<button class="news-nav-button next" onclick="audio_slider.$Next()">starší</button>
+				<button class="news-nav-button prev" onclick="prevSlide('audio_slider')">novější</button>
+                <button class="news-nav-button next" onclick="nextSlide('audio_slider')">starší</button>
+            </div>
+        </div>
+
+        <div class="row news-section visible-md">
+            <div class="col-md-4">
+                <h2><a class="link" n:href="Actuality:default">Akce:</a></h2>
+                <div id="events_slider_md" n:class="slideshow, news-slideshow">
+                    <div u="slides">
+                        <div>
+                            <a class="new-link" n:href="Actuality:sunday">
+                                <img class="new-image" src="{$basePath}/images/actuality/previews/program.jpg" />
+                                <div class="bold new-title">Programy pro veřejnost</div>
+                                <span class="new-description">
+                                    Každou neděli od 14:00 hodin
+                                </span>
+                            </a>
+                        {foreach $event_news as $new}
+                        {if $iterator->counter % 3 == 1 && !$iterator->first}
+                        </div>
+                        <div>
+                        {/if}
+                            <a class="new-link" {if $new->target != ""} href="{$new->target}"{/if}>
+                                <img class="new-image" src="{$basePath}/images/news_thumbs/{$new->file}" />
+                                <div class="new-title">{$new->title}</div>
+                                <span class="new-description">
+                                    {if $new->date_to != ""}
+                                        {$new->date_from|date: 'j.n.'} - {$new->date_to|date: 'j.n.Y'}
+                                    {else}
+                                        {$new->date_from|date: 'j.n.Y'}
+                                    {/if}
+                                </span>
+                            </a>
+                        {/foreach}          
+                        </div>
+                    </div>
+                </div>
+                {if $event_news->count() != 1}
+                <button class="news-nav-button prev" onclick="prevSlide('events_slider')">předchozí</button>
+                <button class="news-nav-button next" onclick="nextSlide('events_slider')">nadcházející</button>
+                {/if}
+            </div>
+            <div class="col-md-4">
+                <h2><a class="link" n:href="Galery:galeries">Foto:<a/></h2>
+                <div id="photos_slider_md" n:class="slideshow, news-slideshow">
+                    <div u="slides">
+                        <div>
+                        {foreach $photo_news as $new}
+                        {if $iterator->counter % 3 == 1 && !$iterator->first}
+                        </div>
+                        <div>
+                        {/if}
+                            <a class="new-link" {if $new->target != ""} href="{$new->target}"{/if}>
+                                <img class="new-image" src="{$basePath}/images/news_thumbs/{$new->file}" />
+                                <div class="new-title">{$new->title}</div>
+                                <span class="new-description">
+                                    {if $new->date_to != ""}
+                                        {$new->date_from|date: 'j.n.'} - {$new->date_to|date: 'j.n.Y'}
+                                    {else}
+                                        {$new->date_from|date: 'j.n.Y'}
+                                    {/if}
+                                </span>
+                            </a>
+                        {/foreach}          
+                        </div>
+                    </div>
+                </div>
+                {if $photo_news->count() != 1}
+                <button class="news-nav-button prev" onclick="prevSlide('photos_slider')">novější</button>
+                <button class="news-nav-button next" onclick="nextSlide('photos_slider')">starší</button>
+                {/if}
+            </div>
+            <div class="col-md-4">
+                <h2><a class="link" n:href="Audio:latest">Audio:<a/></h2>
+                <div id="audio_slider_md" n:class="slideshow, news-slideshow">
+                    <div u="slides">
+                        <div>
+                        {foreach $audio_news as $new}
+                        {if $iterator->counter % 3 == 1 && !$iterator->first}
+                        </div>
+                        <div>
+                        {/if}
+                            <a class="new-link" {if $new->target != ""} href="{$new->target}"{/if}>
+                                <img class="new-image" src="{$basePath}/images/news_thumbs/{$new->file}" />
+                                <div class="new-title">{$new->title}</div>
+                                <span class="new-description">{$new->date_from|date: 'd.m.Y'}</span>
+                            </a>
+                        {/foreach}          
+                        </div>
+                    </div>
+                </div>
+                <button class="news-nav-button prev" onclick="prevSlide('audio_slider')">novější</button>
+                <button class="news-nav-button next" onclick="nextSlide('audio_slider')">starší</button>
+            </div>
+        </div>
+
+        <div class="row news-section visible-sm">
+            <div class="col-md-4">
+                <h2><a class="link" n:href="Actuality:default">Akce:</a></h2>
+                <div id="events_slider_sm" n:class="slideshow, news-slideshow">
+                    <div u="slides">
+                        <div>
+                            <a class="new-link" n:href="Actuality:sunday">
+                                <img class="new-image" src="{$basePath}/images/actuality/previews/program.jpg" />
+                                <div class="bold new-title">Programy pro veřejnost</div>
+                                <span class="new-description">
+                                    Každou neděli od 14:00 hodin
+                                </span>
+                            </a>
+                        {foreach $event_news as $new}
+                        {if ($iterator->counter + 1) % 2 == 1 && !$iterator->first}
+                        </div>
+                        <div>
+                        {/if}
+                            <a class="new-link" {if $new->target != ""} href="{$new->target}"{/if}>
+                                <img class="new-image" src="{$basePath}/images/news_thumbs/{$new->file}" />
+                                <div class="new-title">{$new->title}</div>
+                                <span class="new-description">
+                                    {if $new->date_to != ""}
+                                        {$new->date_from|date: 'j.n.'} - {$new->date_to|date: 'j.n.Y'}
+                                    {else}
+                                        {$new->date_from|date: 'j.n.Y'}
+                                    {/if}
+                                </span>
+                            </a>
+                        {/foreach}          
+                        </div>
+                    </div>
+                </div>
+                {if $event_news->count() != 1}
+                <button class="news-nav-button prev" onclick="prevSlide('events_slider')">předchozí</button>
+                <button class="news-nav-button next" onclick="nextSlide('events_slider')">nadcházející</button>
+                {/if}
+            </div>
+            <div class="col-md-4">
+                <h2><a class="link" n:href="Galery:galeries">Foto:<a/></h2>
+                <div id="photos_slider_sm" n:class="slideshow, news-slideshow">
+                    <div u="slides">
+                        <div>
+                        {foreach $photo_news as $new}
+                        {if $iterator->counter + 1 % 2 == 1 && !$iterator->first}
+                        </div>
+                        <div>
+                        {/if}
+                            <a class="new-link" {if $new->target != ""} href="{$new->target}"{/if}>
+                                <img class="new-image" src="{$basePath}/images/news_thumbs/{$new->file}" />
+                                <div class="new-title">{$new->title}</div>
+                                <span class="new-description">
+                                    {if $new->date_to != ""}
+                                        {$new->date_from|date: 'j.n.'} - {$new->date_to|date: 'j.n.Y'}
+                                    {else}
+                                        {$new->date_from|date: 'j.n.Y'}
+                                    {/if}
+                                </span>
+                            </a>
+                        {/foreach}          
+                        </div>
+                    </div>
+                </div>
+                {if $photo_news->count() != 1}
+                <button class="news-nav-button prev" onclick="prevSlide('photos_slider')">novější</button>
+                <button class="news-nav-button next" onclick="nextSlide('photos_slider')">starší</button>
+                {/if}
+            </div>
+            <div class="col-md-4">
+                <h2><a class="link" n:href="Audio:latest">Audio:<a/></h2>
+                <div id="audio_slider_sm" n:class="slideshow, news-slideshow">
+                    <div u="slides">
+                        <div>
+                        {foreach $audio_news as $new}
+                        {if $iterator->counter + 1 % 2 == 1 && !$iterator->first}
+                        </div>
+                        <div>
+                        {/if}
+                            <a class="new-link" {if $new->target != ""} href="{$new->target}"{/if}>
+                                <img class="new-image" src="{$basePath}/images/news_thumbs/{$new->file}" />
+                                <div class="new-title">{$new->title}</div>
+                                <span class="new-description">{$new->date_from|date: 'd.m.Y'}</span>
+                            </a>
+                        {/foreach}          
+                        </div>
+                    </div>
+                </div>
+                <button class="news-nav-button prev" onclick="prevSlide('audio_slider')">novější</button>
+                <button class="news-nav-button next" onclick="nextSlide('audio_slider')">starší</button>
             </div>
         </div>
     </div>
@@ -190,10 +374,52 @@
             { $Duration: 1200, $Opacity: 2},
         ];
 
-		var events_slider;
-		var photos_slider;
-		var audio_slider;
+		var events_slider_lg;
+		var photos_slider_lg;
+		var audio_slider_lg;
+        var events_slider_md;
+        var photos_slider_md;
+        var audio_slider_md;
+        var events_slider_sm;
+        var photos_slider_sm;
+        var audio_slider_sm;
 		
+        function nextSlide(slider) {
+            if(slider == "events_slider") {
+                events_slider_lg.$Next();
+                events_slider_md.$Next();
+                events_slider_sm.$Next();
+            }
+            if(slider == "photos_slider") {
+                photos_slider_lg.$Next();
+                photos_slider_md.$Next();
+                photos_slider_sm.$Next();
+            }
+            if(slider == "audio_slider") {
+                audio_slider_lg.$Next();
+                audio_slider_md.$Next();
+                audio_slider_sm.$Next();
+            }
+        }
+
+        function prevSlide(slider) {
+            if(slider == "events_slider") {
+                events_slider_lg.$Prev();
+                events_slider_md.$Prev();
+                events_slider_sm.$Prev();
+            }
+            if(slider == "photos_slider") {
+                photos_slider_lg.$Prev();
+                photos_slider_md.$Prev();
+                photos_slider_sm.$Prev();
+            }
+            if(slider == "audio_slider") {
+                audio_slider_lg.$Prev();
+                audio_slider_md.$Prev();
+                audio_slider_sm.$Prev();
+            }
+        }
+
 	    jQuery(document).ready(function ($) {
             var options = {
                 $AutoPlay: true,   
@@ -219,11 +445,11 @@
                 $SlideSpacing: 0,                                   {* [Optional] Space between each slide in pixels, default value is 0 *}
                 $SlideshowOptions: {                                {* [Optional] Options to specify and enable slideshow or not *}
                     $Class: $JssorSlideshowRunner$,                 {* [Required] Class to create instance of slideshow *}
-                    $Transitions: _SlideshowTransitions, {* Fade *}
+                    $Transitions: _SlideshowTransitions,            {* Fade *}
                 },
 
-                $BulletNavigatorOptions: {                                {* [Optional] Options to specify and enable navigator or not *}
-                    $Class: $JssorBulletNavigator$,                       {* [Required] Class to create navigator instance *}
+                $BulletNavigatorOptions: {                          {* [Optional] Options to specify and enable navigator or not *}
+                    $Class: $JssorBulletNavigator$,                 {* [Required] Class to create navigator instance *}
                     $SpacingX: 5,                                   {* [Optional] Horizontal space between each item in pixel, default value is 0 *}
                 }
             };
@@ -245,19 +471,28 @@
             $(window).bind("resize", ScaleSlideshowSlider);
             $(window).bind("orientationchange", ScaleSlideshowSlider); 
 			
-			if({$event_news->count()} > 3)
-				events_slider = initSlider("events_slider");
+			if({$event_news->count()} > 3) {
+				events_slider_lg = initNewsSlider("events_slider_lg", 365, 270);
+                events_slider_md = initNewsSlider("events_slider_md", 310, 270);
+                events_slider_sm = initNewsSlider("events_slider_sm", 730, 90);
+            }
 	
-			if({$photo_news->count()} > 3)
-				photos_slider = initSlider("photos_slider");
+			if({$photo_news->count()} > 3) {
+				photos_slider_lg = initNewsSlider("photos_slider_lg", 365, 270);
+                photos_slider_md = initNewsSlider("photos_slider_md", 310, 270);
+                photos_slider_sm = initNewsSlider("photos_slider_sm", 730, 90);
+            }
 			
-			if({$audio_news->count()} > 3)
-				audio_slider = initSlider("audio_slider");
+			if({$audio_news->count()} > 3) {
+				audio_slider_lg = initNewsSlider("audio_slider_lg", 365, 270);
+                audio_slider_md = initNewsSlider("audio_slider_md", 310, 270);
+                audio_slider_sm = initNewsSlider("audio_slider_sm", 730, 90);
+            }
 				
-			function initSlider(element_id) {
+			function initNewsSlider(element_id, width, height) {
 				var options = {
-		            $SlideWidth: 310, 
-		            $SlideHeight: 270,
+		            $SlideWidth: width, 
+		            $SlideHeight: height,
 		            $Loop: 0,
 					$ArrowKeyNavigation: 0,
 		        };
@@ -276,19 +511,6 @@
 				
 				return slider;
 			}
-			
-			function ScaleNewsSliders() {
-                browser_width = this.innerWidth;
-                if(browser_width >= 768 && browser_width <= 991) {
-	                //photos_slider.$ScaleWidth(100);
-                }   
-            }
-
-            ScaleNewsSliders();
-                                            
-            $(window).bind("load", ScaleNewsSliders);
-            $(window).bind("resize", ScaleNewsSliders);
-            $(window).bind("orientationchange", ScaleNewsSliders); 
         });
     </script>
 

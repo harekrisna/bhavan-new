@@ -18,7 +18,7 @@
 						{$new['date_from']|date: 'd.m.Y'}
 					{/if}
 				</div>
-			    <div><span>Cíl okdazu:</span> <a n:if="$new['target'] != ''" n:class="$new['target_http_code'] != 200 ? broken" title="{$new['target']}" href="{$new['target']}" target="_blank">{$new['target']}</a></div>
+			    <div><span>Cíl okdazu:</span> <a n:if="$new['target'] != ''" {* n:class="$new['target_http_code'] != 200 ? broken" *} title="{$new['target']}" href="{$new['target']}" target="_blank">{$new['target']}</a></div>
 			    <div><span>Od:</span>
 				{if $new['show_from'] != ""}
 					{$new['show_from']|date: 'd.m.Y H:i'}

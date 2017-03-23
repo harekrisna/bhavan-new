@@ -49,7 +49,8 @@ final class NewsPresenter extends BasePresenter {
 			if($new->target != "" && strpos($new->target, "http://") === FALSE) {
 				$target = "http://www.bhavan.cz/".$new->target;
 				$row['target'] = $target;
-				$row['target_http_code'] = $this->common->checkUrl($target);
+				//$row['target_http_code'] = $this->common->checkUrl($target);
+
 			}
 			else {
 				$row['target'] = "";
