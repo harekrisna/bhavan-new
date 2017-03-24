@@ -463,6 +463,14 @@
                 }
                 else
                     window.setTimeout(ScaleSlideshowSlider, 30);
+                
+                browser_width = window.innerWidth;
+				if(browser_width >= 992 && browser_width <= 1199) {
+					$('.visible-md').css('height', '270px');
+					$('.visible-md div.col-md-4').css('height', '335px');
+					$('.visible-md div.col-md-4 .slideshow').css('height', '270px');
+					console.log(browser_width);
+				}
             }
 
             ScaleSlideshowSlider();
