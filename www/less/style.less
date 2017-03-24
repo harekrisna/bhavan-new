@@ -26,6 +26,12 @@
     }
 }
 
+.big-mobile-screen(@rules) {
+    @media screen and (min-width: 600px) and (max-width: 767px) {
+        @rules();
+    }
+}
+
 .mobile-screen(@rules) {
     @media (max-width: 767px) {
         @rules();
