@@ -308,7 +308,7 @@
                     <div u="slides">
                         <div>
                         {foreach $photo_news as $new}
-                        {if $iterator->counter + 1 % 2 == 1 && !$iterator->first}
+                        {if $iterator->counter % 2 == 1 && !$iterator->first}
                         </div>
                         <div>
                         {/if}
@@ -338,7 +338,7 @@
                     <div u="slides">
                         <div>
                         {foreach $audio_news as $new}
-                        {if $iterator->counter + 1 % 2 == 1 && !$iterator->first}
+                        {if $iterator->counter % 2 == 1 && !$iterator->first}
                         </div>
                         <div>
                         {/if}
@@ -482,19 +482,19 @@
 			if({$event_news->count()} > 3) {
 				events_slider_lg = initNewsSlider("events_slider_lg", 365, 270);
                 events_slider_md = initNewsSlider("events_slider_md", 310, 270);
-                events_slider_sm = initNewsSlider("events_slider_sm", 730, 90);
+                events_slider_sm = initNewsSlider("events_slider_sm", 730, 80);
             }
 	
 			if({$photo_news->count()} > 3) {
 				photos_slider_lg = initNewsSlider("photos_slider_lg", 365, 270);
                 photos_slider_md = initNewsSlider("photos_slider_md", 310, 270);
-                photos_slider_sm = initNewsSlider("photos_slider_sm", 730, 90);
+                photos_slider_sm = initNewsSlider("photos_slider_sm", 730, 80);
             }
 			
 			if({$audio_news->count()} > 3) {
 				audio_slider_lg = initNewsSlider("audio_slider_lg", 365, 270);
                 audio_slider_md = initNewsSlider("audio_slider_md", 310, 270);
-                audio_slider_sm = initNewsSlider("audio_slider_sm", 730, 90);
+                audio_slider_sm = initNewsSlider("audio_slider_sm", 730, 80);
             }
 				
 			function initNewsSlider(element_id, width, height) {
