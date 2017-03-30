@@ -1,22 +1,25 @@
 {block title}Foto{/block}
 {block content}
-<h1>Foto</h1>
-<div id="photo_folders">
-	<div n:foreach="$galeries as $galery">
-		<div class="preview_image" style="background-image: url('{$basePath}/images/galery/{$galery->photos_folder|noescape}/galery_image.jpg');">
-			<div>{$galery->galery_year, $galery->galery_month, $galery->galery_day|dynamicDate}</div>
+<h1 class="list-title">Foto</h1>
+<div class="row list">
+	{var $group_year = null}
+ 	{foreach $galeries as $galery}
+ 	{if $group_year != $galery->galery_year}
+ 	{if !$iterator->first}</div>{/if}
+	<div class="list-group clearfix">
+		<h2 class="list-group-title">Rok {$galery->galery_year}</h2>
+		{var $group_year = $galery->galery_year}
+	{/if}
+		<div class="col-md-6">
+			<div class="list-box">
+				<a class="list-box-title sms-down" n:href="photos, $galery->id">{$galery->title}</a>
+				<div class="list-box-image" style="background-image: url('{$basePath}/images/galery/{$galery->photos_folder|noescape}/galery_image.jpg');">
+					<div class="list-box-image-title">{$galery->galery_year, $galery->galery_month, $galery->galery_day|dynamicDate}</div>
+				</div>
+				<a class="list-box-title sms-up" n:href="photos, $galery->id">{$galery->title}</a>
+				<p class="list-box-text">{$galery->description}</p>
+		    </div>
 		</div>
-		<a href="{link photos, $galery->id}">{$galery->title}</a>
-		<p>{$galery->description}</p>
-	</div>
+	{/foreach}
 </div>
-{/block}
-{block scripts}
-{include parent}
-  <script type="text/javascript">
-    $('#photo_folders > div').click(function() {
-      var href = $(this).children("a").attr("href");
-      window.location.href = href;
-    });
-  </script>
 {/block}

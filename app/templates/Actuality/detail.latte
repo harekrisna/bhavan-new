@@ -1,0 +1,9 @@
+{block title}{$actuality->title} | Aktuality{/block}
+{block content}
+{include breadcrumb_nav, backlinks => $backlinks}
+<article class="article-detail">
+	<h1 class="article-title">{$actuality->title}</h1>
+	<img n:if="$actuality->article_image" class="article-image" src="{$basePath}/images/actuality/{$actuality->article_image}" />
+	{!$actuality->description}
+</article>
+{/block}	

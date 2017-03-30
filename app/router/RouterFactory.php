@@ -147,7 +147,7 @@ class RouterFactory
 					'odkazy' => 'Links'
 				)
 			),
-			'action' =>	'default',
+			'action' =>	'list',
 		));
 		return $router;
 	}

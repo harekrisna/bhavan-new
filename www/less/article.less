@@ -1,0 +1,58 @@
+.article-detail {
+	margin-bottom: 50px;
+
+	a {
+		color: #EB8C3A;
+		transition: 0.3s; 
+		
+		&:hover {
+			color: #12323D;
+			transition: 0.3s; 
+		}	
+	}
+	
+	hr {
+		border-top: 1px #000 solid;
+	}
+
+	h3 {
+		margin: 15px 0;
+	}
+
+	p {
+	    text-align: justify;
+	    margin-bottom: 20px;
+	}
+    
+	.article-title {
+		margin-left: 0;
+		margin-bottom: 10px;
+
+		.large-mobile-screen({
+			font-size: 25px;
+			height: 40px;
+		});
+
+		.small-mobile-screen-down({
+			font-size: 20px;
+			height: 30px;
+		})
+	}
+
+	.article-image {
+		width:50%; 
+		border-radius: 70px 0;
+		margin: 30px 0 0px 15px;
+		float: right;
+		position: relative;
+		top: -20px;
+
+		.ts-down({
+			border-radius: 40px 0;
+		});
+
+		.extra-small-screen({
+			border-radius: 20px 0;
+		});
+	}
+}

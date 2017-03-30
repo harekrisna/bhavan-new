@@ -1,0 +1,32 @@
+{block title}Aktuality{/block}
+{block content}
+<h1 class="list-title">Akce</h1>
+<div class="row list">
+	<div class="col-md-6">
+		<div class="list-box">
+			<a class="list-box-title sms-down" n:href="sunday">Programy pro veřejnost</a>
+			<div class="list-box-image" style="background-image: url('{$basePath}/images/actuality/previews/program.jpg');">
+				<div class="list-box-image-title">neděle</div>
+			</div>
+			<a class="list-box-title sms-up" n:href="sunday">Programy pro veřejnost</a>
+			<p class="list-box-text">Každou neděli od 14:00<br />Védská filosofie, zpívání Haré Kršna mahámantry (mantra meditace), přednáška z Bhagavad-gíty, prostor pro vaše otázky, vegetariánská hostina, nabídka duchovní literatury, drobnosti z Indie.</p>
+	    </div>
+	</div>
+	<div class="col-md-6" n:foreach="$actualities as $actuality">
+		<div class="list-box">
+			<a class="list-box-title sms-down" n:href="detail, $actuality->id">{$actuality->title}</a>
+			<div class="list-box-image" style="background-image: url('{$basePath}/images/actuality/previews/{$actuality->preview_image|noescape}');">
+				<div class="list-box-image-title">
+					{if $actuality->date_to != ""}
+						{$actuality->date_from|date: 'j.n'}-{$actuality->date_to|date: 'j.n Y'}
+					{else}
+						{$actuality->date_from|date: 'j.n Y'}
+					{/if}
+				</div>
+			</div>
+			<a class="list-box-title sms-up" n:href="detail, $actuality->id">{$actuality->title}</a>
+			<p class="list-box-text">{!strip_tags($actuality->description)|truncate:330}</p>
+	    </div>
+	</div>
+</div>
+{/block}

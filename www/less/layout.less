@@ -1,10 +1,29 @@
 body {
 	font-family: 'PT Sans', sans-serif;
+	font-size: 15px;
+	line-height: 1.6;
 	background-color: #FFFFF3;
     background-image: url('../images/layout/bg.gif');
    	background-size: 120px;
 }
 
+h1, h2 {
+	font-family: 'Lora', serif;
+	font-weight: bold;
+	color: #EB8C3A;
+}
+
+h1 {
+	font-size: 30px;
+	line-height: 1.6 !important;
+	margin: 0 0 5px 0;
+	height: 48px;
+}
+
+h2 {
+	font-size: 20px;
+	margin: 30px 0px 10px 0px;
+}
 .navbar {
 	background-color: transparent;
 	border: none;
@@ -15,6 +34,7 @@ body {
 	
 	.mobile-screen({
 		margin-top: 0px;
+		margin-bottom: 0px;
 		background-color: #f8f8f8
 	});
 
@@ -43,18 +63,19 @@ body {
 	}
 
 	.nav-container {
-		width: 545px;
+		width: 555px;
 		height: 90px;
 		float: right;
 		
 		.tablet-screen({
-			width: 465px;
+			width: 470px;
 			height: 80px;
 		});
 
 		.mobile-screen({
 			width: 100%;
-			float: none
+			padding: 0 10px;
+			float: none;
 		});
 		
 		.actuality-bar {
@@ -151,7 +172,7 @@ body {
 		    transition: 0.2s;    
 			
 			.tablet-wide-screen({margin-top: 1px});
-			.tablet-screen({margin-top: -3px});
+			.tablet-screen({margin-top: 0px});
 			.mobile-screen({margin-top: -35px});
 		}
 
@@ -165,7 +186,8 @@ body {
 
 .navbar-header {
     display: none;
-    
+    border-bottom: 1px 	rgba(235, 140, 58, 0.5) solid;
+
     .mobile-screen({display: block;})
 }
 
@@ -173,7 +195,7 @@ body {
 	float: left;
 
 	.tablet-wide-screen({margin-top: -7px});
-	.tablet-screen({margin-top: -12px});
+	.tablet-screen({margin-top: -9px});
 	.mobile-screen({
 		margin-top: 0px;
 		float: left;
@@ -183,11 +205,11 @@ body {
 
 	li {
 		a {
-			font-size: 1.2em;
+			font-size: 17px;
 
 			.tablet-screen({
 				padding-left: 6px !important;
-				padding-right: 13px !important;
+				padding-right: 12px !important;
 			});
 		}
 
@@ -198,6 +220,45 @@ body {
 			.mobile-screen({padding-left: 15px !important});
 		}
 	}
+}
+
+.main-content {
+
+}
+
+.divider {
+    width: 100%;
+    height: 18px;
+    margin-top: 2px;
+    background: url("../images/layout/divider.png") no-repeat center center / 990px 18px; 
+    clear: both;
+ 
+	.large-mobile-screen-down({
+		background: none; 
+	});
+
+    &.flipped {
+	    transform: rotate(180deg);    
+    }
+    
+    &.shifted {
+	    margin-top: -13px;
+    }
+    
+    &.broken {
+	    height: 44px;
+	    background-size: 990px 44px;
+		background-image: url(../images/layout/divider-broken.png)
+    }
+}
+
+nav.breadcrumb_nav {
+	margin-top: -6px;
+	margin-bottom: 4px;
+
+	.large-mobile-screen-down({
+		margin-bottom: 0;
+	});
 }
 
 footer {

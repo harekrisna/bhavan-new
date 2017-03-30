@@ -1,0 +1,154 @@
+
+.list-title {
+	margin: 0;
+
+	.large-mobile-screen({
+		margin: 0 0 -5px 20px;
+	});
+
+	.small-mobile-screen-down({
+		margin: 0 0 -10px 10px;
+	});
+}
+
+.list {
+	margin-bottom: 100px;
+	margin-left: 10px;
+
+	.extra-small-screen({
+		margin-left: -5px;
+	});
+
+	.list-group {
+		width: 100%;
+		margin-bottom: 50px;
+
+		.list-group-title {
+			width: 96%;
+			border-bottom: 1px @webTextColorHover solid;
+			margin: 20px 0 5px 0;
+		}
+	}
+
+	.col-md-6 {
+		&:first-of-type {
+			.list-box {
+				margin-top: 10px;
+			}
+		};
+
+		&:nth-of-type(2) {
+		  	.list-box {
+				margin-top: 10px;
+				margin-bottom: 10px;
+			}  
+		}
+
+		&:nth-of-type(odd) {
+			padding-left: 0;
+		}
+
+		&:nth-of-type(even) {
+			padding-right: 0;
+		}
+
+		@media (max-width: 991px) {
+        	padding: 0;
+
+        	&:nth-of-type(2) {
+			  	.list-box {
+					margin-top: 25px;
+				}  
+			}
+    	}
+	}
+
+	.list-box {
+		margin-top: 25px;
+		min-height: 110px;
+		cursor: pointer;
+
+		&:hover .list-box-title {
+  			color: #663200;
+  			transition: 0.3s;
+		}		
+
+		.small-mobile-screen-down({
+			min-height: 135px;
+		});
+
+		.list-box-image {
+			border-radius: 20px 0;
+			width: 100px;
+			height: 100px;
+			float: left;
+			transition: 1s;  
+			font-size: 30px;
+			background-size: 100px;
+			background-color: #FFFFFF;
+			margin-top: 6px;
+			margin-right: 15px;
+			margin-bottom: 10px;
+			position: relative;
+
+			.small-mobile-screen-down({
+				margin-top: 0;
+				margin-right: 10px;
+				margin-bottom: 5px;
+			});
+
+			.list-box-image-title {
+				width: 100%;
+				height: 25px;  
+				font-size: 14px;
+				line-height: 24px;
+				color: #FFFFFF;
+				background-color: rgba(0, 0, 0, 0.50);
+				border-bottom-right-radius: inherit;
+				text-align: center;
+				margin-top: 75px;
+			}
+		}
+
+		.list-box-title{
+			width: 72%;
+			font-family: 'Lora', serif;	
+			font-size: 18px;
+			font-weight: bold;
+			white-space: nowrap;
+    		text-overflow: ellipsis;
+    		overflow: hidden;
+			color: #EB8C3A;
+			margin: 0px;
+			float: left;
+			clear: right;
+			display: none;
+			transition: 0.2s; 
+
+			.small-mobile-screen-down({
+				float: left;
+			    margin-bottom: 5px;
+			    clear: both;
+			    width: 100%;
+			});
+		}
+
+		.list-box-text {
+			line-height: 18px;
+			font-size: 15px;
+			padding-top: 28px;
+			padding-right: 10px;
+			color: #61503C;
+			text-align: justify;
+			margin-bottom: 0 !important;
+
+			.large-mobile-screen-down({
+				padding-right: 20px;
+			});
+
+			.extra-small-screen({
+				padding-right: 10px !important;
+			});
+		}		
+	}
+}

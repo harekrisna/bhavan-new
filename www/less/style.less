@@ -1,5 +1,7 @@
 @import "layout.less";
+@import "list.less";
 @import "homepage.less";
+@import "article.less";
 
 /**********************
        CONSTANTS
@@ -26,8 +28,32 @@
     }
 }
 
-.big-mobile-screen(@rules) {
+.ts-down(@rules) {
+    @media screen and (max-width: 991px) {
+        @rules();
+    }
+}
+
+.large-mobile-screen(@rules) {
     @media screen and (min-width: 600px) and (max-width: 767px) {
+        @rules();
+    }
+}
+
+.large-mobile-screen-down(@rules) {
+    @media screen and (max-width: 767px) {
+        @rules();
+    }
+}
+
+.small-mobile-screen-down(@rules) {
+    @media screen and (max-width: 599px) {
+        @rules();
+    }
+}
+
+.small-mobile-screen-up(@rules) {
+    @media screen and (min-width: 600px) {
         @rules();
     }
 }
@@ -44,18 +70,33 @@
     }
 }
 
+.ultra-small-screen(@rules) {
+    @media (max-width: 320px) {
+        @rules();
+    }
+}
+
+.ts-down {
+    .tablet-screen({
+        display: block !important;
+    });
+}
+
+.sms-down {
+	.small-mobile-screen-down ({
+		display: block !important;
+	});
+}
+
+.sms-up	{
+	.small-mobile-screen-up ({
+		display: block !important;
+	});
+}
+
 .outline(@color: black) {
     outline: 1px @color solid;
 }
-
-.border-radiuses (@topright: 0, @bottomright: 0, @bottomleft: 0, @topleft: 0) {
-	border-top-right-radius: @topright;
-	border-bottom-right-radius: @bottomright;
-	border-bottom-left-radius: @bottomleft;
-	border-top-left-radius: @topleft;
-	background-clip: padding-box; 
-}
-
 
 a:hover {
 	text-decoration: none;
@@ -64,7 +105,11 @@ a:hover {
 .link {
 	color: #12323D;
 	transition: 0.3s; 
-	
+
+	&.current {
+		color: #EB8C3A;
+	}	
+
 	&:hover {
 		color: #EB8C3A;
 		transition: 0.3s; 
@@ -77,4 +122,54 @@ a:hover {
 
 button:focus {
 	outline:0;
+}
+
+.clearfix:after {
+    content: ".";
+
+
+    display: block;
+
+
+    clear: both;
+
+
+    visibility: hidden;
+
+
+    line-height: 0;
+
+
+    height: 0;
+
+}
+
+ 
+
+
+.clearfix {
+
+
+    display: inline-block;
+
+}
+
+ 
+
+
+html[xmlns] .clearfix {
+
+
+    display: block;
+
+}
+
+ 
+
+
+* html .clearfix {
+
+
+    height: 1%;
+
 }
