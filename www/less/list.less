@@ -46,6 +46,7 @@
 
 		&:nth-of-type(odd) {
 			padding-left: 0;
+			clear: left;
 		}
 
 		&:nth-of-type(even) {
@@ -85,7 +86,7 @@
 			transition: 1s;  
 			font-size: 30px;
 			background-size: 100px;
-			background-color: #FFFFFF;
+			background-color: transparent;
 			margin-top: 6px;
 			margin-right: 15px;
 			margin-bottom: 10px;
@@ -107,6 +108,11 @@
 				border-bottom-right-radius: inherit;
 				text-align: center;
 				margin-top: 75px;
+
+				&.title-small {
+					font-size: 13px;
+					line-height: 25px;
+				}
 			}
 		}
 
@@ -149,6 +155,15 @@
 			.extra-small-screen({
 				padding-right: 10px !important;
 			});
-		}		
+		}
+
+		.list-box-note {
+			font-size: 13px;
+		    font-style: italic;
+		    color: #61503C;
+		    margin-top: 5px;
+		    padding-right: 10px;
+		    float: right;
+		}
 	}
 }

@@ -1,0 +1,61 @@
+{extends audio.latte}
+{block audio}
+<section id="audio_folders">
+	<div>
+		<a class="preview" n:href="byType, 'sankirtan', 'audio_year'"><img src="{$basePath}/images/books/sankirtan.jpg" /></a>
+		<a class="title" n:href="byType, 'sankirtan', 'audio_year'">Sankírtanové lekce</a>
+		<p></p>
+		<div>
+			{$sankirtan|czPlural}
+		</div>
+	</div>
+	<div>
+		<a class="preview" n:href="byType, 'varnasrama', 'audio_year'"><img src="{$basePath}/images/books/varnasrama.jpg" /></a>
+		<a class="title" n:href="byType, 'varnasrama', 'audio_year'">Varnášrama a farmy</a>
+		<p></p>
+		<div>
+			{$varnasrama|czPlural}
+		</div>
+	</div>
+	<div>
+		<a class="preview" n:href="byType, 'seminar', 'audio_year'"><img src="{$basePath}/images/books/seminars.jpg" /></a>
+		<a class="title" n:href="byType, 'seminar', 'audio_year'">Semináře</a>
+		<p></p>
+		<div>
+			{$seminar|czPlural}
+		</div>
+	</div>
+	<div>
+		<a class="preview" n:href="book, $bg->id"><img src="{$basePath}/images/books/{$bg->id}.jpg" /></a>
+		<a class="title" n:href="book, $bg->id">{$bg->title}</a>
+		<p></p>
+		<div>
+			{$bg->related('audio')->count()|czPlural}
+		</div>
+	</div>
+	<div>
+		<a class="preview" n:href="sb"><img src="{$basePath}/images/books/sb.jpg" /></a>
+		<a class="title" n:href="sb">Śrīmad-Bhāgavatam</a>
+		<p></p>
+		<div>
+			{$sb|czPlural}
+		</div>
+	</div>
+	<div>
+		<a class="preview" n:href="cc"><img src="{$basePath}/images/books/cc.jpg" /></a>
+		<a class="title" n:href="cc">Śrī Caitanya-caritāmṛta</a>
+		<p></p>
+		<div>
+			{$cc|czPlural}
+		</div>
+	</div>
+	<div>
+		<a class="preview" n:href="unclasified"><img src="{$basePath}/images/books/unclasified.jpg" /></a>
+		<a class="title" n:href="unclasified">Nezařazené</a>
+		<p></p>
+		<div>
+			{$unclasified|czPlural}
+		</div>
+	</div>
+</section>
+{/block}

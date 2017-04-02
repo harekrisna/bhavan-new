@@ -271,7 +271,7 @@ h2 {
   width: 100%;
   height: 18px;
   margin-top: 2px;
-  background: url("../images/layout/divider.png") no-repeat center center / 990px 18px;
+  background: url("../images/layout/divider.png") no-repeat center center / 1180px 18px;
   clear: both;
 }
 @media screen and (max-width: 767px) {
@@ -354,6 +354,7 @@ footer p {
 }
 .list .col-md-6:nth-of-type(odd) {
   padding-left: 0;
+  clear: left;
 }
 .list .col-md-6:nth-of-type(even) {
   padding-right: 0;
@@ -388,7 +389,7 @@ footer p {
   transition: 1s;
   font-size: 30px;
   background-size: 100px;
-  background-color: #FFFFFF;
+  background-color: transparent;
   margin-top: 6px;
   margin-right: 15px;
   margin-bottom: 10px;
@@ -411,6 +412,10 @@ footer p {
   border-bottom-right-radius: inherit;
   text-align: center;
   margin-top: 75px;
+}
+.list .list-box .list-box-image .list-box-image-title.title-small {
+  font-size: 13px;
+  line-height: 25px;
 }
 .list .list-box .list-box-title {
   width: 72%;
@@ -453,6 +458,14 @@ footer p {
   .list .list-box .list-box-text {
     padding-right: 10px !important;
   }
+}
+.list .list-box .list-box-note {
+  font-size: 13px;
+  font-style: italic;
+  color: #61503C;
+  margin-top: 5px;
+  padding-right: 10px;
+  float: right;
 }
 .slideshow {
   position: relative;
@@ -794,6 +807,56 @@ footer p {
   .article-detail .article-image {
     border-radius: 20px 0;
   }
+}
+.audio_nav .link:not(:last-child):after {
+  content: '|';
+  font-size: 16px;
+  color: #12323d;
+  margin-left: 5px;
+  position: relative;
+  top: -1px;
+}
+.lectures-group {
+  margin-bottom: 65px;
+}
+.lectures-group:first-of-type {
+  margin-top: 35px;
+}
+.lectures-group .group-header {
+  width: 100%;
+  margin: 20px 0 20px 5px;
+  clear: both;
+}
+.lectures-group .group-header .group-header-title {
+  font-family: "PT Sans", sans-serif;
+  font-weight: normal;
+  font-size: 23px !important;
+  color: #333333;
+  border-bottom: 2px solid rgba(235, 140, 58, 0.78);
+  margin-left: 90px !important;
+  display: block;
+}
+.lectures-group .group-header .group-header-label {
+  width: 75px;
+  height: 75px;
+  border-radius: 15px 0 15px 0;
+  margin: -20px 15px 0 0;
+  display: block;
+  float: left;
+}
+.lectures-group .group-header .group-header-label.label-text {
+  font-size: 30px;
+  line-height: 79px;
+  text-align: center;
+  color: #FFFFFF;
+  background-color: #325058;
+}
+.lectures-group .group-header .group-header-label.label-text.infinity {
+  font-size: 50px;
+  line-height: 79px;
+}
+.lectures-group .group-header .group-header-label.label-text.old {
+  background-color: #796956;
 }
 /**********************
        CONSTANTS

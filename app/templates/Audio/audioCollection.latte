@@ -1,0 +1,19 @@
+{block head}
+	<link rel="stylesheet" media="screen" href="{$basePath}/css/mediaelementplayer.css?v=1.2?v=1.1">
+{/block}
+{block title}{$collection->title} | Audio{/block}
+{block content}
+{include breadcrumb_nav, backlinks => $backlinks}
+<h1>{$collection->title}</h1>
+{foreach $audio_collection as $lecture} 
+	{include player-bar.latte, lecture => $lecture, show_interpret_abbr => true, title_only_text => true}
+{/foreach}
+<div style="width: 10px; height: 50px;"></div>
+{/block}
+{block scripts}
+{include parent}
+{if !$isMobile}
+	<script src="{$basePath}/js/mediaelement-and-player.min.js"></script>
+	<script src="{$basePath}/js/mediaelement-and-player.init.js"></script>
+{/if}
+{/block}

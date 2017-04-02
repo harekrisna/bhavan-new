@@ -4,9 +4,8 @@ namespace App\Presenters;
 use Nette,
 	App\Model;
 use Tracy\Debugger;
+use App\Extensions\Mobile_Detect;
 use Nette\Application\Responses\FileResponse;
-use Nette\Environment;
-use FileDownloader\FileDownload;
 use Nette\Database\SqlLiteral;
 
 class AudioPresenter extends BasePresenter	{

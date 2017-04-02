@@ -1,0 +1,60 @@
+.audio_nav {
+	.link:not(:last-child):after {
+		content: '|';
+		font-size: 16px;
+		color: @webTextColor;
+		margin-left: 5px;
+		position: relative;
+		top: -1px;
+	}	
+}
+
+.lectures-group {
+	margin-bottom: 65px;
+	
+	&:first-of-type {
+		margin-top: 35px;
+	}
+	
+	.group-header {
+		width: 100%;
+		margin: 20px 0 20px 5px;
+		clear: both;
+		
+		.group-header-title {
+			font-family: "PT Sans",sans-serif;
+			font-weight: normal;
+			font-size: 23px !important;
+			color: #333333;
+			border-bottom: 2px solid rgba(235, 140, 58, 0.78);
+			margin-left: 90px !important;
+			display: block;
+		}
+		
+		.group-header-label {
+			width: 75px;
+			height: 75px;
+			border-radius: 15px 0 15px 0;
+			margin: -20px 15px 0 0;
+			display: block;
+			float: left;
+
+			&.label-text {
+				font-size: 30px;
+				line-height: 79px;
+				text-align: center;
+				color: #FFFFFF;
+				background-color: #325058;
+				
+				&.infinity {
+					font-size: 50px;
+					line-height: 79px;
+				}
+				
+				&.old {
+					background-color: #796956;
+				}
+			}
+		}
+	}
+}

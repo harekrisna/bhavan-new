@@ -1,0 +1,24 @@
+{var $show_interpret_abbr = empty($show_interpret_abbr) ? false : $show_interpret_abbr}
+{var $group_by = empty($group_by) ? "time_created" : $group_by}
+<div class="audio-player">
+	<div class="line">
+	{if isset($title_only_text) && $title_only_text == true}
+		<div class="title" n:href="singleAudio, $lecture->id">{$lecture->title}</div>
+	{else}
+		<a class="title" n:href="singleAudio, $lecture->id">{$lecture->title}</a>
+	{/if}
+		<div class="place-time">
+			{$lecture->place} 
+			{$lecture->audio_year, $lecture->audio_month, $lecture->audio_day|dynamicDate}
+		</div>
+		<div n:if="$lecture->book_id" class="verse">{$lecture->book->abbreviation, $lecture->chapter, $lecture->verse|verseReadable}</div>
+		<div n:if="$show_interpret_abbr" class="interpret-abbr">
+			<a class="link" n:href="interpret, $lecture->audio_interpret->id, $group_by" title="{$lecture->audio_interpret->title}">{$lecture->audio_interpret->abbreviation}</a>
+		</div>
+	</div>
+	
+	{var douwnloadcount = $lecture->related('audio_downloadcount')->sum(downloadcount)}
+	
+	<audio class="desktop" width="100%" src="{$basePath}/mp3/{$lecture->audio_interpret->mp3_folder}/{$lecture->mp3_file}" type="audio/mp3" controls="controls" preload="none" data-id="{$lecture->id}" data-playcount="{$lecture->related('audio_playcount')->sum(playcount)}"></audio>
+	
+</div>

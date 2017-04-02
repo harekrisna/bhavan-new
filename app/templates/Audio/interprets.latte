@@ -1,0 +1,22 @@
+{extends audio.latte}
+{block audio}
+<div class="row list">
+	<div class="col-md-6">
+		<div class="list-box">
+			<a class="list-box-title sms-down" n:href="sunday">Šríla Prabhupáda</a>
+			<div class="list-box-image" style="background-image: url('{$basePath}/images/interpret_avatars/sp.png');"></div>
+			<a class="list-box-title sms-up" n:href="sunday">Šríla Prabhupáda</a>
+			<p class="list-box-text">Zakladatel-áčárja Mezinárodní společnosti pro&nbsp;vědomí Kršny. Kolekce přednášek<br />na stránkách www.prabhupad.cz</p>
+	    </div>
+	</div>
+	<div class="col-md-6" n:foreach="$interprets as $interpret">
+		<div class="list-box">
+			<a class="list-box-title sms-down" n:href="interpret, $interpret->id">{$interpret->title}</a>
+			<div class="list-box-image" style="background-image: url('{$basePath}/images/interpret_avatars/{$interpret->image}');"></div>
+			<a class="list-box-title sms-up" n:href="interpret, $interpret->id">{$interpret->title}</a>
+			<p class="list-box-text">{!$interpret->description}</p>
+			<span class="list-box-note">{$interpret->related("audio", "audio_interpret_id")->count()|czPlural}</span>
+	    </div>
+	</div>
+</div>
+{/block}
