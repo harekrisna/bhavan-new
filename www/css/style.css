@@ -558,11 +558,15 @@ footer p {
   width: 65px;
   height: 65px;
   border-radius: 16px 0;
-  margin: 5px 20px 0 15px;
+  margin: 5px 15px 0 0;
   float: left;
 }
+@media screen and (max-width: 599px) {
+  .news-section .news-slideshow a.new-link img.new-image {
+    margin-right: 10px;
+  }
+}
 .news-section .news-slideshow a.new-link div.new-title {
-  width: 260px;
   height: 22px;
   font-size: 16px;
   white-space: nowrap;
@@ -715,7 +719,7 @@ footer p {
   }
 }
 #news-section-xs .news-slideshow {
-  width: 350px;
+  width: 100%;
   height: 265px;
 }
 @media (max-width: 320px) {
@@ -724,7 +728,7 @@ footer p {
   }
 }
 #news-section-xs .news-slideshow div[u=slides] {
-  width: 350px;
+  width: 100%;
   height: 265px;
 }
 @media (max-width: 320px) {
@@ -733,7 +737,8 @@ footer p {
   }
 }
 #news-section-xs .news-slideshow a.new-link {
-  width: 350px;
+  width: 100%;
+  padding-right: 20px;
 }
 @media (max-width: 320px) {
   #news-section-xs .news-slideshow a.new-link {
@@ -744,9 +749,6 @@ footer p {
   #news-section-xs .news-slideshow a.new-link img.new-image {
     margin: 5px 10px 0 15px;
   }
-}
-#news-section-xs .news-slideshow a.new-link div.new-title {
-  width: 250px;
 }
 @media (max-width: 320px) {
   #news-section-xs .news-slideshow a.new-link div.new-title {
