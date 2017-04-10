@@ -248,6 +248,9 @@ h2 {
 .navbar-nav li a {
   font-size: 17px;
 }
+.navbar-nav li a:focus {
+  color: #eb8c3a;
+}
 @media screen and (min-width: 768px) and (max-width: 991px) {
   .navbar-nav li a {
     padding-left: 6px !important;
@@ -443,7 +446,7 @@ footer p {
 .list .list-box .list-box-text {
   line-height: 18px;
   font-size: 15px;
-  padding-top: 28px;
+  padding-top: 29px;
   padding-right: 10px;
   color: #61503C;
   text-align: justify;

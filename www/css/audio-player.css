@@ -1,8 +1,6 @@
 .audio-player {
-	position: relative;
 	width: 100%;
 	max-width: 720px;
-	height: 70px;
 	margin-left: 5px;
 	margin-top: 10px ;
 	clear: both;
@@ -26,28 +24,26 @@
   	font-size: 18px;
 	color: #EB8C3A;
 	margin: 0 !important;
-	float: left;
-	height: 27px;
-	position: relative;
+
+
 	z-index: 1;
 }
 
 .audio-player .line {
 	width: inherit;
-	height: 26px;
+
 	border-bottom: 1px rgba(235, 141, 58, 0.5) solid;
 }
 
-.audio-player div.verse, div.place-time, div.interpret-abbr{
+.audio-player .verse, .audio-player .place-time, .audio-player .interpret-abbr{
 	color: #12323D;
 	font-family: 'Lora', serif;
 	font-size: 14px;
 	font-style: italic;
 	margin-top: 6px;
-	float: right;
 }
 
-.audio-player div.interpret-abbr {
+.audio-player .interpret-abbr {
 	margin-right: 10px;
 }
 
@@ -98,4 +94,32 @@
 	background-repeat: no-repeat;
 	background-color: #9F9483;
 	cursor: pointer;
+}
+
+
+
+.mejs__container {
+	background-color: transparent;
+}
+
+.mejs__controls {
+	height: 30px;
+	background-color: #9F9483 !important;
+	border-radius: 4px 0 0 4px;
+}
+
+.mejs__button > button {
+	margin-top: 6px;
+}
+
+.mejs__time {
+	padding-top: 11px;
+}
+
+.mejs__time-rail {
+	padding-top: 5px;
+}  
+
+.mejs__horizontal-volume-slider {
+	margin-top: -4px;
 }

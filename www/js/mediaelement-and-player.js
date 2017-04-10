@@ -2234,7 +2234,8 @@ Object.assign(_player2.default.prototype, {
 
 		// Toggle long-video class if time code is >5 digits (MM:SS)
 		if (timecode.length > 5) {
-			(0, _dom.toggleClass)(t.container, t.options.classPrefix + 'long-video');
+			//(0, _dom.toggleClass)(t.container, t.options.classPrefix + 'long-video');
+			(0, _dom.addClass)(t.container, t.options.classPrefix + 'long-video');
 		}
 
 		if (t.controls.querySelector('.' + t.options.classPrefix + 'duration') && duration > 0) {

@@ -9,6 +9,8 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
     overflow: hidden;
 }
 
+
+
 .mejs__container {
     position: relative;
     background: #000;
@@ -367,11 +369,12 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
     background: #eee;
     width: 36px;
     height: 17px;
-    border: solid 1px #333;
+    border: 1px rgba(0,0,0,0.2) solid;
     top: -26px;
     margin-left: -18px;
     text-align: center;
     color: #111;
+    box-shadow: 0px 0px 2px 0px rgba(0,0,0,0.2);
 }
 
 .mejs__time-float-current {
@@ -396,12 +399,12 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
 }
 
 .mejs__long-video .mejs__time-float {
-    width: 64px;
+    width: 54px;
     margin-left:-23px;
 }
 
 .mejs__long-video .mejs__time-float-current {
-    width: 60px;
+    width: 50px;
 }
 
 .mejs__long-video .mejs__time-float-corner {

@@ -3,3 +3,4 @@ node_modules/*
 temp/cache/*
 www/images/galery/*
 www/images/interpret_avatars/*
+log/*
