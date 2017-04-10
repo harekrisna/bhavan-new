@@ -346,7 +346,7 @@ footer p {
 .list .list-group .list-group-title {
   width: 96%;
   border-bottom: 1px #eb8c3a solid;
-  margin: 20px 0 5px 0;
+  margin: 20px 0 15px 0;
 }
 .list .col-md-6:first-of-type .list-box {
   margin-top: 10px;
@@ -377,6 +377,10 @@ footer p {
 }
 .list .list-box:hover .list-box-title {
   color: #663200;
+  transition: 0.3s;
+}
+.list .list-box:hover .list-box-link {
+  text-decoration: underline;
   transition: 0.3s;
 }
 @media screen and (max-width: 599px) {
@@ -443,12 +447,18 @@ footer p {
     width: 100%;
   }
 }
+.list .list-box .list-box-link {
+  color: #61503c;
+  position: relative;
+  top: -2px;
+  transition: 0.2s;
+}
 .list .list-box .list-box-text {
   line-height: 18px;
   font-size: 15px;
   padding-top: 29px;
   padding-right: 10px;
-  color: #61503C;
+  color: #61503c;
   text-align: justify;
   margin-bottom: 0 !important;
 }
@@ -462,10 +472,13 @@ footer p {
     padding-right: 10px !important;
   }
 }
+.list .list-box .list-box-text.no-padding {
+  padding-top: 0;
+}
 .list .list-box .list-box-note {
   font-size: 13px;
   font-style: italic;
-  color: #61503C;
+  color: #61503c;
   margin-top: 5px;
   padding-right: 10px;
   float: right;
@@ -829,7 +842,7 @@ footer p {
 }
 .lectures-group .group-header {
   width: 100%;
-  margin: 20px 0 20px 5px;
+  margin: 20px 0 40px 5px;
   clear: both;
 }
 .lectures-group .group-header .group-header-title {

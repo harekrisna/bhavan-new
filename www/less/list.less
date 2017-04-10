@@ -26,7 +26,7 @@
 		.list-group-title {
 			width: 96%;
 			border-bottom: 1px @webTextColorHover solid;
-			margin: 20px 0 5px 0;
+			margin: 20px 0 15px 0;
 		}
 	}
 
@@ -69,9 +69,16 @@
 		min-height: 110px;
 		cursor: pointer;
 
-		&:hover .list-box-title {
-  			color: #663200;
-  			transition: 0.3s;
+		&:hover {
+			.list-box-title {
+  				color: #663200;
+  				transition: 0.3s;
+  			}
+
+  			.list-box-link {
+  				text-decoration: underline;
+  				transition: 0.3s;
+  			}
 		}		
 
 		.small-mobile-screen-down({
@@ -139,12 +146,19 @@
 			});
 		}
 
+		.list-box-link {
+			color: @webBrown;
+			position: relative;
+			top: -2px;
+			transition: 0.2s;
+		}
+
 		.list-box-text {
 			line-height: 18px;
 			font-size: 15px;
 			padding-top: 29px;
 			padding-right: 10px;
-			color: #61503C;
+			color: @webBrown;
 			text-align: justify;
 			margin-bottom: 0 !important;
 
@@ -155,12 +169,16 @@
 			.extra-small-screen({
 				padding-right: 10px !important;
 			});
+
+			&.no-padding {
+				padding-top: 0;
+			}
 		}
 
 		.list-box-note {
 			font-size: 13px;
 		    font-style: italic;
-		    color: #61503C;
+		    color: @webBrown;
 		    margin-top: 5px;
 		    padding-right: 10px;
 		    float: right;
