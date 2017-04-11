@@ -95,6 +95,19 @@
 	});
 }
 
+.visible-sm-xs {
+    .large-mobile-screen({
+        display: block;
+    });
+}
+
+.visible-ts {
+    .tablet-screen({
+        display: block;
+    });
+}
+
+
 .outline(@color: black) {
     outline: 1px @color solid;
 }
@@ -127,50 +140,21 @@ button:focus {
 
 .clearfix:after {
     content: ".";
-
-
     display: block;
-
-
     clear: both;
-
-
     visibility: hidden;
-
-
     line-height: 0;
-
-
     height: 0;
-
 }
-
- 
-
 
 .clearfix {
-
-
     display: inline-block;
-
 }
-
- 
-
 
 html[xmlns] .clearfix {
-
-
     display: block;
-
 }
 
- 
-
-
 * html .clearfix {
-
-
     height: 1%;
-
 }
