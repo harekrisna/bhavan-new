@@ -331,6 +331,10 @@
 {/block}
 {block scripts}
 	<script>	    
+        function hereDoc(f) {
+            return f.toString().replace(/^[^\/]+\/\*!?/, '').replace(/\*\/[^\/]+$/, '');
+        }
+
         var _SlideshowTransitions = [
             { $Duration: 1200, $Opacity: 2},
         ];
@@ -359,6 +363,7 @@
 
         function prevSlide(slider) {
             if(slider == "events_slider") {
+                console.log(slider);
                 events_slider_lg.$Prev();
                 events_slider_sm.$Prev();
                 events_slider_xs.$Prev();
@@ -487,16 +492,6 @@
                 audio_slider_xs = initNewsSlider('audio_slider_xs', browser_width - 10, 265);
             }
 
-			/*
-			if({$audio_news->count()} > 3) {
-				audio_slider_lg = initNewsSlider("audio_slider_lg", 365, 270);
-                audio_slider_md = initNewsSlider("audio_slider_md", 310, 270);
-                audio_slider_sm = initNewsSlider("audio_slider_sm", 730, 80);
-                audio_slider_sm_xs = initNewsSlider("audio_slider_sm_xs", 570, 80);
-                audio_slider_xs = initNewsSlider("audio_slider_xs", 350, 265);
-            }
-			*/
-
 			function initNewsSlider(element_id, width, height) {
 				var options = {
 		            $SlideWidth: width, 
@@ -505,15 +500,15 @@
 					$ArrowKeyNavigation: 0,
 		        };
 
-                if(element_id == 'events_slider_lg') var slider_html = `{include events_slider_lg}`;
-                if(element_id == 'events_slider_sm') var slider_html = `{include events_slider_sm}`;
-                if(element_id == 'events_slider_xs') var slider_html = `{include events_slider_xs}`;
-                if(element_id == 'photos_slider_lg') var slider_html = `{include photos_slider_lg}`;
-                if(element_id == 'photos_slider_sm') var slider_html = `{include photos_slider_sm}`;
-                if(element_id == 'photos_slider_xs') var slider_html = `{include photos_slider_xs}`;
-                if(element_id == 'audio_slider_lg') var slider_html = `{include audio_slider_lg}`;
-                if(element_id == 'audio_slider_sm') var slider_html = `{include audio_slider_sm}`;
-                if(element_id == 'audio_slider_xs') var slider_html = `{include audio_slider_xs}`;
+                if(element_id == 'events_slider_lg') var slider_html = hereDoc(function() { /*{include events_slider_lg}*/});
+                if(element_id == 'events_slider_sm') var slider_html = hereDoc(function() { /*{include events_slider_sm}*/});
+                if(element_id == 'events_slider_xs') var slider_html = hereDoc(function() { /*{include events_slider_xs}*/});
+                if(element_id == 'photos_slider_lg') var slider_html = hereDoc(function() { /*{include photos_slider_lg}*/});
+                if(element_id == 'photos_slider_sm') var slider_html = hereDoc(function() { /*{include photos_slider_sm}*/});
+                if(element_id == 'photos_slider_xs') var slider_html = hereDoc(function() { /*{include photos_slider_xs}*/});
+                if(element_id == 'audio_slider_lg') var slider_html = hereDoc(function() { /*{include audio_slider_lg}*/});
+                if(element_id == 'audio_slider_sm') var slider_html = hereDoc(function() { /*{include audio_slider_sm}*/});
+                if(element_id == 'audio_slider_xs') var slider_html = hereDoc(function() { /*{include audio_slider_xs}*/});
                 
                 var container = '#' + element_id + '_container';
                 
@@ -521,6 +516,22 @@
                 var slider_main = $(container).children();
 		        var slider_id = slider_main.attr('id');
 		        var slider = new $JssorSlider$(slider_id, options);
+
+                // správné nastavení šířky slideru pro ie
+                if(element_id == 'events_slider_lg' || element_id == 'photos_slider_lg' || element_id == 'audio_slider_lg') {
+                    var slider_css_width = width - 20;
+                }
+                
+                if(element_id == 'events_slider_sm' || element_id == 'photos_slider_sm' || element_id == 'audio_slider_sm') {
+                    var slider_css_width = width - 10;
+                }
+
+                if(element_id == 'events_slider_xs' || element_id == 'photos_slider_xs' || element_id == 'audio_slider_xs') {
+                    var slider_css_width = width - 30;   
+                }
+                
+                $('#'+slider_id).width(slider_css_width);
+                $('#'+slider_id).children().width(slider_css_width);
 
 	       		slider.$On($JssorSlider$.$EVT_PARK, function(position, fromPosition) {
 					var slides_count = slider.$SlidesCount();
