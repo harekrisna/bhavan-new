@@ -1,0 +1,126 @@
+.audio-player {
+	width: 100%;
+	max-width: 720px;
+	margin-left: 5px;
+	margin-top: 20px ;
+	clear: both;
+	
+	audio.desktop{
+		width: 100%;
+	}
+	
+	.title-line {
+		width: inherit;
+		height: 25px;
+		border-bottom: 1px rgba(235, 141, 58, 0.5) solid;
+
+		.title {
+			font-family: 'Lora', serif;
+			font-weight: normal;
+		  	font-size: 18px;
+			color: #EB8C3A;
+			width: 100%;
+			white-space: nowrap;
+			overflow: hidden;
+			text-overflow: ellipsis;
+			display: block;
+		}
+	}
+
+	.audio-info {
+		width: 100%;
+		height: 23px;
+		margin-top: 2px;
+
+		.place-time, .verse-autor {
+			color: #12323D;
+			font-family: 'Lora', serif;
+			font-size: 14px;
+			font-style: italic;
+		}
+
+		.place-time {
+			float: left;
+		}
+
+		.verse-autor {
+			float: right;
+			
+			.link {
+				margin-left: 5px;
+			}		
+		}
+	}
+
+	.collection-text {
+		font-size: 16px;
+		line-height: 2;
+	}
+
+	.audio-download {
+		width: 20px;
+		height: 20px;
+		margin: 6px 0 0 6px;
+		float: right;
+		display: block;
+		background: transparent url('mejs-download.svg');
+		background-size: 20px 20px;
+	}
+
+	&:last-child {
+		margin-bottom: 25px;
+	}
+}
+
+.mejs-container.wide {
+	width: 581px !important;
+}
+ 
+.audio-player .hidder {
+	width: 48px;
+	border-radius: 4px;
+	overflow: hidden;
+	transition: 0.3s;	
+}
+
+
+.hidder.wide {
+	width: 100%;
+	transition: 0.3s; 
+}
+
+
+.mejs__container {
+	height: 30px !important;
+	background-color: transparent;
+}
+
+.mejs__controls {
+	height: 30px;
+	background-color: #9F9483 !important;
+	border-radius: 4px 0 0 4px;
+}
+
+.mejs__button > button {
+	margin-top: 6px;
+}
+
+.mejs__play > button{
+	margin-left: 5px;
+}
+
+.mejs__volume-button {
+	margin-top: -1px;	
+}
+
+.mejs__time {
+	padding-top: 10px;
+}
+
+.mejs__time-rail {
+	padding-top: 5px;
+}  
+
+.mejs__horizontal-volume-slider {
+	margin-top: -4px;
+}

@@ -44,7 +44,11 @@ $(function(){
         
         
 	});
+
+	$('div.mejs__controls').append('<div class="mejs__button"><a href="lol" class="audio-download" download></a></div>');
 });
+
+
 
 function redraw_playcount_title(me, playcount) {
 	if(playcount == "") playcount = 0;

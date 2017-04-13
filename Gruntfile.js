@@ -7,7 +7,8 @@
                     yuicompress: true
                 },
                 files: {
-                    "www/css/style.css": "www/less/style.less"
+                    "www/css/style.css": "www/less/style.less",
+                    "www/css/audio-player.css": "www/less/audio-player.less"
                 }
             }
         },
