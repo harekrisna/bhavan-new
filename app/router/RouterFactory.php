@@ -53,7 +53,7 @@ class RouterFactory
 		/* routs for section audio */
 
 		$router[] = new Route('audio/nejnovejsi', 'Audio:latest');
-		$router[] = new Route('audio/autori', 'Audio:interprets');
+		$router[] = new Route('audio', 'Audio:interprets');
 		$router[] = new Route('audio/roky', 'Audio:years');
 		$router[] = new Route('audio/rok/<year>?seskupit=<group_by>', array(
 			'presenter' => 'Audio',
@@ -107,6 +107,7 @@ class RouterFactory
 				Route::FILTER_TABLE => array(
 					'tema' => 'book_id',
 					'cas_pridani' => 'time_created',
+					'autoru' => 'audio_interpret_id',
 					'casu' => 'audio_year'
 				)
 			),
@@ -120,6 +121,21 @@ class RouterFactory
 				Route::FILTER_TABLE => array(
 					'tema' => 'book_id',
 					'cas_pridani' => 'time_created',
+					'autoru' => 'audio_interpret_id',
+					'casu' => 'audio_year'
+				)
+			),
+		));
+
+		$router[] = new Route('audio/varnasrama-a-farmy?seskupit=<group_by>', array(
+			'presenter' => 'Audio',
+			'action' => 'byType',
+			'type' => 'varnasrama',
+			'group_by' => array(
+				Route::FILTER_TABLE => array(
+					'tema' => 'book_id',
+					'cas_pridani' => 'time_created',
+					'autoru' => 'audio_interpret_id',
 					'casu' => 'audio_year'
 				)
 			),

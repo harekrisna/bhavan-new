@@ -1,19 +1,31 @@
 {block head}
-	<link rel="stylesheet" media="screen" href="{$basePath}/css/mediaelementplayer.css?v=1.2?v=1.1">
+	<link rel="stylesheet" media="screen" href="{$basePath}/css/mediaelementplayer.min.css">
+	<link rel="stylesheet" media="screen" href="{$basePath}/css/audio-player.css">
 {/block}
 {block title}Audio{/block}
 {block content}
 {var $displayed_collections = []}
 {include breadcrumb_nav, backlinks => $backlinks}
 <h1>{$book ? $book->title : "Nezařazené"}</h1>
-<nav id="audio_nav">
+<nav class="audio_nav">
 	<span>Seskupit podle:</span>
-	<a n:href="book, $book ? $book->id : NULL, 'audio_interpret_id'"{ifCurrent Audio:book, $book ? $book->id : NULL, 'audio_interpret_id'} class="current"{/ifCurrent}>Autorů</a>
-	<a n:href="book, $book ? $book->id : NULL, 'audio_year'"{ifCurrent Audio:book, $book ? $book->id : NULL, 'audio_year'} class="current"{/ifCurrent}>Roků</a>
+	<a n:href="book, $book ? $book->id : NULL, 'audio_interpret_id'" class="link {ifCurrent Audio:book, $book ? $book->id : NULL, 'audio_interpret_id'} current{/ifCurrent}">Autorů</a>
+	<a n:href="book, $book ? $book->id : NULL, 'audio_year'" class="link {ifCurrent Audio:book, $book ? $book->id : NULL, 'audio_year'} current{/ifCurrent}">Roků</a>
 </nav>
 {foreach $groups as $group}
 <section class="lectures-group">
-	{include group-header.latte, group => $group, group_by => $group_by}
+	{if $group_by == 'audio_interpret_id'}
+	<div class="group-header">
+		<div class="group-header-label" style="background-image: url('{$basePath}/images/interpret_avatars/{$group->audio_interpret->image}')"></div>
+		<h2 class="group-header-title">{$group->audio_interpret->title}</h2>
+	</div>
+	{/if}
+	{if $group_by == 'audio_year'}
+	<div class="group-header">
+		<div n:class="group-header-label, label-text, year-label, $group->audio_year < 2000 ? 'alt-color'">{$group->audio_year}</div>
+		<h2 class="group-header-title">Přednášky z roku {$group->audio_year}</h2>
+	</div>
+	{/if}
 	{foreach $lectures[$group->id] as $lecture}
 		{if $lecture->audio_collection_id}
 			{continueIf in_array($lecture->audio_collection_id, $displayed_collections)}

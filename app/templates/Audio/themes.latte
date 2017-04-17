@@ -1,61 +1,68 @@
 {extends audio.latte}
 {block audio}
-<section id="audio_folders">
-	<div>
-		<a class="preview" n:href="byType, 'sankirtan', 'audio_year'"><img src="{$basePath}/images/books/sankirtan.jpg" /></a>
-		<a class="title" n:href="byType, 'sankirtan', 'audio_year'">Sankírtanové lekce</a>
-		<p></p>
-		<div>
-			{$sankirtan|czPlural}
-		</div>
+<div class="row list">
+	<div class="col-md-6">
+		<div class="list-box">
+			<a class="list-box-title sms-down" n:href="byType, 'sankirtan', 'audio_year'">Sankírtanové lekce</a>
+			<div class="list-box-image" style="background-image: url('{$basePath}/images/books/sankirtan.jpg');"></div>
+			<a class="list-box-title sms-up" n:href="byType, 'sankirtan', 'audio_year'">Sankírtanové lekce</a>
+			<p class="list-box-text"></p>
+			<span class="list-box-note">{$sankirtan|czPlural}</span>
+	    </div>
 	</div>
-	<div>
-		<a class="preview" n:href="byType, 'varnasrama', 'audio_year'"><img src="{$basePath}/images/books/varnasrama.jpg" /></a>
-		<a class="title" n:href="byType, 'varnasrama', 'audio_year'">Varnášrama a farmy</a>
-		<p></p>
-		<div>
-			{$varnasrama|czPlural}
-		</div>
+	<div class="col-md-6">
+		<div class="list-box">
+			<a class="list-box-title sms-down" n:href="byType, 'varnasrama', 'audio_year'">Varnášrama a farmy</a>
+			<div class="list-box-image" style="background-image: url('{$basePath}/images/books/varnasrama.jpg');"></div>
+			<a class="list-box-title sms-up" n:href="byType, 'varnasrama', 'audio_year'">Varnášrama a farmy</a>
+			<p class="list-box-text"></p>
+			<span class="list-box-note">{$varnasrama|czPlural}</span>
+	    </div>
 	</div>
-	<div>
-		<a class="preview" n:href="byType, 'seminar', 'audio_year'"><img src="{$basePath}/images/books/seminars.jpg" /></a>
-		<a class="title" n:href="byType, 'seminar', 'audio_year'">Semináře</a>
-		<p></p>
-		<div>
-			{$seminar|czPlural}
-		</div>
+	<div class="col-md-6">
+		<div class="list-box">
+			<a class="list-box-title sms-down" n:href="byType, 'seminar', 'audio_year'">Semináře</a>
+			<div class="list-box-image" style="background-image: url('{$basePath}/images/books/seminars.jpg');"></div>
+			<a class="list-box-title sms-up" n:href="byType, 'seminar', 'audio_year'">Semináře</a>
+			<p class="list-box-text"></p>
+			<span class="list-box-note">{$seminar|czPlural}</span>
+	    </div>
 	</div>
-	<div>
-		<a class="preview" n:href="book, $bg->id"><img src="{$basePath}/images/books/{$bg->id}.jpg" /></a>
-		<a class="title" n:href="book, $bg->id">{$bg->title}</a>
-		<p></p>
-		<div>
-			{$bg->related('audio')->count()|czPlural}
-		</div>
+	<div class="col-md-6">
+		<div class="list-box">
+			<a class="list-box-title sms-down" n:href="book, $bg->id">{$bg->title}</a>
+			<div class="list-box-image" style="background-image: url('{$basePath}/images/books/{$bg->id}.jpg');"></div>
+			<a class="list-box-title sms-up" n:href="book, $bg->id">{$bg->title}</a>
+			<p class="list-box-text"></p>
+			<span class="list-box-note">{$bg->related('audio')->count()|czPlural}</span>
+	    </div>
 	</div>
-	<div>
-		<a class="preview" n:href="sb"><img src="{$basePath}/images/books/sb.jpg" /></a>
-		<a class="title" n:href="sb">Śrīmad-Bhāgavatam</a>
-		<p></p>
-		<div>
-			{$sb|czPlural}
-		</div>
+	<div class="col-md-6">
+		<div class="list-box">
+			<a class="list-box-title sms-down" n:href="sb">Śrīmad-Bhāgavatam</a>
+			<div class="list-box-image" style="background-image: url('{$basePath}/images/books/sb.jpg');"></div>
+			<a class="list-box-title sms-up" n:href="sb">Śrīmad-Bhāgavatam</a>
+			<p class="list-box-text"></p>
+			<span class="list-box-note">{$sb|czPlural}</span>
+	    </div>
 	</div>
-	<div>
-		<a class="preview" n:href="cc"><img src="{$basePath}/images/books/cc.jpg" /></a>
-		<a class="title" n:href="cc">Śrī Caitanya-caritāmṛta</a>
-		<p></p>
-		<div>
-			{$cc|czPlural}
-		</div>
+	<div class="col-md-6">
+		<div class="list-box">
+			<a class="list-box-title sms-down" n:href="cc">Śrī Caitanya-caritāmṛta</a>
+			<div class="list-box-image" style="background-image: url('{$basePath}/images/books/cc.jpg');"></div>
+			<a class="list-box-title sms-up" n:href="cc">Śrī Caitanya-caritāmṛta</a>
+			<p class="list-box-text"></p>
+			<span class="list-box-note">{$cc|czPlural}</span>
+	    </div>
 	</div>
-	<div>
-		<a class="preview" n:href="unclasified"><img src="{$basePath}/images/books/unclasified.jpg" /></a>
-		<a class="title" n:href="unclasified">Nezařazené</a>
-		<p></p>
-		<div>
-			{$unclasified|czPlural}
-		</div>
+	<div class="col-md-6">
+		<div class="list-box">
+			<a class="list-box-title sms-down" n:href="unclasified">Nezařazené</a>
+			<div class="list-box-image" style="background-image: url('{$basePath}/images/books/unclasified.jpg');"></div>
+			<a class="list-box-title sms-up" n:href="unclasified">Nezařazené</a>
+			<p class="list-box-text"></p>
+			<span class="list-box-note">{$unclasified|czPlural}</span>
+	    </div>
 	</div>
-</section>
+</div>
 {/block}

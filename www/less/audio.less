@@ -1,17 +1,19 @@
 .audio_nav {
-	.link:not(:first-child) {
-		border-left: thin black solid;
-		padding: 0;
-		display: block;
-		float: left;
+	.link:not(:last-child):after {
+		content: '|';
+		font-size: 1.1em;
+		color: @webTextColor;
+		margin-left: 5px;
+		position: relative;
+		top: -1px;
 	}
 }
 
 .lectures-group {
-	margin-bottom: 65px;
+	margin-bottom: 90px;
 	
 	&:first-of-type {
-		margin-top: 35px;
+		margin-top: 36px;
 	}
 	
 	.group-header {
@@ -33,6 +35,7 @@
 			width: 75px;
 			height: 75px;
 			border-radius: 15px 0 15px 0;
+			background-size: 75px;
 			margin: -20px 15px 0 0;
 			display: block;
 			float: left;
@@ -48,11 +51,19 @@
 					font-size: 40px;
 					line-height: 79px;
 				}
-				
-				&.old {
-					background-color: #796956;
+
+				&.year-label {
+					font-size: 22px;
 				}
+			}
+
+			&.alt-color {
+				background-color: #796956;
 			}
 		}
 	}
+}
+
+.category-list {
+		
 }

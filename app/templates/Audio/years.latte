@@ -1,16 +1,13 @@
 {extends audio.latte}
 {block audio}
-<section id="audio_folders" class="years">
-	<div n:foreach="$years as $year">
-		<a n:class="$year->year >= 2000 ? 'preview new', $year->year < 2000 ? 'preview old'" n:href="year, $year->year">
-			{$year->year}
-		</a>
-		<a class="title" n:href="year, $year->year">
-			Přednášky z roku {$year->year}
-		</a>
-		<p></p>
-		<div>
-			{$year->count|czPlural}
+<div class="row list">
+	<div class="col-md-6" n:foreach="$years as $year">
+		<div class="list-box">
+			<a class="list-box-title sms-down" n:href="year, $year->year">Přednášky z roku {$year->year}</a>
+			<div n:class="list-box-image, image-by-text, $year->year < 2000 ? 'alt-color'">{$year->year}</div>
+			<a class="list-box-title sms-up" n:href="year, $year->year">Přednášky z roku {$year->year}</a>
+			<p class="list-box-text"></p>
+			<span class="list-box-note">{$year->count|czPlural}</span>
 		</div>
 	</div>
 </section>

@@ -384,6 +384,16 @@ footer p {
     margin-bottom: 5px;
   }
 }
+.list .list-box .list-box-image.image-by-text {
+  font-size: 26px;
+  text-align: center;
+  color: #FFFFFF;
+  background-color: #325058;
+  padding-top: 30px;
+}
+.list .list-box .list-box-image.image-by-text.alt-color {
+  background-color: #796956;
+}
 .list .list-box .list-box-image .list-box-image-title {
   width: 100%;
   height: 25px;
@@ -705,17 +715,19 @@ footer p {
     border-radius: 20px 0;
   }
 }
-.audio_nav .link:not(:first-child) {
-  border-left: thin black solid;
-  padding: 0;
-  display: block;
-  float: left;
+.audio_nav .link:not(:last-child):after {
+  content: '|';
+  font-size: 1.1em;
+  color: #12323d;
+  margin-left: 5px;
+  position: relative;
+  top: -1px;
 }
 .lectures-group {
-  margin-bottom: 65px;
+  margin-bottom: 90px;
 }
 .lectures-group:first-of-type {
-  margin-top: 35px;
+  margin-top: 36px;
 }
 .lectures-group .group-header {
   width: 100%;
@@ -735,6 +747,7 @@ footer p {
   width: 75px;
   height: 75px;
   border-radius: 15px 0 15px 0;
+  background-size: 75px;
   margin: -20px 15px 0 0;
   display: block;
   float: left;
@@ -750,7 +763,10 @@ footer p {
   font-size: 40px;
   line-height: 79px;
 }
-.lectures-group .group-header .group-header-label.label-text.old {
+.lectures-group .group-header .group-header-label.label-text.year-label {
+  font-size: 22px;
+}
+.lectures-group .group-header .group-header-label.alt-color {
   background-color: #796956;
 }
 /**********************
@@ -784,7 +800,8 @@ footer p {
     display: block;
   }
 }
-a:hover {
+a:hover,
+a:focus {
   text-decoration: none;
 }
 .link {
@@ -800,7 +817,6 @@ a:hover {
 }
 .link:focus {
   color: #eb8c3a;
-  text-decoration: none;
 }
 .bold {
   font-weight: bold;

@@ -1,10 +1,10 @@
 .audio-player {
   max-width: 720px;
-  margin-top: 20px ;
+  margin-bottom: 20px;
   clear: both;
 }
-.audio-player audio.desktop {
-  width: 100%;
+.audio-player.small-margin {
+  margin-bottom: 5px;
 }
 .audio-player .title-line {
   width: inherit;
@@ -49,13 +49,6 @@
 }
 .audio-player .audio-info .verse-autor .link {
   margin-left: 5px;
-}
-.audio-player .collection-text {
-  font-size: 16px;
-  line-height: 2;
-}
-.audio-player:last-child {
-  margin-bottom: 25px;
 }
 .mejs-container.wide {
   width: 581px !important;
