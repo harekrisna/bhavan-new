@@ -26,6 +26,7 @@ h2 {
   background-color: transparent;
   border: none;
   margin-top: 25px;
+  margin-bottom: 15px;
 }
 @media screen and (min-width: 992px) and (max-width: 1199px) {
   .navbar {
@@ -74,13 +75,18 @@ h2 {
 }
 .navbar .nav-container {
   width: 555px;
-  height: 90px;
+  height: 85px;
   float: right;
+}
+@media screen and (min-width: 992px) and (max-width: 1199px) {
+  .navbar .nav-container {
+    height: 90px;
+  }
 }
 @media screen and (min-width: 768px) and (max-width: 991px) {
   .navbar .nav-container {
     width: 470px;
-    height: 80px;
+    height: 75px;
   }
 }
 @media (max-width: 767px) {
@@ -111,12 +117,6 @@ h2 {
     width: 461px;
   }
 }
-@media (max-width: 767px) {
-  .navbar .nav-container .actuality-bar {
-    float: left;
-    width: 100%;
-  }
-}
 .navbar .nav-container .actuality-bar > a.section-link {
   font-size: 19px;
   color: #12333e;
@@ -138,25 +138,8 @@ h2 {
     width: 388px !important;
   }
 }
-@media (max-width: 767px) {
-  .navbar .nav-container .actuality-bar #actuality_slider {
-    width: 435px !important;
-  }
-}
-@media (max-width: 544px) {
-  .navbar .nav-container .actuality-bar #actuality_slider {
-    margin-top: 3px;
-    margin-left: 0px;
-    clear: both;
-  }
-}
 .navbar .nav-container .actuality-bar #actuality_slider a {
   color: #EB8C3A;
-}
-@media (max-width: 544px) {
-  .navbar .nav-container .actuality-bar #actuality_slider a {
-    font-size: 18px;
-  }
 }
 .navbar .nav-container .actuality-bar #actuality_slider div[u=slides] {
   width: 470px;
@@ -202,11 +185,6 @@ h2 {
     margin-top: 0px;
   }
 }
-@media (max-width: 767px) {
-  .navbar .nav-container a.facebook-link {
-    margin-top: -35px;
-  }
-}
 .navbar .nav-container a.facebook-link:hover {
   color: #12323D;
   transition: 0.2s;
@@ -247,9 +225,6 @@ h2 {
 }
 .navbar-nav li a {
   font-size: 17px;
-}
-.navbar-nav li a:focus {
-  color: #eb8c3a;
 }
 @media screen and (min-width: 768px) and (max-width: 991px) {
   .navbar-nav li a {
@@ -730,13 +705,11 @@ footer p {
     border-radius: 20px 0;
   }
 }
-.audio_nav .link:not(:last-child):after {
-  content: '|';
-  font-size: 16px;
-  color: #12323d;
-  margin-left: 5px;
-  position: relative;
-  top: -1px;
+.audio_nav .link:not(:first-child) {
+  border-left: thin black solid;
+  padding: 0;
+  display: block;
+  float: left;
 }
 .lectures-group {
   margin-bottom: 65px;
@@ -746,7 +719,7 @@ footer p {
 }
 .lectures-group .group-header {
   width: 100%;
-  margin: 20px 0 40px 5px;
+  margin: 20px 0 40px 0;
   clear: both;
 }
 .lectures-group .group-header .group-header-title {
@@ -774,7 +747,7 @@ footer p {
   background-color: #325058;
 }
 .lectures-group .group-header .group-header-label.label-text.infinity {
-  font-size: 50px;
+  font-size: 40px;
   line-height: 79px;
 }
 .lectures-group .group-header .group-header-label.label-text.old {
@@ -786,11 +759,6 @@ footer p {
 /**********************
         MIXINS
 ***********************/
-@media screen and (min-width: 768px) and (max-width: 991px) {
-  .ts-down {
-    display: block !important;
-  }
-}
 @media screen and (max-width: 599px) {
   .sms-down {
     display: block !important;
@@ -806,6 +774,11 @@ footer p {
     display: block;
   }
 }
+@media screen and (max-width: 767px) {
+  .hide-lms-down {
+    display: none !important;
+  }
+}
 @media screen and (min-width: 768px) and (max-width: 991px) {
   .visible-ts {
     display: block;
@@ -819,11 +792,15 @@ a:hover {
   transition: 0.3s;
 }
 .link.current {
-  color: #EB8C3A;
+  color: #eb8c3a;
 }
 .link:hover {
-  color: #EB8C3A;
+  color: #eb8c3a;
   transition: 0.3s;
+}
+.link:focus {
+  color: #eb8c3a;
+  text-decoration: none;
 }
 .bold {
   font-weight: bold;

@@ -28,6 +28,7 @@ h2 {
 	background-color: transparent;
 	border: none;
 	margin-top: 25px;
+	margin-bottom: 15px;
 	
 	.tablet-wide-screen({margin-bottom: 0px});
 	.tablet-screen({margin-bottom: 0px});
@@ -64,12 +65,16 @@ h2 {
 
 	.nav-container {
 		width: 555px;
-		height: 90px;
+		height: 85px;
 		float: right;
+		
+		.tablet-wide-screen({
+			height: 90px;
+		});
 		
 		.tablet-screen({
 			width: 470px;
-			height: 80px;
+			height: 75px;
 		});
 
 		.mobile-screen({
@@ -97,11 +102,6 @@ h2 {
 				width: 461px;
 			});
 
-			.mobile-screen({
-				float: left;
-				width: 100%;
-			});
-
 			> a.section-link {
 				font-size: 19px;
 				color: #12333e;
@@ -121,18 +121,9 @@ h2 {
 				float: left;
 
 				.tablet-screen({width: 388px !important});
-				.mobile-screen({width: 435px !important});
-				.extra-small-screen({
-					margin-top: 3px;
-					margin-left: 0px;
-					clear: both;
-				});
 
 				a {
 					color: #EB8C3A;
-					.extra-small-screen({
-						font-size: 18px;
-					});
 				}
 			}
 			
@@ -173,7 +164,6 @@ h2 {
 			
 			.tablet-wide-screen({margin-top: 1px});
 			.tablet-screen({margin-top: 0px});
-			.mobile-screen({margin-top: -35px});
 		}
 
 		a.facebook-link:hover {
@@ -205,10 +195,7 @@ h2 {
 
 	li {
 		a {
-			font-size: 17px;
-			&:focus {
-				color: @webTextColorHover;
-			} 
+			font-size: 17px; 
 			
 			.tablet-screen({
 				padding-left: 6px !important;

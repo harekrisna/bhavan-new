@@ -1,7 +1,5 @@
 .audio-player {
-  width: 100%;
   max-width: 720px;
-  margin-left: 5px;
   margin-top: 20px ;
   clear: both;
 }
@@ -23,6 +21,13 @@
   overflow: hidden;
   text-overflow: ellipsis;
   display: block;
+}
+.audio-player .title-line .title.title-padding {
+  padding-right: 66px;
+}
+.audio-player .title-line .download-link {
+  margin-top: -26px;
+  float: right;
 }
 .audio-player .audio-info {
   width: 100%;
@@ -49,30 +54,76 @@
   font-size: 16px;
   line-height: 2;
 }
-.audio-player .audio-download {
-  width: 20px;
-  height: 20px;
-  margin: 6px 0 0 6px;
-  float: right;
-  display: block;
-  background: transparent url('mejs-download.svg');
-  background-size: 20px 20px;
-}
 .audio-player:last-child {
   margin-bottom: 25px;
 }
 .mejs-container.wide {
   width: 581px !important;
 }
-.audio-player .hidder {
-  width: 48px;
-  border-radius: 4px;
-  overflow: hidden;
+player-bar-container {
+  position: relative;
+}
+.hidder {
+  width: 87px;
+  height: 30px;
+  display: table;
+  z-index: 10;
+  transition: 0.3s;
+  float: right;
+}
+.hidder.hidder-hide {
+  width: 100%;
+}
+.hidder .hidder-row {
+  display: table-row;
+}
+.hidder .hidder-row .hidder-cell {
+  display: table-cell;
   transition: 0.3s;
 }
-.hidder.wide {
-  width: 100%;
-  transition: 0.3s;
+.hidder .hidder-row .hidder-cell.transparent-part {
+  width: 47px;
+  background: transparent;
+}
+.hidder .hidder-row .hidder-cell.download-part {
+  width: 40px;
+  background-image: url('../images/layout/bg.gif');
+  background-size: 120px;
+  background-position: right top;
+  position: relative;
+  top: -30px;
+  z-index: 10;
+}
+.hidder .hidder-row .hidder-cell.download-part .download-part-background {
+  width: 40px;
+  height: 30px;
+  background-color: #9F9483;
+  border-radius: 0 4px 4px 0;
+}
+.hidder .hidder-row .hidder-cell.download-part .download-part-background .audio-download {
+  width: inherit;
+  height: inherit;
+  background: inherit;
+  background: linear-gradient(transparent, rgba(0, 0, 0, 0.35));
+  float: right;
+  border-radius: inherit;
+}
+.hidder .hidder-row .hidder-cell.download-part .download-part-background .audio-download .download-button {
+  width: 30px;
+  height: 30px;
+  margin-right: 7px;
+  background: transparent url('mejs-download.svg') center center no-repeat;
+  background-size: 20px 20px;
+  float: right;
+  display: block;
+}
+.hidder .hidder-row .hidder-cell.hidder-part {
+  position: relative;
+  top: -30px;
+  background-image: url('../images/layout/bg.gif');
+  background-size: 120px;
+  background-position: right top;
+  z-index: 10;
 }
 .mejs__container {
   height: 30px !important;
@@ -81,7 +132,7 @@
 .mejs__controls {
   height: 30px;
   background-color: #9F9483 !important;
-  border-radius: 4px 0 0 4px;
+  border-radius: 4px;
 }
 .mejs__button > button {
   margin-top: 6px;
@@ -93,6 +144,7 @@
   margin-top: -1px;
 }
 .mejs__time {
+  width: 44px;
   padding-top: 10px;
 }
 .mejs__time-rail {

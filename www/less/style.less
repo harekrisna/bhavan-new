@@ -41,6 +41,12 @@
     }
 }
 
+.large-mobile-screen-up(@rules) {
+    @media screen and (min-width: 768px) {
+        @rules();
+    }
+}
+
 .large-mobile-screen-down(@rules) {
     @media screen and (max-width: 767px) {
         @rules();
@@ -77,12 +83,6 @@
     }
 }
 
-.ts-down {
-    .tablet-screen({
-        display: block !important;
-    });
-}
-
 .sms-down {
 	.small-mobile-screen-down ({
 		display: block !important;
@@ -99,6 +99,12 @@
     .large-mobile-screen({
         display: block;
     });
+}
+
+.hide-lms-down {
+	.large-mobile-screen-down({
+		display: none !important;
+	});
 }
 
 .visible-ts {
@@ -120,12 +126,17 @@ a:hover {
 	transition: 0.3s; 
 
 	&.current {
-		color: #EB8C3A;
+		color: @webTextColorHover;
 	}	
 
 	&:hover {
-		color: #EB8C3A;
+		color: @webTextColorHover;
 		transition: 0.3s; 
+	}
+	
+	&:focus {
+		color: @webTextColorHover;
+		text-decoration: none;
 	}
 }
 

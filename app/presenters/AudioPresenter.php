@@ -441,7 +441,6 @@ class AudioPresenter extends BasePresenter	{
 	}
 	
 	public function actionDownloadMp3($id) {
-		Debugger::fireLog($id);
 		if (!$audio = $this->audio->get($id))
             throw new Nette\Application\BadRequestException;
 

@@ -1,12 +1,10 @@
 .audio_nav {
-	.link:not(:last-child):after {
-		content: '|';
-		font-size: 16px;
-		color: @webTextColor;
-		margin-left: 5px;
-		position: relative;
-		top: -1px;
-	}	
+	.link:not(:first-child) {
+		border-left: thin black solid;
+		padding: 0;
+		display: block;
+		float: left;
+	}
 }
 
 .lectures-group {
@@ -18,7 +16,7 @@
 	
 	.group-header {
 		width: 100%;
-		margin: 20px 0 40px 5px;
+		margin: 20px 0 40px 0;
 		clear: both;
 		
 		.group-header-title {
@@ -47,7 +45,7 @@
 				background-color: #325058;
 				
 				&.infinity {
-					font-size: 50px;
+					font-size: 40px;
 					line-height: 79px;
 				}
 				

@@ -1,7 +1,5 @@
 .audio-player {
-	width: 100%;
 	max-width: 720px;
-	margin-left: 5px;
 	margin-top: 20px ;
 	clear: both;
 	
@@ -24,6 +22,15 @@
 			overflow: hidden;
 			text-overflow: ellipsis;
 			display: block;
+			
+			&.title-padding {
+				padding-right: 66px;
+			}
+		}
+		
+		.download-link {
+			margin-top: -26px;
+			float: right;
 		}
 	}
 
@@ -57,16 +64,6 @@
 		line-height: 2;
 	}
 
-	.audio-download {
-		width: 20px;
-		height: 20px;
-		margin: 6px 0 0 6px;
-		float: right;
-		display: block;
-		background: transparent url('mejs-download.svg');
-		background-size: 20px 20px;
-	}
-
 	&:last-child {
 		margin-bottom: 25px;
 	}
@@ -75,19 +72,84 @@
 .mejs-container.wide {
 	width: 581px !important;
 }
- 
-.audio-player .hidder {
-	width: 48px;
-	border-radius: 4px;
-	overflow: hidden;
-	transition: 0.3s;	
+
+player-bar-container {
+	position: relative;
 }
 
-
-.hidder.wide {
-	width: 100%;
-	transition: 0.3s; 
-}
+.hidder {
+	width: 87px; 
+	height: 30px;   	
+	display: table;  
+	z-index: 10; 	
+	transition: 0.3s;
+	float: right;
+	
+	&.hidder-hide {
+		width: 100%;	
+	}
+	
+	.hidder-row {   	
+		display: table-row; 
+		
+		.hidder-cell {
+			display: table-cell;   	
+			transition: 0.3s;
+			
+			&.transparent-part {
+				width: 47px;
+				background: transparent;
+			}
+			
+			&.download-part {
+				width: 40px;
+				background-image: url('../images/layout/bg.gif');
+				background-size: 120px;
+				background-position: right top;
+				position: relative;
+				top:-30px;
+				z-index: 10;
+				
+				.download-part-background {
+					width: 40px;
+					height: 30px;
+					background-color: #9F9483;
+					border-radius: 0 4px 4px 0;
+					
+					.audio-download {
+						width: inherit;
+						height: inherit;
+						background: inherit;
+						background: linear-gradient(transparent, rgba(0,0,0,.35));
+						float: right;
+						border-radius: inherit;
+						
+						.download-button {
+							width: 30px;
+							height: 30px;
+							margin-right: 7px;
+							background: transparent url('mejs-download.svg') center center no-repeat;
+							background-size: 20px 20px;
+							float: right;
+							display: block;
+						}
+					}
+				}
+			}
+			
+			&.hidder-part {	
+				position: relative;
+				top:-30px;
+				background-image: url('../images/layout/bg.gif');
+				background-size: 120px;
+				background-position: right top;
+				z-index: 10;
+			}
+			
+			
+		}
+	} 
+} 
 
 
 .mejs__container {
@@ -98,7 +160,7 @@
 .mejs__controls {
 	height: 30px;
 	background-color: #9F9483 !important;
-	border-radius: 4px 0 0 4px;
+	border-radius: 4px;
 }
 
 .mejs__button > button {
@@ -114,6 +176,7 @@
 }
 
 .mejs__time {
+	width: 44px;
 	padding-top: 10px;
 }
 
