@@ -1,18 +1,19 @@
 {extends audio.latte}
 {block content}
-	{include breadcrumb_nav, backlinks => $backlinks}
-	<h1 n:block="title">Přednášky z Śrī Caitanya-caritāmṛty</h1>
-	<section id="audio_folders" style="margin-top: -10px;">
-	{foreach $books as $sb}
-	{continueIf $sb->related('audio')->count() == 0}
-	<div>
-		<a class="preview" n:href="book, $sb->id"><img src="{$basePath}/images/books/{$sb->id}.jpg" /></a>
-		<a class="title" n:href="book, $sb->id">{strtok($sb->title, ":")}</a>
-		<p></p>
-		<div>
-			{$sb->related('audio')->count()|czPlural}
+{include breadcrumb_nav, backlinks => ['themes' => "Audio"]}
+<h1 class="list-title scale-text"><span n:block="title">Přednášky z Śrī Caitanya-caritāmṛty</span></h1>
+<div class="row list">
+	{foreach $books as $cc}
+	{continueIf $cc->related('audio')->count() == 0}
+	<div class="col-md-6">
+		<div class="list-box">
+			<a class="list-box-title sms-down" n:href="book, $cc->id">{strtok($cc->title, ":")}</a>
+			<div class="list-box-image" style="background-image: url('{$basePath}/images/books/{$cc->id}.jpg');"></div>
+			<a class="list-box-title sms-up" n:href="book, $cc->id">{strtok($cc->title, ":")}</a>
+			<p class="list-box-text"></p>
+			<span class="list-box-note">{$cc->related('audio')->count()|czPlural}</span>
 		</div>
 	</div>
 	{/foreach}
-	</section>
+</div>
 {/block}

@@ -74,12 +74,13 @@ h2 {
   }
 }
 .navbar .nav-container {
-  width: 555px;
+  width: 640px;
   height: 85px;
   float: right;
 }
 @media screen and (min-width: 992px) and (max-width: 1199px) {
   .navbar .nav-container {
+    width: 620px;
     height: 90px;
   }
 }
@@ -226,6 +227,11 @@ h2 {
 .navbar-nav li a {
   font-size: 17px;
 }
+@media screen and (min-width: 992px) and (max-width: 1199px) {
+  .navbar-nav li a {
+    padding-right: 12px !important;
+  }
+}
 @media screen and (min-width: 768px) and (max-width: 991px) {
   .navbar-nav li a {
     padding-left: 6px !important;
@@ -297,12 +303,12 @@ footer p {
 }
 @media screen and (min-width: 600px) and (max-width: 767px) {
   .list-title {
-    margin: 0 0 -5px 20px;
+    margin: 0 0 -5px 0px;
   }
 }
 @media screen and (max-width: 599px) {
   .list-title {
-    margin: 0 0 -10px 10px;
+    margin: 0 0 -10px 0;
   }
 }
 .list {
@@ -439,6 +445,7 @@ footer p {
   transition: 0.2s;
 }
 .list .list-box .list-box-text {
+  min-height: 80px;
   line-height: 18px;
   font-size: 15px;
   padding-top: 29px;
@@ -820,6 +827,9 @@ a:focus {
 }
 .bold {
   font-weight: bold;
+}
+.scale-text {
+  white-space: nowrap;
 }
 button:focus {
   outline: 0;

@@ -6,7 +6,7 @@
 {block content}
 {var $displayed_collections = []}
 {include breadcrumb_nav, backlinks => $backlinks}
-<h1>{$book ? $book->title : "Nezařazené"}</h1>
+<h1 class="scale-text"><span>{$book ? $book->title : "Nezařazené"}</span></h1>
 <nav class="audio_nav">
 	<span>Seskupit podle:</span>
 	<a n:href="book, $book ? $book->id : NULL, 'audio_interpret_id'" class="link {ifCurrent Audio:book, $book ? $book->id : NULL, 'audio_interpret_id'} current{/ifCurrent}">Autorů</a>

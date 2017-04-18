@@ -64,11 +64,12 @@ h2 {
 	}
 
 	.nav-container {
-		width: 555px;
+		width: 640px;
 		height: 85px;
 		float: right;
 		
 		.tablet-wide-screen({
+			width: 620px;
 			height: 90px;
 		});
 		
@@ -197,6 +198,10 @@ h2 {
 		a {
 			font-size: 17px; 
 			
+			.tablet-wide-screen({
+				padding-right: 12px !important;
+			});
+
 			.tablet-screen({
 				padding-left: 6px !important;
 				padding-right: 12px !important;
@@ -210,10 +215,6 @@ h2 {
 			.mobile-screen({padding-left: 15px !important});
 		}
 	}
-}
-
-.main-content {
-
 }
 
 .divider {
