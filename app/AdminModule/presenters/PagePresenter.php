@@ -35,6 +35,8 @@ final class PagePresenter extends BasePresenter {
 		$page = $this->page->findBy(['page' => $this->pageName])
 		                   ->fetch();
 
+        $this->template->page_name = $this->pageName;
+        
 		if ($page) {
             $this["pageForm"]->setDefaults($page);
             

@@ -1,7 +1,7 @@
-{block title}O nás{/block}
+{block title}{$page_name}{/block}
 {block content}
 <fieldset id="page_form">
-	<legend>O nás:</legend>
+	<legend>{$page_name}:</legend>
 	{form pageForm}
 	<ul class="error" n:if="$form->hasErrors()">
 	        <li n:foreach="$form->errors as $error">{$error}</li>

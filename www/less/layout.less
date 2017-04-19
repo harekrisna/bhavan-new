@@ -36,7 +36,7 @@ h2 {
 	.mobile-screen({
 		margin-top: 0px;
 		margin-bottom: 0px;
-		background-color: #f8f8f8
+		background-color: #f8f8f8;
 	});
 
 	.navbar-collapse {
@@ -46,6 +46,7 @@ h2 {
 
 	.navbar-brand {
 		float: none;
+		margin-left: -20px !important;
 
 		img {
 			width: 370px;
@@ -53,7 +54,7 @@ h2 {
 
 			.tablet-wide-screen({width: 300px});
 			.tablet-screen({
-				width: 230px;
+				width: 170px;
 				padding-top: 2px;
 			});
 			.mobile-screen({
@@ -74,13 +75,14 @@ h2 {
 		});
 		
 		.tablet-screen({
-			width: 470px;
-			height: 75px;
+			width: 535px;
+			height: 73px;
+			margin-top: 7px;
 		});
 
 		.mobile-screen({
 			width: 100%;
-			padding: 0 10px;
+			padding: 10px;
 			float: none;
 		});
 		
@@ -165,6 +167,7 @@ h2 {
 			
 			.tablet-wide-screen({margin-top: 1px});
 			.tablet-screen({margin-top: 0px});
+			.mobile-screen({margin-top: 0px});
 		}
 
 		a.facebook-link:hover {
@@ -186,7 +189,7 @@ h2 {
 	float: left;
 
 	.tablet-wide-screen({margin-top: -7px});
-	.tablet-screen({margin-top: -9px});
+	.tablet-screen({margin-top: -2px});
 	.mobile-screen({
 		margin-top: 0px;
 		float: left;
@@ -204,7 +207,9 @@ h2 {
 
 			.tablet-screen({
 				padding-left: 6px !important;
-				padding-right: 12px !important;
+				padding-right: 11px !important;
+				padding-top: 9px !important;
+				padding-bottom: 11px !important;
 			});
 		}
 
@@ -243,6 +248,10 @@ h2 {
     }
 }
 
+.main-content {
+	min-height: 500px;
+}
+
 nav.breadcrumb_nav {
 	margin-top: -6px;
 	margin-bottom: 4px;
@@ -253,19 +262,123 @@ nav.breadcrumb_nav {
 }
 
 footer {
-    background: #fff;
-    background: rgba(255,255,255,0.9);
-}
+	min-height: 55px;
+	font-size: 13px;
+	line-height: 20px;
+	color: #FFFFFF;
+    background: @webBrown;
+    padding-top: 9px;
 
-footer p {
-    margin: 0;
-    padding: 50px 0;
-}
+    .container {
+		@media screen and (max-width: 700px) {
+			padding-left: 10px;
+    		padding-right: 10px;
 
-@media screen and (min-width:1200px) {
-    .box:after {
-        content: '';
-        display: table;
-        clear: both;
+			.bhavan-info {
+	        	margin: 0;
+	    	}
+		}
     }
+
+    .address-info {
+    	border-right: 1px #FFFFFF dotted;
+
+	 	@media screen and (max-width: 767px) {
+        	width: 45%;
+        	float: left;
+    	}
+
+		@media screen and (max-width: 700px) {
+        	width: 100%;
+        	padding-bottom: 5px;
+        	float: none;
+        	border-right: none;
+        	border-bottom: 1px #FFFFFF dotted;
+        	padding-right: 0px;
+        	padding-left: 0px;
+
+        	.box {
+    			width: 275px;
+    			margin: 0 auto;
+    		}
+    	}    	
+
+	    .footer-logo {
+	    	height: 35px;
+	    	margin-right: 10px;
+	    	float: left;
+	    }
+
+	    .map-link {
+	    	color: @webTextColorHover;
+
+	    	&:hover {
+	    		color: #FFFFFF;
+	    	}
+	    }
+		
+	}
+
+	.contact-info {
+		@media screen and (max-width: 700px) {
+			padding: 5px 0;
+		}
+
+		.row {
+			@media screen and (max-width: 700px) {
+				margin: 0 auto;
+			}
+
+			@media screen and (max-width: 400px) {
+				width: 100%;
+				margin: 0 auto;
+			}
+		}
+		
+
+		.leader-contact, .telbank-contact {
+			white-space: nowrap;
+
+			@media screen and (max-width: 767px) {
+	        	float: left;
+	    	}
+
+	    	@media screen and (max-width: 700px) {
+	        	width: 50%;
+
+	        	.box div {
+	        		width: 40%;
+	        		float: left;
+
+	        		&:last-child {
+	        			width: 60%;
+	        		}
+	        	}
+	    	}
+
+	    	@media screen and (max-width: 600px) {
+	    		padding-left: 10vw;
+
+	        	.box div {
+	        		width: 100% !important;
+	        		float: none;
+	        	}
+	    	}
+
+	    	@media screen and (max-width: 400px) {
+	    		float: none;
+	    		padding-left: 2.5vw !important;
+	    	}
+		}
+
+		.telbank-contact {
+	    	@media screen and (max-width: 700px) {
+	        	padding-right: 0;
+	    	}
+
+	    	@media screen and (max-width: 600px) {
+	    		padding-left: 5vw;	        
+	    	}
+		}
+	}
 }

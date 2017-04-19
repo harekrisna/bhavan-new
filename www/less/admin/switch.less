@@ -1,0 +1,61 @@
+// stylopis pro přepínač Aktivní/Neaktivní v detailu galerie
+
+ul.switch {
+    list-style:none; 
+    margin: 0;
+    padding: 0;
+    
+	li {
+	    float:left;
+	    height: 20px;
+	    line-height: 20px;
+	    font-size: 12px;
+	    background: #E5E5E5;
+	    background-image:-webkit-gradient(linear, 0% 0%, 0% 100%, from(#F3F3F3), to(#E5E5E5));
+	    text-shadow:0 1px 0 #FFF;
+	    border-left:1px solid #D5D5D5;
+	    border-top:1px solid #D5D5D5;
+	    border-bottom:1px solid #D5D5D5;
+	    -webkit-box-shadow:0 1px 0 #FFF inset, 0 0 5px rgba(0, 0, 0, .1) inset, 0 1px 1px rgba(0, 0, 0, .3);
+		
+		a {
+		    text-decoration: none;
+		    letter-spacing: 0.5px;
+		    color:#a1a1a1;
+		    cursor: pointer;
+		}
+
+		&.on {
+		    background: #505050;
+		    border:1px solid #505050;
+		    text-shadow:0 -1px 0 #444, 0 0 7px #9AE658;
+		    -webkit-box-shadow:0 1px 2px rgba(0, 0, 0, .7) inset, 0 1px 0 #FFF;  
+		    
+			a {
+			    color:#7BBA47;
+			    cursor: default;
+			}
+		}			    
+		
+		&:not(.on):active{
+			background-image:-webkit-gradient(linear, 0% 0%, 0% 100%, from(#ddd), to(#f1f1f1));
+		}		
+		
+	    &:first-child{
+			border-radius: 3px 0 0 3px;
+	
+			a { padding: 0 10px 0 10px; }
+			
+			&.on a{
+			    color: #d25252;
+			    cursor: default;
+			}
+		}
+		
+		&:last-child{
+			border-radius: 0 3px 3px 0;
+			
+			a {	padding: 4px 15px 2px 15px;	}
+		}
+	}
+}

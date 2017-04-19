@@ -38,7 +38,10 @@
                 <a class="navbar-brand" href="{link Homepage:default}"><img src="{$basePath}/images/layout/logo-pb.png"></a>
             </div>
             <div class="collapse navbar-collapse" id="bs-navbar-collapse">
-       	        <a class="navbar-brand hidden-xs" href="{link Homepage:default}"><img src="{$basePath}/images/layout/logo-pb.png"></a>
+       	        <a class="navbar-brand hidden-xs" href="{link Homepage:default}">
+                    <img class="hide-tws-down" src="{$basePath}/images/layout/logo-pb.png">
+                    <img class="hide-ts-up" src="{$basePath}/images/layout/logo-pb-text.png">
+                </a>
                 <div class="nav-container">
            	        <nav class="actuality-bar hide-lms-down"><a class="section-link" n:href="Actuality:default">AKCE:</a>
     					<div id="actuality_slider" class="slideshow">
@@ -67,7 +70,7 @@
             </div>
         </div>
     </nav>
-    <div n:class="container, main-content, $presenter->isLinkCurrent('Homepage:*') ? no-margin-mobile">
+    <div class="container main-content">
         {block divider}<div class="divider"></div>{/block}
         {define breadcrumb_nav}
         <nav class="breadcrumb_nav" n:ifset="$backlinks">
@@ -82,9 +85,34 @@
         {/define}
         {include content}
     </div>
-    <!-- /.container -->
-
     <footer>
+        <div class="container">
+            <div class="row bhavan-info">
+                <div class="col-sm-6 address-info">
+                    <div class="box">
+                        <img src="{$basePath}/images/layout/logo-pb-white.png" class="footer-logo" alt="logo-patička">
+                        <div class="address-text">Durďákova 34, Brno</div>
+                        <a class="link map-link" href="http://maps.google.com/?q=Durďákova 34, Brno" target="_blank">ukázat na mapě</a>
+                    </div>
+                </div>
+                <div class="col-sm-6 contact-info">
+                    <div class="row">
+                        <div class="col-sm-6 leader-contact">
+                            <div class="box">
+                                <div>Sankírtan Dás</div>
+                                <div>sankirtan.bvks@gmail.com</div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 telbank-contact">
+                            <div class="box">
+                                <div>+420 739 634 848</div>
+                                <div>č. účtu: 2500248634/2010</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </footer>
     <script src="{$basePath}/js/jquery.min.js"></script>
     <script src="{$basePath}/js/bootstrap.min.js"></script>

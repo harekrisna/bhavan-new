@@ -51,6 +51,7 @@ h2 {
 }
 .navbar .navbar-brand {
   float: none;
+  margin-left: -20px !important;
 }
 .navbar .navbar-brand img {
   width: 370px;
@@ -63,7 +64,7 @@ h2 {
 }
 @media screen and (min-width: 768px) and (max-width: 991px) {
   .navbar .navbar-brand img {
-    width: 230px;
+    width: 170px;
     padding-top: 2px;
   }
 }
@@ -86,14 +87,15 @@ h2 {
 }
 @media screen and (min-width: 768px) and (max-width: 991px) {
   .navbar .nav-container {
-    width: 470px;
-    height: 75px;
+    width: 535px;
+    height: 73px;
+    margin-top: 7px;
   }
 }
 @media (max-width: 767px) {
   .navbar .nav-container {
     width: 100%;
-    padding: 0 10px;
+    padding: 10px;
     float: none;
   }
 }
@@ -186,6 +188,11 @@ h2 {
     margin-top: 0px;
   }
 }
+@media (max-width: 767px) {
+  .navbar .nav-container a.facebook-link {
+    margin-top: 0px;
+  }
+}
 .navbar .nav-container a.facebook-link:hover {
   color: #12323D;
   transition: 0.2s;
@@ -210,7 +217,7 @@ h2 {
 }
 @media screen and (min-width: 768px) and (max-width: 991px) {
   .navbar-nav {
-    margin-top: -9px;
+    margin-top: -2px;
   }
 }
 @media (max-width: 767px) {
@@ -235,7 +242,9 @@ h2 {
 @media screen and (min-width: 768px) and (max-width: 991px) {
   .navbar-nav li a {
     padding-left: 6px !important;
-    padding-right: 12px !important;
+    padding-right: 11px !important;
+    padding-top: 9px !important;
+    padding-bottom: 11px !important;
   }
 }
 .navbar-nav li:first-child a {
@@ -274,6 +283,9 @@ h2 {
   background-size: 990px 44px;
   background-image: url(../images/layout/divider-broken.png);
 }
+.main-content {
+  min-height: 500px;
+}
 nav.breadcrumb_nav {
   margin-top: -6px;
   margin-bottom: 4px;
@@ -284,18 +296,124 @@ nav.breadcrumb_nav {
   }
 }
 footer {
-  background: #fff;
-  background: rgba(255, 255, 255, 0.9);
+  min-height: 55px;
+  font-size: 13px;
+  line-height: 20px;
+  color: #FFFFFF;
+  background: #61503c;
+  padding-top: 9px;
 }
-footer p {
-  margin: 0;
-  padding: 50px 0;
+@media screen and (max-width: 700px) {
+  footer .container {
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+  footer .container .bhavan-info {
+    margin: 0;
+  }
 }
-@media screen and (min-width: 1200px) {
-  .box:after {
-    content: '';
-    display: table;
-    clear: both;
+footer .address-info {
+  border-right: 1px #FFFFFF dotted;
+}
+@media screen and (max-width: 767px) {
+  footer .address-info {
+    width: 45%;
+    float: left;
+  }
+}
+@media screen and (max-width: 700px) {
+  footer .address-info {
+    width: 100%;
+    padding-bottom: 5px;
+    float: none;
+    border-right: none;
+    border-bottom: 1px #FFFFFF dotted;
+    padding-right: 0px;
+    padding-left: 0px;
+  }
+  footer .address-info .box {
+    width: 275px;
+    margin: 0 auto;
+  }
+}
+footer .address-info .footer-logo {
+  height: 35px;
+  margin-right: 10px;
+  float: left;
+}
+footer .address-info .map-link {
+  color: #eb8c3a;
+}
+footer .address-info .map-link:hover {
+  color: #FFFFFF;
+}
+@media screen and (max-width: 700px) {
+  footer .contact-info {
+    padding: 5px 0;
+  }
+}
+@media screen and (max-width: 700px) {
+  footer .contact-info .row {
+    margin: 0 auto;
+  }
+}
+@media screen and (max-width: 400px) {
+  footer .contact-info .row {
+    width: 100%;
+    margin: 0 auto;
+  }
+}
+footer .contact-info .leader-contact,
+footer .contact-info .telbank-contact {
+  white-space: nowrap;
+}
+@media screen and (max-width: 767px) {
+  footer .contact-info .leader-contact,
+  footer .contact-info .telbank-contact {
+    float: left;
+  }
+}
+@media screen and (max-width: 700px) {
+  footer .contact-info .leader-contact,
+  footer .contact-info .telbank-contact {
+    width: 50%;
+  }
+  footer .contact-info .leader-contact .box div,
+  footer .contact-info .telbank-contact .box div {
+    width: 40%;
+    float: left;
+  }
+  footer .contact-info .leader-contact .box div:last-child,
+  footer .contact-info .telbank-contact .box div:last-child {
+    width: 60%;
+  }
+}
+@media screen and (max-width: 600px) {
+  footer .contact-info .leader-contact,
+  footer .contact-info .telbank-contact {
+    padding-left: 10vw;
+  }
+  footer .contact-info .leader-contact .box div,
+  footer .contact-info .telbank-contact .box div {
+    width: 100% !important;
+    float: none;
+  }
+}
+@media screen and (max-width: 400px) {
+  footer .contact-info .leader-contact,
+  footer .contact-info .telbank-contact {
+    float: none;
+    padding-left: 2.5vw !important;
+  }
+}
+@media screen and (max-width: 700px) {
+  footer .contact-info .telbank-contact {
+    padding-right: 0;
+  }
+}
+@media screen and (max-width: 600px) {
+  footer .contact-info .telbank-contact {
+    padding-left: 5vw;
   }
 }
 .list-title {
@@ -517,12 +635,32 @@ footer p {
 .slideshow .slider-bullets .dn:hover {
   background-position: -97px -7px;
 }
+#slideshow_loader {
+  box-shadow: 0 0 10px 3px rgba(0, 0, 0, 0.3);
+  margin-bottom: -610px;
+}
+@media screen and (min-width: 768px) and (max-width: 991px) {
+  #slideshow_loader {
+    margin-top: 2px;
+  }
+}
+#slideshow_loader a {
+  width: 100%;
+}
+#slideshow_loader a img {
+  width: inherit;
+}
 #slideshow {
   width: 1140px;
   height: 606px;
   box-shadow: 0 0 10px 3px rgba(0, 0, 0, 0.3);
   margin-bottom: 30px;
   visibility: hidden;
+}
+@media screen and (min-width: 768px) and (max-width: 991px) {
+  #slideshow {
+    margin-top: 2px;
+  }
 }
 @media (max-width: 767px) {
   #slideshow {
@@ -620,6 +758,12 @@ footer p {
 .news-section button.news-nav-button:hover {
   color: #eb8c3a;
   transition: 0.3s;
+}
+#news_section_lg {
+  min-height: 334px;
+}
+#news_section_lg div.col-md-4 {
+  min-height: inherit;
 }
 #news_section_sm div.col-md-4 {
   height: 150px;
@@ -782,6 +926,16 @@ footer p {
 /**********************
         MIXINS
 ***********************/
+@media screen and (max-width: 991px) {
+  .hide-tws-down {
+    display: none !important;
+  }
+}
+@media screen and (min-width: 992px) {
+  .hide-ts-up {
+    display: none !important;
+  }
+}
 @media screen and (max-width: 599px) {
   .sms-down {
     display: block !important;
@@ -812,7 +966,7 @@ a:focus {
   text-decoration: none;
 }
 .link {
-  color: #12323D;
+  color: #12323d;
   transition: 0.3s;
 }
 .link.current {
@@ -824,6 +978,20 @@ a:focus {
 }
 .link:focus {
   color: #eb8c3a;
+}
+.link-inverse {
+  color: #eb8c3a;
+  transition: 0.3s;
+}
+.link-inverse.current {
+  color: #12323d;
+}
+.link-inverse:hover {
+  color: #12323d;
+  transition: 0.3s;
+}
+.link-inverse:focus {
+  color: #12323d;
 }
 .bold {
   font-weight: bold;

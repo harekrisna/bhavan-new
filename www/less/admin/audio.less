@@ -1,0 +1,96 @@
+fieldset#audio_form {
+	width: 499px;
+	min-height: 305px;
+	float: left;
+	
+	label {
+		font-weight: bold;
+		
+		input {
+			margin-right: 5px;
+		}
+	}
+		
+	select {
+		margin-right: 5px;
+			
+		&:not(:first-child) {
+			margin-left: 4px;
+		}
+	}
+	
+	td {
+		width: 370px;
+	}
+}
+
+fieldset.half-size {
+	min-height: 200px;
+	width: 480px;	
+}
+
+div#copy_buttons {
+	width: 100px;
+	padding-top: 120px;
+	float: left;
+	
+	button {
+		font-size: 16px;
+		margin: auto;
+		margin-bottom: 40px;
+		display: block;
+	}
+}
+
+fieldset#mp3_tags {
+	width: 470px;
+	min-height: 250px;
+	
+	td {
+		span.duration {
+			line-height: 20px;
+		}
+		
+		&.mp3_image {
+			height: 104px;
+		
+			img {
+				max-width: 100px;
+			}
+		}
+	}
+	
+	input[type=submit] {
+		float: right;
+	}
+}
+
+table#audio_list {
+	td.date {
+		text-align: right;
+	}
+	
+	td.flags {
+		img {
+		    float: left;
+		    height: 16px;
+		    margin-right: 3px;
+		    margin-top: 1px;
+		    width: 16px;
+		}
+	}
+}
+
+table#interpret_list {
+	width: 1000px;
+	
+	th.image { width: 50px; }
+	th.title { width: 250px; }
+	th.lessons { width: 50px; }	
+
+}
+
+
+table#collection_list {
+	min-width: 800px;
+}
