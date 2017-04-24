@@ -28,7 +28,7 @@ class ActualityPresenter extends BasePresenter
     	                   
         $html = Html::el()->setHtml($page->text);
         
-        $this->template->backlinks = [$this->link('default') => "Akce"];
+        $this->template->backlinks = [$this->link('list') => "Akce"];
         $this->template->text = $html;		
 	}
 }

@@ -1,3 +1,6 @@
+audio.mobile {
+  width: 100%;
+}
 .audio-player {
   max-width: 720px;
   margin-bottom: 20px;

@@ -26,6 +26,16 @@
 </head>
 
 <body>
+	<script>
+		(function(i,s,o,g,r,a,	m){
+		i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+		(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+		m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+		})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+		
+		ga('create', 'UA-66118107-1', 'auto');
+		ga('send', 'pageview');
+	</script>
     <nav class="navbar navbar-default" role="navigation">
         <div class="container">
             <div class="navbar-header">
@@ -43,7 +53,7 @@
                     <img class="hide-ts-up" src="{$basePath}/images/layout/logo-pb-text.png">
                 </a>
                 <div class="nav-container">
-           	        <nav class="actuality-bar hide-lms-down"><a class="section-link" n:href="Actuality:default">AKCE:</a>
+           	        <nav class="actuality-bar hide-lms-down"><a class="section-link" n:href="Actuality:list">AKCE:</a>
     					<div id="actuality_slider" class="slideshow">
     					    <div u="slides">
     						    <div>

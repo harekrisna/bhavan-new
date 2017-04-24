@@ -214,7 +214,7 @@ final class ActualityPresenter extends BasePresenter {
 		if($change !== false) {
 			if($values['preview_image']->isOK()) {
 				if($this->actuality_record->preview_image)
-					unlink("images/actuality/previews/".$this->actuality_record->preview_image);
+					@unlink("images/actuality/previews/".$this->actuality_record->preview_image);
 					
 				$file_name = $this->actuality_record->id."_".$values['preview_image']->name;
 				$image = $values['preview_image']->toImage();
@@ -224,7 +224,7 @@ final class ActualityPresenter extends BasePresenter {
 	        }
         	if($values['article_image']->isOK()) {
 				if($this->actuality_record->article_image)
-					unlink("images/actuality/".$this->actuality_record->article_image);
+					@unlink("images/actuality/".$this->actuality_record->article_image);
 					
 				$file_name = $this->actuality_record->id."_".$values['article_image']->name;
 				$image = $values['article_image']->toImage();
