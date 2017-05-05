@@ -2,7 +2,7 @@
 {block content}
 <h1 class="list-title">Akce</h1>
 <div class="row list">
-	<div class="col-md-6">
+	<div>
 		<div class="list-box">
 			<a class="list-box-title sms-down" n:href="sunday">Programy pro veřejnost</a>
 			<div class="list-box-image" style="background-image: url('{$basePath}/images/actuality/previews/program.jpg');">
@@ -12,7 +12,7 @@
 			<p class="list-box-text">Každou neděli od 14:00<br />Védská filosofie, zpívání Haré Kršna mahámantry (mantra meditace), přednáška z Bhagavad-gíty, prostor pro vaše otázky, vegetariánská hostina, nabídka duchovní literatury, drobnosti z Indie.</p>
 	    </div>
 	</div>
-	<div class="col-md-6" n:foreach="$actualities as $actuality">
+	<div n:foreach="$actualities as $actuality">
 		<div class="list-box">
 			<a class="list-box-title sms-down" n:href="detail, $actuality->id">{$actuality->title}</a>
 			<div class="list-box-image" style="background-image: url('{$basePath}/images/actuality/previews/{$actuality->preview_image|noescape}');">
