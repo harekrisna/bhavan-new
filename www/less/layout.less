@@ -262,7 +262,7 @@ nav.breadcrumb_nav {
 
 footer {
 	min-height: 55px;
-	font-size: 13px;
+	font-size: 14px;
 	line-height: 20px;
 	color: #FFFFFF;
     background: @webBrown;
@@ -281,15 +281,26 @@ footer {
     }
 
     .address-info {
+    	height: 59px;
     	border-right: 1px #FFFFFF dotted;
+    	padding-top: 3px;
+
+    	.box {
+    		width: 360px;
+
+    		@media screen and (max-width: 440px) {
+	 			width: 100%;
+    		}
+    	}
 
 	 	@media screen and (max-width: 767px) {
-        	width: 45%;
+	 		padding-left: 10%;
         	float: left;
     	}
 
 		@media screen and (max-width: 700px) {
         	width: 100%;
+        	height: 65px;
         	padding-bottom: 5px;
         	float: none;
         	border-right: none;
@@ -298,28 +309,57 @@ footer {
         	padding-left: 0px;
 
         	.box {
-    			width: 275px;
     			margin: 0 auto;
     		}
     	}    	
 
+    	@media screen and (max-width: 390px) {
+    		height: 105px;
+    		padding-left: 10px;
+    	}
+
 	    .footer-logo {
-	    	height: 35px;
+	    	height: 50px;
 	    	margin-right: 10px;
 	    	float: left;
+
+	    	@media screen and (max-width: 390px) {
+    			float: none;
+    		}
+	    }
+
+	    .address-text {
+	    	margin-top: 7px;
+	    	margin-bottom: 5px;
+	    	float: left;
+
+	    	@media screen and (max-width: 390px) {
+	    		margin-top: 5px;
+		    	margin-bottom: 0;
+    			float: none;
+    		}
 	    }
 
 	    .map-link {
 	    	color: @webTextColorHover;
+	    	float: left;
 
 	    	&:hover {
 	    		color: #FFFFFF;
 	    	}
+
+	    	@media screen and (max-width: 390px) {
+    			float: none;
+    		}
 	    }
 		
 	}
 
 	.contact-info {
+		@media screen and (max-width: 767px) {
+			padding-left: 10%
+		}
+
 		@media screen and (max-width: 700px) {
 			padding: 5px 0;
 		}
@@ -329,7 +369,7 @@ footer {
 				margin: 0 auto;
 			}
 
-			@media screen and (max-width: 400px) {
+			@media screen and (max-width: 440px) {
 				width: 100%;
 				margin: 0 auto;
 			}
@@ -345,10 +385,10 @@ footer {
 
 	    	@media screen and (max-width: 700px) {
 	        	width: 50%;
+				padding-left: 10vw;
 
 	        	.box div {
 	        		width: 40%;
-	        		float: left;
 
 	        		&:last-child {
 	        			width: 60%;
@@ -357,15 +397,13 @@ footer {
 	    	}
 
 	    	@media screen and (max-width: 600px) {
-	    		padding-left: 10vw;
-
 	        	.box div {
 	        		width: 100% !important;
 	        		float: none;
 	        	}
 	    	}
 
-	    	@media screen and (max-width: 400px) {
+	    	@media screen and (max-width: 440px) {
 	    		float: none;
 	    		padding-left: 2.5vw !important;
 	    	}
