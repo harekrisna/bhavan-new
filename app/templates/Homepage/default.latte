@@ -128,7 +128,7 @@
                         <div>
                             <a class="new-link" n:href="Actuality:sunday">
                                 <img class="new-image" src="{$basePath}/images/actuality/previews/program.jpg" />
-                                <div class="bold new-title">Programy pro veřejnost, Programy pro veřejnost, Programy pro veřejnost</div>
+                                <div class="bold new-title">Programy pro veřejnost</div>
                                 <span class="new-description">
                                     Každou neděli od 14:00 hodin
                                 </span>
@@ -140,7 +140,7 @@
                         {/if}
                             <a class="new-link" {if $new->target != ""} href="{$new->target}"{/if}>
                                 <img class="new-image" src="{$basePath}/images/news_thumbs/{$new->file}" />
-                                <div class="new-title">Programy pro veřejnost, Programy pro veřejnost, Programy pro veřejnost</div>
+                                <div class="new-title">{$new->title}</div>
                                 <span class="new-description">
                                     {if $new->date_to != ""}
                                         {$new->date_from|date: 'j.n.'} - {$new->date_to|date: 'j.n.Y'}
@@ -235,7 +235,7 @@
 	                    <div>
 	                        <a class="new-link" n:href="Actuality:sunday">
 	                            <img class="new-image" src="{$basePath}/images/actuality/previews/program.jpg" />
-	                            <div class="bold new-title">Programy pro veřejnost Programy pro veřejnost Programy pro veřejnost</div>
+	                            <div class="bold new-title">Programy pro veřejnost</div>
 	                            <span class="new-description">
 	                                Každou neděli od 14:00 hodin
 	                            </span>

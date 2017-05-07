@@ -453,6 +453,9 @@ footer .contact-info .telbank-contact {
     padding-left: 5vw;
   }
 }
+footer .contact-info .link-mail {
+  color: inherit;
+}
 .list-title {
   margin: 0;
 }
