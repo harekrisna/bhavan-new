@@ -157,7 +157,7 @@ class RouterFactory
 			'presenter' => array(
 				Route::FILTER_TABLE => array(
 					'aktuality' => 'Actuality',
-					'clanky' => 'Articles',
+					'clanky' => 'Teaching',
 					'fotky' => 'Galery',
 					'o-nas' => 'About',
 					'odkazy' => 'Links'

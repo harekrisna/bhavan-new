@@ -267,6 +267,10 @@ h2 {
     background: none;
   }
 }
+.divider.simple {
+  background: url("../images/layout/divider-simple.png") top center / 1180px 4px;
+  height: 4px;
+}
 .divider.flipped {
   transform: rotate(180deg);
 }
