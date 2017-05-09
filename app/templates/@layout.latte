@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="Prabhupád Bhavan Brno mainsite">
     <meta name="author" content="Muktakéša dás">
-
+	
 	<title>{ifset title}{include title} | {/ifset}Prabhupád Bhavan</title>
     <!-- Bootstrap Core CSS -->
     <link href="{$basePath}/css/bootstrap.css" rel="stylesheet">
@@ -21,7 +21,12 @@
         <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
         <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
-
+	<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+	<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+	<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+	<link rel="manifest" href="/manifest.json">
+	<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#eb8c3a">
+	<meta name="theme-color" content="#eb8c3a">
 	{block head}{/block}
 </head>
 
@@ -70,7 +75,7 @@
                         <li><a n:class="link, $presenter->isLinkCurrent('Homepage:*') ? current" href="{link Homepage:default}">Domů</a></li>
                         <li><a n:class="link, $presenter->isLinkCurrent('Actuality:*') ? current" href="{link Actuality:list}">Akce</a></li>
                         <li><a n:class="link, $presenter->isLinkCurrent('About:*') ? current" href="{link About:about}">O nás</a></li>
-                        <li><a n:class="link, $presenter->isLinkCurrent('Teaching:*') ? current" href="{link Teaching:list}">Učení</a></li>
+                        <li><a n:class="link, $presenter->isLinkCurrent('Articles:*') ? current" href="{link Articles:list}">Učení</a></li>
                         <li><a n:class="link, $presenter->isLinkCurrent('Galery:*') ? current" href="{link Galery:galeries}">Foto</a></li>
                         <li><a n:class="link, $presenter->isLinkCurrent('Audio:*') ? current" href="{link Audio:interprets}">Audio</a></li>
                         <li><a n:class="link, $presenter->isLinkCurrent('Contact:*') ? current" href="{link Contact:contact}">Kontakt</a></li>
@@ -95,6 +100,7 @@
         {/define}
         {include content}
     </div>
+    <!--div class="mahamantra-text"></div -->
     <footer>
         <div class="container">
             <div class="row bhavan-info">
