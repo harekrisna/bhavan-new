@@ -652,6 +652,34 @@ footer .contact-info .link-mail {
   padding-right: 10px;
   float: right;
 }
+.collection-title {
+  margin-bottom: 10px;
+}
+.collection-nav {
+  margin-top: 10px;
+}
+.collection-nav .link {
+  text-transform: uppercase;
+  display: block;
+  float: left;
+  padding-left: 10px;
+}
+.collection-nav .link:after,
+.collection-nav .link:first-child:before {
+  content: '|';
+  font-size: 1.2em;
+  color: #12323d;
+  margin-left: 10px;
+  position: relative;
+  top: -1px;
+}
+.collection-nav .link:first-child {
+  padding-left: 0;
+}
+.collection-nav .link:first-child:before {
+  margin-right: 10px;
+  margin-left: 0;
+}
 .slideshow {
   position: relative;
   top: 0px;

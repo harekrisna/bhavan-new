@@ -1,0 +1,11 @@
+{layout ../@layout.latte}
+{block content}
+<h1 class="collection-title">{block title}Učení{/block}</h1>
+<div class="divider simple"></div>
+<nav class="collection-nav">
+	<a n:class="link, $presenter->isLinkCurrent('Audio:latest') ? current" n:href="latest">Základy filosofie</a>
+	<a n:class="link, $presenter->isLinkCurrent('Audio:interprets') ? current" n:href="interprets">Jak praktikovat</a>
+	<a n:class="link, $presenter->isLinkCurrent('Audio:years') ? current" n:href="years">Blog</a>
+</nav>
+{include teaching_content}
+{/block}
