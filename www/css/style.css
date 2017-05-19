@@ -297,9 +297,13 @@ nav.breadcrumb_nav {
 }
 .mahamantra-text {
   width: 100%;
-  height: 25px;
-  background: url(../images/layout/mahamantra.svg) no-repeat top center;
-  background-size: 60%;
+  height: 30px;
+  text-align: center;
+  color: #61503c;
+  font-family: 'Petit Formal Script', cursive;
+  font-size: 22px;
+  font-weight: bold;
+  word-spacing: 2px;
 }
 footer {
   min-height: 55px;
