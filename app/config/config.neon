@@ -23,6 +23,7 @@ services:
 	newsType: App\Model\NewsType
 	actuality: App\Model\Actuality
 	slide: App\Model\Slide
+	article: App\Model\Article
 	interpret: App\Model\Interpret
 	audio_collection: App\Model\AudioCollection
 	galery: App\Model\Galery

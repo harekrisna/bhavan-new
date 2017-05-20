@@ -3,169 +3,37 @@
 {include parent}
     <script src="{$basePath}/js/jquery.form.min.js"></script>
 {/block}
-{block audio-content}
-<fieldset id="audio_form">
+{block article-content}
+<fieldset id="article_form">
 	<legend n:block="title">{$form_title}</legend>
-	{form audioForm}
+	{form articleForm}
 	<ul class="error" n:if="$form->hasErrors()">
 	    <li n:foreach="$form->errors as $error">{$error}</li>
 	</ul>
 	<table>
-		<tr><th>{label title /}</th><td>{input title}</td></tr>
-		<tr><th>{label audio_interpret_id /}</th><td>{input audio_interpret_id}</td></tr>
-		<tr><th>{label place /}</th><td>{input place}</td></tr>	
-		<tr><th>{label book_id /}</th><td>{input book_id}</td></tr>
-		<tr><th>{label chapter /} . {label verse /}</th><td>{input chapter} . {input verse}</td></tr>
-		<tr><th><label>Datum:</label></th><td>{input audio_day}.{input audio_month}.{input audio_year}</td></tr>
-		<tr><th>Soubor:</th><td>{if $form_type == "add"}{input mp3_file}{else}{$record->mp3_file}{/if}</td></tr>
-		<tr><th>{label type /}</th><td>{input type}</td></tr>
-		<tr><th>{label audio_collection_id /}</th><td>{input audio_collection_id}</td></tr>
-		<tr><th>{label seminar /}</th><td>{input seminar}</td></tr>
-		<tr><th>{label sankirtan /}</th><td>{input sankirtan}</td></tr>
-		<tr><th>{label varnasrama /}</th><td>{input varnasrama}</td></tr>		
-		<tr n:if="$presenter->getAction() == 'add'"><th>{label add_to_news /}</th><td>{input add_to_news}</td></tr>
-		<tr><th>{input mp3_file_name}</th><td>{if $form_type == "add"}{input insert}{else}{input update}{/if}</td></tr>
+		<tr><th>{label data-title /}</th><td>{input data-title}</td></tr>
+		<tr><th>{label data-url /}</th><td>{input data-url}</td></tr>
+		<tr><th>{label data-category /}</th><td>{input data-category}</td></tr>
+		<tr><th>{label data-text /}</th><td>{input data-text}</td></tr>
+		<tr><th></th><td>{if $form_type == "add"}{input insert}{else}{input update}{/if}</td></tr>
 	</table>
 	{/form}
 </fieldset>
-<div id="copy_buttons">
-	<button id="tags_to_info"{if $form_type == 'add'} disabled{/if}>&lt;&lt;</button>
-	<button id="info_to_tags"{if $form_type == 'add'} disabled{/if}>&gt;&gt;</button>
-</div>
-<script>
-	$('button#tags_to_info').click(function(){
-		var id3_title = $('input#frm-mp3TagsForm-title');
-		var id3_interpret = $('input#frm-mp3TagsForm-artist');
-		var id3_year = $('input#frm-mp3TagsForm-year');
-		var id3_genre = $('input#frm-mp3TagsForm-genre');
-		
-		var info_title = $('input#frm-audioForm-title');
-		var info_interpret = $('select#frm-audioForm-audio_interpret_id');
-		var info_year = $('select#frm-audioForm-audio_year');
-		var info_seminar = $('input#frm-audioForm-seminar');
-		var info_skt = $('input#frm-audioForm-sankirtan');
-		var info_varnasrama = $('input#frm-audioForm-varnasrama');
-		
-		info_title.val(id3_title.val());
-	
-		if(id3_year.val() != "")
-			info_year.val(id3_year.val());
-		
-		if(String.trim(id3_genre.val()) == "Seminář") {
-			info_seminar.prop("checked", true);
-		}
-		
-		if(String.trim(id3_genre.val()) == "Sankírtanová lekce") {
-			info_skt.prop("checked", true);
-		}
-		
-		if(String.trim(id3_genre.val()) == "Varnášrama a farmy") {
-			info_varnasrama.prop("checked", true);
-		}		
-		
-		$(info_interpret).find('option').each(function () {    			
-			if (this.text.indexOf(id3_interpret.val()) > -1 && id3_interpret.val() != "") {
-				info_interpret.val(this.value);
-			}
-		});
-	});
-	
-	
-	$('button#info_to_tags').click(function(){
-		var info_title = $('input#frm-audioForm-title');
-		var info_interpret = $('select#frm-audioForm-audio_interpret_id');
-		var info_place = $('input#frm-audioForm-place');
-		var info_year = $('select#frm-audioForm-audio_year');
-		var info_seminar = $('input#frm-audioForm-seminar');
-		var info_skt = $('input#frm-audioForm-sankirtan');
-		var info_varnasrama = $('input#frm-audioForm-varnasrama');
-
-		var id3_title = $('input#frm-mp3TagsForm-title');
-		var id3_interpret = $('input#frm-mp3TagsForm-artist');
-		var id3_album = $('input#frm-mp3TagsForm-album');
-		var id3_year = $('input#frm-mp3TagsForm-year');
-		var id3_genre = $('input#frm-mp3TagsForm-genre');
-		
-		
-		id3_title.val(info_title.val());
-		id3_year.val(info_year.val());
-		
-		if(info_seminar.is(':checked')) {
-			id3_genre.val("Seminář");
-		}
-		if(info_skt.is(':checked')) {
-			id3_genre.val("Sankírtanová lekce");
-		}
-		if(info_varnasrama.is(':checked')) {
-			id3_genre.val("Varnášrama a farmy");
-		}		
-		if(info_seminar.is(':checked') && info_skt.is(':checked')) {
-			id3_genre.val("Seminář, Sankírtanová lekce");
-		}
-		
-		id3_interpret.val(info_interpret.find(':selected').text());
-		
-		if(info_place.val() == "")
-			id3_album.val(info_interpret.find(':selected').text());
-		else {
-			id3_album.val(info_place.val() + " " + info_year.val());
-		}
-		
-		if(id3_genre.val() == "")
-			id3_genre.val("Přednáška");
-	});
-	
-	
-</script>
-{snippet mp3_tags}
-<fieldset id="mp3_tags">
-	<legend>MP3 tagy:</legend>
-	{form mp3TagsForm}
-	<table>
-		<tr><th>Obrázek:<br />(náhled)</th>
-		<td class="mp3_image">
-			{if isset($mp3_tag) && $mp3_tag->image}
-				<img alt="Obrázek alba" src="{php echo 'data: '.$mp3_tag->image['mime'].';base64,'.base64_encode($mp3_tag->image['data'])}" />
-			{else}
-				<img alt="Žádný obrázek alba" src="{$basePath}/images/admin/question_mark-128.png" />
-			{/if}
-		</td>
-		</tr>
-		<tr><th>{label picture /}:</th><td>{input picture}</td></tr>
-		<tr><th>{label title /}:</th><td>{input title}</td></tr>
-		<tr><th>{label artist /}:</th><td>{input artist}</td></tr>
-		<tr><th>{label album /}:</th><td>{input album}</td></tr>
-		<tr><th>{label genre /}:</th><td>{input genre}</td></tr>
-		<tr><th>{label year /}:</th><td>{input year}</td></tr>
-		<tr><th>Trvání:</th><td>{if isset($mp3_tag)}<span class="duration">{$mp3_tag->duration}</span>{/if}{input save}</td></tr>
-	</table>
-	{input mp3_file_path}
-	{/form}
-</fieldset>
-<script>
-	$('form#frm-mp3TagsForm').ajaxForm(function(payload) { 
-		$.nette.success(payload);
-    });
-</script>
-{/snippet}
 {/block}
-
 {block scripts}
 {include parent}
-<script>      	
-	$('#frm-audioForm').submit(function() {
-		var selected_file = $(this).find("select[name=mp3_file] option:selected").text();
-		$(this).find('input[name=mp3_file_name]').val(selected_file);
-	}); 	
-	
-	$('#frm-audioForm select[name=mp3_file]').change(function() {
-		var file_name = $(this).find(':selected').text();
-		$.get({link getMp3Tags!}, {'file_name': file_name}, function(payload) {
-			$.nette.success(payload);
+    <script type="text/javascript" src="{$basePath}/js/ckeditor/ckeditor.js"></script>
+	<script type="text/javascript" src="{$basePath}/js/admin/forms.js"></script>
+    <script type="text/javascript" src="{$basePath}/js/admin.js"></script>
+    <script>
+		$(function() {						
+			$("input[name='data[title]'], input[name='data[url]']").keyup(function() {
+				$("input[name='data[url]']").val(stringToNiceURL(this.value));
+			});
 			
-			var copy_buttons = $('div#copy_buttons button');
-			payload['is_empty'] ? copy_buttons.prop('disabled', true) : copy_buttons.prop('disabled', false);
-		});
-	});			
-</script>
+			CKEDITOR.replace('frm-articleForm-data-text', {
+				filebrowserBrowseUrl: '/browser/browse.php',
+			});
+    	});    
+	</script>
 {/block}
