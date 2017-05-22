@@ -200,6 +200,18 @@ fieldset#slide_form span.input_info {
 fieldset#slide_form select {
   margin-right: 5px;
 }
+table#article_list {
+  min-width: 700px;
+}
+table#article_list .th-created {
+  width: 130px;
+}
+table#article_list .th-category {
+  width: 130px;
+}
+table#article_list .th-controls {
+  width: 32px;
+}
 fieldset#audio_form {
   width: 499px;
   min-height: 305px;

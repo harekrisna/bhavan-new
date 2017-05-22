@@ -26,7 +26,6 @@ class RouterFactory
     	));	
     	
 		$router[] = new Route('', 'Homepage:default');
-		$router[] = new Route('clanky/<id>', 'Articles:article');
 
 		$router[] = new Route('aktuality/programy-pro-verejnost', 'Actuality:sunday');		
 		$router[] = new Route('aktuality/<actuality_id>', array(
@@ -37,7 +36,15 @@ class RouterFactory
 				Route::FILTER_IN => function ($url) use($container) { return $container->getService('actuality')->getIdByTitle($url);},
 			),
 		));
-		/* routs for section photos */
+		
+		$router[] = new Route('uceni/<category_id>', array(
+			'presenter' => 'Teaching',
+			'action' => 'category',
+			'category_id' => array(
+				Route::FILTER_OUT => function ($id) use($container) { return $container->getService('article')->getTitleById($category_id);},
+				Route::FILTER_IN => function ($category_id) use($container) { return $container->getService('article')->getIdByTitle($url);},
+			),
+		));
 		
 		$router[] = new Route('fotky/<galery_id>', array(
 			'presenter' => 'Galery',

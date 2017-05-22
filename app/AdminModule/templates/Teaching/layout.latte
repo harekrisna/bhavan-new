@@ -2,9 +2,7 @@
 {block left-column}
 <ul>
 	<li><a {ifCurrent 'list', 'all'}class="current"{/ifCurrent} n:href="list, all">Vše</a></li>
-	<li><a {ifCurrent 'list', 'philosophy'}class="current"{/ifCurrent} n:href="list, philosophy">Základy filosofie</a></li>
-	<li><a {ifCurrent 'list', 'practice'}class="current"{/ifCurrent} n:href="list, practice">Jak praktikovat</a></li>
-	<li><a {ifCurrent 'list', 'blog'}class="current"{/ifCurrent} n:href="list, blog">Blog</a></li>
+	<li n:foreach="$categories as $category"><a {ifCurrent 'list', $category->id}class="current"{/ifCurrent} n:href="list, $category->id">{$category->title}</a></li>
 </ul>
 {/block}
 {block content}

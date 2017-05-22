@@ -1,13 +1,13 @@
 {extends layout.latte}
 {block title}Učení{/block}
 {block article-content}
-<table id="audio_list" class="list">
+<table id="article_list" class="list">
 	<thead>
     	<tr>
-	        <th><span>Vytvořeno</span></th>
+	        <th class="th-created"><span>Vytvořeno</span></th>
 	        <th><span>Název</span></th>
-	        <th><span>Kategorie</span></th>
-	        <th></th>
+	        <th class="th-category"><span>Kategorie</span></th>
+	        <th class="th-controls"></th>
 		</tr>
     </thead>
     <tbody id="table_list">
@@ -17,7 +17,7 @@
 		        <span class="sort-helper">{$article->created|date: 'Y'}x{$article->created|date: 'm'}x{$article->created|date: 'd'}x{$article->created|date: 'H:i:s'}</span>{$article->created|date: 'j.n.Y H:i:s'}
 		    </td>
 			<td><a n:href="edit, $article->id">{$article->title}</a></td>
-			<td>{$article->category}</td>
+			<td class="center">{$article->category->title}</td>
             <td><a class="button edit" n:href="edit, $article->id"></a><a class="button remove" n:href="delete!, $article->id"></a></td>
 		</tr>        
     {/foreach}

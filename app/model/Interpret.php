@@ -7,7 +7,7 @@ use Nette\Diagnostics\Debugger;
 
 
 class Interpret extends Table   {
-	protected $tableName = 'article'; 
+	protected $tableName = 'audio_interpret'; 
 
     public function delete($id) {
         $record = $this->getTable()->where(array('id' => $id))

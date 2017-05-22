@@ -12,105 +12,86 @@ use Extensions\MP3;
 
 final class TeachingPresenter extends BasePresenter {        
 	/** @persistent */
-    public $interpret_id = "all";
+    public $category_id = "all";
     
     /** @var object */
     private $record;
     
-    private $mp3_folder = "./mp3";
-        
+    /** @var object */
+    private $model;
+    
     protected function startup()  {
         parent::startup();
-    
+		$this->model = $this->article;
+		
         if (!$this->getUser()->isLoggedIn()) {
             $this->redirect('Sign:in');
         }
     }
     
     public function beforeRender() {	    
-        $this->template->interprets = $this->interpret->findAll();
+        $this->template->categories = $this->articleCategory->findAll();
     }
 
-	function renderList($category) {
-		$this->template->articles = $this->article->findAll()
-											 	  ->order('created DESC');
+	function renderList($category_id) {
+		$this->category_id = $category_id;
+		
+		if($category_id != "all") {
+			$this->template->articles = $this->article->findBy(['category_id' => $category_id])
+													->order('created DESC');
+		}
+		else {
+			$this->template->articles = $this->article->findAll()
+												 	  ->order('created DESC');
+		}
 	}
 	
 	public function renderAdd() {
 		$this->setView("form");    			
 		$this->template->form_title = "Nový článek:";
-		$this->template->form_type = "add";
+		
+		$_SESSION['KCFINDER'] = [
+			'disabled' => false,
+			'_check4htaccess' => false,
+			'uploadURL' => "../../images/kcfinder/teaching"
+		];
 	}
 
-	function actionEdit($id) {
-		$this->record = $this->model->get($id);
+	function actionEdit($article_id) {
+		$this->record = $this->model->get($article_id);
 
 		if (!$this->record)
             throw new Nette\Application\BadRequestException;
             
-		$this["articleForm"]->setDefaults($this->record);
+		$this["articleForm"]['data']->setDefaults($this->record);
 	}
 
-	function renderEdit($id) {
+	function renderEdit($article_id) {
 		$this->setView("form");
 		$this->template->form_title = "Upravit článek:";
 		$this->template->record = $this->record;
+		
+		$_SESSION['KCFINDER'] = [
+			'disabled' => false,
+			'_check4htaccess' => false,
+			'uploadURL' => "../../images/kcfinder/teaching"
+		];
 	}
 	
 
 
-	public function handleDelete($audio_id) {
-		$audio = $this->audio->get($audio_id);
+	public function handleDelete($id) {
+		$record = $this->model->get($id);
 
-		if (!$audio)
+		if (!$record)
             throw new Nette\Application\BadRequestException;
         
-   		$this->audio->delete($audio_id);
-		@unlink("mp3/".$audio->audio_interpret->mp3_folder."/".$audio->mp3_file);
-		
+   		$record->delete($id);		
 		$this->payload->success = TRUE;
 		$this->sendPayload();
         $this->terminate();	                
     }
 	
-
-	public function handleGetMp3Tags($file_name) {
-		if(!file_exists($this->mp3_folder."/upload/".$file_name)) {			
-			foreach ($this['mp3TagsForm']->getControls() as $control) {
-		        $control->disabled = true;
-	    	}
-	    	
-   			$this['mp3TagsForm']['mp3_file_path']->setValue("");
-   			$this->redrawControl('mp3_tags');
-   			$this->payload->is_empty = true;
-   			return;
-		}
-
-		foreach ($this['mp3TagsForm']->getControls() as $control) {
-	        $control->disabled = false;
-    	}		
-    	
-		$mp3_file = $this->mp3_folder."/upload/".$file_name;
-		$mp3_tag = new MP3($mp3_file);
-		$this->template->mp3_tag = $mp3_tag;
-		
-		$defaults = ['title' => $mp3_tag->title,
-					 'artist' => $mp3_tag->artist,
-					 'album' => $mp3_tag->album,
-					 'genre' => $mp3_tag->genre,
-					 'year' => $mp3_tag->year,
-					];
-		
-		$this["mp3TagsForm"]->setDefaults($defaults);
-		
-		foreach ($this['mp3TagsForm']->getControls() as $control) {
-	        $control->disabled = false;
-    	}
-    	
-		$this['mp3TagsForm']['mp3_file_path']->setValue($mp3_file);
-		$this->payload->is_empty = false;
-		$this->redrawControl('mp3_tags');
-	}
 	
 
 
@@ -124,10 +105,7 @@ final class TeachingPresenter extends BasePresenter {
 	    $data->addText('url', 'URL článku:', 40)
       	     ->setRequired('Zadejte prosím URL článku.');
 	       			 
-	    $data->addSelect('category', 'Kategorie:', ['practice' => "Jak praktikovat", 
-	    											'philosophy' => "Základy filisofie", 
-	    											'blog' => "Blog"
-	    										   ]);
+	    $data->addSelect('category_id', 'Kategorie:', $this->articleCategory->findAll()->fetchPairs('id', 'title'));
 	    										   
 	    $data->addTextArea('text', 'Text:', 40);
 	    
@@ -143,83 +121,33 @@ final class TeachingPresenter extends BasePresenter {
     public function articleFormInsert(\Nette\Forms\Controls\SubmitButton $button)	{
         $form = $button->form;
         $values = $form->getValues();
-		Debugger::fireLog($values);
-		exit;
-		$this->audio->insert(array('title' => $values['title'],
-				   	   				     'audio_interpret_id' => $values['audio_interpret_id'],
-					   					 'place' => $values['place'],
-					   					 'book_id' => $values['book_id'],
-					   					 'chapter' => $values['chapter'],
-										 'verse' => $values['verse'],
-				   						 'audio_year' => $values['audio_year'],
-				   						 'audio_month' => $values['audio_month'],
-				   						 'audio_day' => $values['audio_day'],
-				   	   					 'type' => $values['type'],
-				   						 'audio_collection_id' => $values['audio_collection_id'],
-				   	   					 'seminar' => $values['seminar'],
-				   	   					 'sankirtan' => $values['sankirtan'],
-				   	   					 'varnasrama' => $values['varnasrama'],				   	   					 
-				   	   					 'mp3_file' => $values['mp3_file_name'],
-				   	   					));
+		$new_row = $this->article->insert($values['data']);											 
 		
-		if($ok) {				
-			rename("mp3/upload/".$mp3_file, "mp3/".$interpret->mp3_folder."/".$mp3_file); // zkopírování souboru z dočasné složky do složky interpreta
-			chmod("mp3/".$interpret->mp3_folder."/".$mp3_file, 0777);
-
-			if($values['add_to_news']) {
-				$interpret_image_source = "./images/interpret_avatars/".$interpret->image;
-	    		$target_link = $this->link(":Audio:latest");
-				$this->news->addNew("Audio", $values['title'], $interpret_image_source, $target_link);
-	        }
-	        
-            $this->flashMessage('Audio lekce přidána.', 'success');
-            $this->redirect('list', $this->interpret_id);
-            
+		if($new_row) {
+			$this->flashMessage('Článek přidán.', 'success');
+            $this->redirect('list');
 		}
 		else {
-			$form->addError("Audio nahrávku se nepodařilo vložit.");
+			$form->addError('Článek s tímto URL již existuje, zvolte prosím jiné.');
 		}
     }
     
-	public function audioFormUpdate(\Nette\Forms\Controls\SubmitButton $button)	{
+	public function articleFormUpdate(\Nette\Forms\Controls\SubmitButton $button)	{
 		if (!$this->record)
             throw new Nette\Application\BadRequestException;
 
         $form = $button->form;
         $values = $form->getValues();
         
-		$update = $this->audio->update($this->record->id, 
-									   array('title' => $values['title'],
-				   	   				   		 'audio_interpret_id' => $values['audio_interpret_id'],
-				   	   				   		 'place' => $values['place'],
-				   	   				   		 'book_id' => $values['book_id'],
-					   	   					 'chapter' => $values['chapter'],
-					   	   					 'verse' => $values['verse'],
-				   	   				   		 'audio_year' => $values['audio_year'],
-				   	   				   		 'audio_month' => $values['audio_month'],
-				   	   				   		 'audio_day' => $values['audio_day'],
-				   	   				   		 'type' => $values['type'],
-				   	   				   		 'audio_collection_id' => $values['audio_collection_id'],
-				   	   				   		 'seminar' => $values['seminar'],
-					   	   					 'sankirtan' => $values['sankirtan'],
-					   	   					 'varnasrama' => $values['varnasrama'],
-				   	   					));
+		$update = $this->article->update($this->record->id, 
+									   $values->data);
 		
 		if($update !== false) {
-			if($this->record->audio_interpret_id != $values->audio_interpret_id) { // interpret byl změněn
-				$old_interpret = $this->interpret->get($this->record->audio_interpret_id);
-				$new_interpret = $this->interpret->get($values->audio_interpret_id);
-				$old_filepath = "mp3/".$old_interpret->mp3_folder."/".$this->record->mp3_file;
-				$new_filepath = "mp3/".$new_interpret->mp3_folder."/".$this->record->mp3_file;
-
-				// přesun mp3 souboru do adresáře nového interpreta
-				rename($old_filepath, $new_filepath);
-			}
-            $this->flashMessage('Přednáška upravena.', 'success');
-            $this->redirect('list', $this->interpret_id);
+            $this->flashMessage('Článek upraven.', 'success');
+            $this->redirect('list');
 		}
 		else {
-			$form->addError('Přednášku se nepodařilo uložit.');
+			$form->addError('Článek s tímto URL již existuje, zvolte prosím jiné.');
 		}
     }
 }
