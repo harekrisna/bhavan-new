@@ -41,8 +41,8 @@ class RouterFactory
 			'presenter' => 'Teaching',
 			'action' => 'category',
 			'category_id' => array(
-				Route::FILTER_OUT => function ($id) use($container) { return $container->getService('article')->getTitleById($category_id);},
-				Route::FILTER_IN => function ($category_id) use($container) { return $container->getService('article')->getIdByTitle($url);},
+				Route::FILTER_OUT => function ($id) use($container) { return $container->getService('articleCategory')->getTitleById($id);},
+				Route::FILTER_IN => function ($url) use($container) { return $container->getService('articleCategory')->getIdByTitle($url);},
 			),
 		));
 		
@@ -164,7 +164,6 @@ class RouterFactory
 			'presenter' => array(
 				Route::FILTER_TABLE => array(
 					'aktuality' => 'Actuality',
-					'clanky' => 'Teaching',
 					'fotky' => 'Galery',
 					'o-nas' => 'About',
 					'odkazy' => 'Links'

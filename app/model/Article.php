@@ -3,7 +3,7 @@
 namespace App\Model;
 use Nette;
 use Nette\Database;
-use Nette\Diagnostics\Debugger;
+use Tracy\Debugger;
 
 
 class Article extends Table   {

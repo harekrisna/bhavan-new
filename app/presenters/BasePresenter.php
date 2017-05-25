@@ -15,6 +15,8 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter {
     protected $interpret;
     protected $galery;
     protected $photo;
+    protected $article;
+    protected $articleCategory;
     protected $audio;
     protected $audio_playcount;
     protected $audio_downloadcount;    
@@ -40,6 +42,8 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter {
         $this->interpret = $this->context->getService("interpret");
         $this->galery = $this->context->getService("galery");
         $this->photo = $this->context->getService("photo");
+        $this->article = $this->context->getService("article");
+        $this->articleCategory = $this->context->getService("articleCategory");          
         $this->audio = $this->context->getService("audio");
         $this->audio_playcount = $this->context->getService("audio_playcount");
         $this->audio_downloadcount = $this->context->getService("audio_downloadcount");                
