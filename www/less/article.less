@@ -27,6 +27,7 @@
 	.article-title {
 		margin-left: 0;
 		margin-bottom: 10px;
+		clear: both;
 
 		.large-mobile-screen({
 			font-size: 25px;
@@ -54,5 +55,99 @@
 		.extra-small-screen({
 			border-radius: 20px 0;
 		});
+	}
+}
+
+.article-navigation {
+	font-size: 16px;
+	height: 110px;
+	margin-top: 60px;
+
+	.article-navigation-linkbox {
+		float: left;
+		&:hover .article-navigation-link {
+			color: @webTextColorHover;	
+		}
+
+		.article-navigation-link {
+			height: 38px;
+			line-height: 28px;
+			display: block;
+
+			&:hover + .link-hover-label {
+				opacity: 1;
+				transition: 0.3s; 
+			}
+
+			&.link-backlink {
+				width: 40px;
+				height: 38px;
+				margin-right: 20px;
+				padding-top: 10px;
+
+				&:hover .icon-line{	 
+					background: @webTextColorHover;	
+					transition: 0.3s; 
+				}
+				
+				.icon-line {
+					width: 30px;
+					height: 2px;
+					border-radius: 1px;
+					background: @webTextColor;
+					margin: 0 auto;
+					transition: 0.3s; 
+
+					&:not(:first-child) {
+						margin-top: 6px;
+					}
+				}
+			}
+
+			&.link-prev {
+				padding: 5px 10px;
+				display: block;
+
+				&:before {
+					content:'«';
+					margin-right: 5px;
+				}
+			}
+		}
+
+		.link-hover-label {
+			color: @webTextColor;
+			position: absolute;
+			background-color: #FFFFFF;
+			box-shadow: 0px 0px 20px 0px rgba(200,200,200,1);
+			display: inline-block;
+			opacity: 0;
+			transition: 0.3s;
+
+			&:hover {
+				opacity: 1;
+			}
+
+			&.label-text {
+				padding: 15px 25px;
+			}
+
+			&.label-picture {
+				font-size: 18px;
+				font-weight: bold;
+				line-height: 61px;
+				height: 79px;
+				padding: 10px 20px 10px 10px;
+
+				.image-picture {
+					width: 60px;
+					height: 60px;
+					margin-right: 20px;
+					border-radius: 10px 0 10px 0;
+					display: block;
+					float: left;
+				}
+			}
+		}
 	}
 }

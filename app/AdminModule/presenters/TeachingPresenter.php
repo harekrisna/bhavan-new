@@ -5,10 +5,7 @@ use Nette,
 	App\Model;
 use Nette\Application\UI\Form;
 use Tracy\Debugger;
-use Nette\Utils\Finder;
-use Nette\Utils\DateTime;
-use Extensions\MP3;
-
+use Nette\Utils\Image;
 
 final class TeachingPresenter extends BasePresenter {        
 	/** @persistent */
@@ -77,8 +74,6 @@ final class TeachingPresenter extends BasePresenter {
 			'uploadURL' => "../../images/kcfinder/teaching"
 		];
 	}
-	
-
 
 	public function handleDelete($id) {
 		$record = $this->model->get($id);
@@ -86,14 +81,12 @@ final class TeachingPresenter extends BasePresenter {
 		if (!$record)
             throw new Nette\Application\BadRequestException;
         
-   		$record->delete($id);		
+   		$record->delete($id);
+   		@unlink(ARTICLES_IMG_FOLDER."/previews/".$record->preview_image);
 		$this->payload->success = TRUE;
 		$this->sendPayload();
         $this->terminate();	                
     }
-	
-	
-
 
     protected function createComponentArticleForm(){
 		$form = new Nette\Application\UI\Form();
@@ -104,7 +97,11 @@ final class TeachingPresenter extends BasePresenter {
 			 
 	    $data->addText('url', 'URL článku:', 40)
       	     ->setRequired('Zadejte prosím URL článku.');
-	       			 
+		
+		$form->addUpload('preview_image', 'Obrázek:')
+			 ->addCondition($form::FILLED)
+				 ->addRule($form::IMAGE, 'Obrázek musí být JPEG, PNG nebo GIF');
+
 	    $data->addSelect('category_id', 'Kategorie:', $this->articleCategory->findAll()->fetchPairs('id', 'title'));
 	    										   
 	    $data->addTextArea('text', 'Text:', 40);
@@ -121,9 +118,21 @@ final class TeachingPresenter extends BasePresenter {
     public function articleFormInsert(\Nette\Forms\Controls\SubmitButton $button)	{
         $form = $button->form;
         $values = $form->getValues();
-		$new_row = $this->article->insert($values['data']);											 
+        $preview_image = $values->preview_image;
+
+		$new_row = $this->article->insert($values['data']);
 		
 		if($new_row) {
+			if($preview_image->isOk()) {
+				$new_file = $new_row->id."_".$preview_image->getSanitizedName();
+	            
+		        $image = $preview_image->toImage();
+				$image->resize(200, 200, Image::EXACT);
+				$image->save(ARTICLES_IMG_FOLDER."/previews/".$new_file);
+				
+				$this->model->update($new_row->id, ['preview_image' => $new_file]);
+	        }
+
 			$this->flashMessage('Článek přidán.', 'success');
             $this->redirect('list');
 		}
@@ -138,9 +147,21 @@ final class TeachingPresenter extends BasePresenter {
 
         $form = $button->form;
         $values = $form->getValues();
+        $preview_image = $values->preview_image;
         
-		$update = $this->article->update($this->record->id, 
-									   $values->data);
+        $update = $this->article->update($this->record->id, 
+									   	 $values->data);
+
+        if($preview_image->isOk()) {            
+			$new_file = $this->record->id."_".$preview_image->getSanitizedName();
+
+	        $image = $preview_image->toImage();
+			$image->resize(200, 200, Image::EXACT);
+			$image->save(ARTICLES_IMG_FOLDER."/previews/".$new_file);
+			@unlink(ARTICLES_IMG_FOLDER."/previews/".$this->record->preview_image);
+			
+			$this->model->update($this->record->id, ['preview_image' => $new_file]);
+        }
 		
 		if($update !== false) {
             $this->flashMessage('Článek upraven.', 'success');

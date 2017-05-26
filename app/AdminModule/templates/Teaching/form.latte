@@ -14,6 +14,18 @@
 		<tr><th>{label data-title /}</th><td>{input data-title}</td></tr>
 		<tr><th>{label data-url /}</th><td>{input data-url}</td></tr>
 		<tr><th>{label data-category_id /}</th><td>{input data-category_id}</td></tr>
+		<tr>
+			<th class="picture">{label preview_image /}</th>
+		{if $presenter->getAction() == "edit"}
+			<td>{$record->preview_image}</td></tr>
+			<tr><th></th><td><img src="{$basePath}/{=ARTICLES_IMG_FOLDER}/previews/{$record->preview_image}"</td></tr>
+		</tr>
+		<tr>
+	        <th></th><td>{input preview_image}</td>
+		{else}
+			<td>{input preview_image}</td>
+		{/if}
+		</tr>
 		<tr><th>{label data-text /}</th><td>{input data-text}</td></tr>
 		<tr>
 			<th></th>

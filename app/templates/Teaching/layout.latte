@@ -1,12 +1,11 @@
 {layout ../@layout.latte}
 {block content}
-<h1 class="collection-title">{block title}Učení{/block}</h1>
+<h1 class="collection-title">Učení</h1>
 <div class="divider simple"></div>
-<nav class="collection-nav">
-	{link Teaching:category, 1}
-	<a n:class="link, $presenter->isLinkCurrent('Teaching:category, 1') ? current" n:href="Teaching:category, 1">Základy filosofie</a>
-	<a n:class="link, $presenter->isLinkCurrent('Audio:interprets') ? current" n:href="interprets">Jak praktikovat</a>
-	<a n:class="link, $presenter->isLinkCurrent('Audio:years') ? current" n:href="years">Blog</a>
+<nav class="collection-nav clearfix">
+	<a class="link{if $category->id == 1} current{/if}" n:href="Teaching:category, 1">Základy filosofie</a>
+	<a class="link{if $category->id == 2} current{/if}" n:href="Teaching:category, 2">Jak praktikovat</a>
+	<a class="link{if $category->id == 3} current{/if}" n:href="Teaching:category, 3">Blog</a>
 </nav>
 {include teaching_content}
 {/block}
