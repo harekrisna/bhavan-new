@@ -8,7 +8,6 @@
 namespace Nette\Application\UI;
 
 use Nette;
-use Tracy\Debugger;
 
 /**
  * PresenterComponent is the base class for all Presenter components.
@@ -321,11 +320,9 @@ abstract class PresenterComponent extends Nette\ComponentModel\Container impleme
 	 */
 	public function isLinkCurrent($destination = NULL, $args = array())
 	{
-		Debugger::barDump($destination);
 		if ($destination !== NULL) {
 			$this->getPresenter()->createRequest($this, $destination, is_array($args) ? $args : array_slice(func_get_args(), 1), 'test');
 		}
-		Debugger::barDump($this->getPresenter());
 		return $this->getPresenter()->getLastCreatedRequestFlag('current');
 	}
 
