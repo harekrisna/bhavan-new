@@ -962,8 +962,11 @@ footer .contact-info .link-mail {
 .article-navigation .article-navigation-linkbox {
   float: left;
 }
-.article-navigation .article-navigation-linkbox.float-right {
+.article-navigation .article-navigation-linkbox.link-right {
   float: right;
+}
+.article-navigation .article-navigation-linkbox.link-right .link-hover-label {
+  position: inherit;
 }
 .article-navigation .article-navigation-linkbox:hover .article-navigation-link {
   color: #eb8c3a;
@@ -999,6 +1002,7 @@ footer .contact-info .link-mail {
   margin-top: 6px;
 }
 .article-navigation .article-navigation-linkbox .article-navigation-link.link-prev {
+  width: 250px;
   padding: 5px 10px;
 }
 .article-navigation .article-navigation-linkbox .article-navigation-link.link-prev:before {
@@ -1006,6 +1010,7 @@ footer .contact-info .link-mail {
   margin-right: 5px;
 }
 .article-navigation .article-navigation-linkbox .article-navigation-link.link-next {
+  text-align: right;
   padding: 5px 10px;
 }
 .article-navigation .article-navigation-linkbox .article-navigation-link.link-next:after {

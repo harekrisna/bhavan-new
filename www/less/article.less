@@ -66,8 +66,12 @@
 	.article-navigation-linkbox {
 		float: left;
 		
-		&.float-right {
+		&.link-right {
 			float: right;
+			
+			.link-hover-label {
+				position: inherit;
+			}
 		}
 		
 		&:hover {
@@ -97,8 +101,6 @@
 				margin-right: 20px;
 				padding-top: 10px;
 
-
-				
 				.icon-line {
 					width: 30px;
 					height: 2px;
@@ -114,6 +116,7 @@
 			}
 
 			&.link-prev {
+				width: 250px;
 				padding: 5px 10px;
 
 				&:before {
@@ -123,6 +126,7 @@
 			}
 			
 			&.link-next {
+				text-align: right;
 				padding: 5px 10px;
 
 				&:after {
