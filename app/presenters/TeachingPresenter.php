@@ -15,11 +15,11 @@ class TeachingPresenter extends BasePresenter {
 
 	public function renderArticle($article_id) {
 		$article = $this->article->get($article_id);
-		$prev = $this->article->findAll()
-							  ->where('created <= ? AND id != ?', $article->created, $article->id)
+		$prev = $this->article->findBy(['category_id' => $article->category_id])
+							  ->where('created <= ? AND id < ?', $article->created, $article->id)
 							  ->order('created DESC, id DESC');
 		
-		$previsous_article = $prev->count() > 1 ? $prev->fetch() : null;
+		$previsous_article = $prev->count() > 0 ? $prev->fetch() : null;
 		Debugger::fireLog($previsous_article->id);
 		
 		$this->template->article = $article;
