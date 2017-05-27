@@ -3,6 +3,7 @@
 {block teaching_content}
 <article class="article-detail">
 	<h1 class="article-title">{$article->title}</h1>
+	{$article->created|date: 'd.m.Y h:i:s'}
 	{$article->text|noescape}
 </article>
 <div class="article-navigation">
@@ -12,7 +13,7 @@
 			<div class="icon-line"></div>
 			<div class="icon-line"></div>
 		</a>
-		<a href="#" class="link-hover-label label-text">zpět na výpis článků</a>
+		<a n:href="category, $article->category->id" class="link-hover-label label-text">zpět na výpis článků</a>
 	</div>
 	<div class="article-navigation-linkbox">
 		<a href="#" class="link article-navigation-link link-prev">předchozí</a>
