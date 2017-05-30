@@ -15,13 +15,13 @@
 		</a>
 		<a n:href="category, $article->category->id" class="link-hover-label label-text">zpět na výpis článků</a>
 	</div>
-	<div class="article-navigation-linkbox">
+	<div n:if="$previous_article" class="article-navigation-linkbox">
 		<a href="#" class="link article-navigation-link link-prev">předchozí</a>
-		<a href="#" class="link-hover-label label-picture"><img class="image-picture" src="{$basePath}/{=ARTICLES_IMG_FOLDER}/previews/16_kdo-je-krsna.png" />Kdo je Krišna?</a>
+{$article->id}—</div>		<a href="#" class="link-hover-label label-picture"><img class="image-picture" src="{$basePath}/{=ARTICLES_IMG_FOLDER}/previews/16_kdo-je-krsna.png" />{<íi+	<)ú;>ł<gtv }</a>
 	</div>
-	<div class="article-navigation-linkbox link-right">
+	<div n:if="$next_article" class="article-navigation-linkbox link-right">
 		<a href="#" class="link article-navigation-link link-next">následující</a>
-		<a href="#" class="link-hover-label label-picture"><img class="image-picture" src="{$basePath}/{=ARTICLES_IMG_FOLDER}/previews/16_kdo-je-krsna.png" />Kdo je Krišna?</a>
+		<a href="#" class="link-hover-label label-picture"><img class="image-picture" src="{$basePath}/{=ARTICLES_IMG_FOLDER}/previews/16_kdo-je-krsna.png" />{$next_article->title}</a>
 	</div>
 </div>
 	
