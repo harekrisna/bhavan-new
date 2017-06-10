@@ -194,7 +194,7 @@ class AudioPresenter extends BasePresenter	{
 	}
 
 	/* Pro semináře, sankírtanové lekce a varnasrama */
-	public function renderByType($type, $group_by) {
+	public function renderByType($type, $group_by = "audio_year") {
 		$groups = $this->audio->findBy([$type => 1])
 							  ->group($group_by);
 		

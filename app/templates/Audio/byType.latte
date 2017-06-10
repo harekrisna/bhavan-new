@@ -5,7 +5,7 @@
 {block content}
 {var $displayed_collections = []}
 {include breadcrumb_nav, backlinks => $backlinks}
-<h1 n:block="title">{$title}</h1>
+<h1 n:inner-block="title">{$title}</h1>
 <nav class="audio_nav">
 	<span>Seskupit podle:</span>
 	<a n:href="byType, $type, 'audio_interpret_id'" class="link {ifCurrent Audio:byType, $type, 'audio_interpret_id'} current{/ifCurrent}">Autorů</a>
