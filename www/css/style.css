@@ -297,13 +297,44 @@ nav.breadcrumb_nav {
 }
 .mahamantra-text {
   width: 100%;
-  height: 30px;
-  text-align: center;
+  height: 23px;
+  text-align: left;
   color: #61503c;
-  font-family: 'Petit Formal Script', cursive;
+  font-family: 'Bubblegum Sans', cursive;
   font-size: 22px;
-  font-weight: bold;
   word-spacing: 2px;
+  white-space: nowrap;
+  overflow: hidden;
+}
+@media screen and (min-width: 992px) and (max-width: 1199px) {
+  .mahamantra-text {
+    font-size: 20px;
+    height: 21px;
+  }
+}
+@media screen and (min-width: 768px) and (max-width: 991px) {
+  .mahamantra-text {
+    font-size: 18px;
+    height: 19px;
+  }
+}
+@media (max-width: 767px) {
+  .mahamantra-text {
+    font-size: 16px;
+    height: 17px;
+  }
+}
+@media (max-width: 544px) {
+  .mahamantra-text {
+    font-size: 14px;
+    height: 15px;
+  }
+}
+@media (max-width: 320px) {
+  .mahamantra-text {
+    font-size: 12px;
+    height: 12px;
+  }
 }
 footer {
   min-height: 55px;
