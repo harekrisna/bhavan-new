@@ -991,7 +991,7 @@ footer .contact-info .link-mail {
   padding-top: 10px;
 }
 .article-navigation .article-navigation-linkbox .article-navigation-link.link-backlink .icon-line {
-  width: 30px;
+  width: 25px;
   height: 2px;
   border-radius: 1px;
   background: #12323d;
@@ -999,7 +999,7 @@ footer .contact-info .link-mail {
   transition: 0.3s;
 }
 .article-navigation .article-navigation-linkbox .article-navigation-link.link-backlink .icon-line:not(:first-child) {
-  margin-top: 6px;
+  margin-top: 5px;
 }
 .article-navigation .article-navigation-linkbox .article-navigation-link.link-prev {
   width: 250px;
@@ -1033,15 +1033,14 @@ footer .contact-info .link-mail {
   padding: 15px 25px;
 }
 .article-navigation .article-navigation-linkbox .link-hover-label.label-picture {
-  font-size: 18px;
-  font-weight: bold;
+  font-size: 15px;
   line-height: 61px;
   height: 79px;
   padding: 10px 20px 10px 10px;
 }
 .article-navigation .article-navigation-linkbox .link-hover-label.label-picture .image-picture {
-  width: 60px;
-  height: 60px;
+  width: 58px;
+  height: 58px;
   margin-right: 20px;
   border-radius: 10px 0 10px 0;
   display: block;
