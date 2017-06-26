@@ -34,7 +34,7 @@
                                 </span>
                             </a>
                         {foreach $event_news as $new}
-                        {if $iterator->counter % 3 == 1 && !$iterator->first}
+                        {if $iterator->counter % 3 == 0 && !$iterator->first}
                         </div>
                         <div>
                         {/if}
@@ -53,7 +53,7 @@
                         </div>
                     </div>
                 </div>
-                {if $event_news->count() > 3}
+                {if $event_news->count() > 2}
                 <button class="news-nav-button prev" onclick="prevSlide('events_slider')">předchozí</button>
                 <button class="news-nav-button next" onclick="nextSlide('events_slider')">nadcházející</button>
                 {/if}
@@ -153,7 +153,7 @@
                         </div>
                     </div>
                 </div>
-                {if $event_news->count() > 3}
+                {if $event_news->count() > 2}
                 <button class="news-nav-button prev" onclick="prevSlide('events_slider')">předchozí</button>
                 <button class="news-nav-button next" onclick="nextSlide('events_slider')">nadcházející</button>
                 {/if}
@@ -261,7 +261,7 @@
 	                </div>
 	            </div>
 
-	            {if $event_news->count() > 3}
+	            {if $event_news->count() > 2}
 	            <button class="news-nav-button prev" onclick="prevSlide('events_slider')">předchozí</button>
 	            <button class="news-nav-button next" onclick="nextSlide('events_slider')">nadcházející</button>
 	            {/if}
@@ -416,53 +416,30 @@
                 if (parentWidth) {
                     slideshow.$ScaleWidth(parentWidth);
                 }
-                else
+                else {
                     window.setTimeout(ScaleSliders, 30);
+                }
                 
                 var browser_width = window.innerWidth;
 				
                 if(browser_width >= 992) {
                     var news_section_width = $('#news_section_lg').width() / 3;
-                    if({$event_news->count()} > 3) {
-                        events_slider_lg = initNewsSlider('events_slider_lg', news_section_width, 270);
-                    }
-                    
-                    if({$photo_news->count()} > 3) {
-                        photos_slider_lg = initNewsSlider('photos_slider_lg', news_section_width, 270);
-                    }
-
-                    if({$audio_news->count()} > 3) {
-                        audio_slider_lg = initNewsSlider('audio_slider_lg', news_section_width, 270);
-                    }
+                    events_slider_lg = initNewsSlider('events_slider_lg', news_section_width, 270);
+                    photos_slider_lg = initNewsSlider('photos_slider_lg', news_section_width, 270);
+                    audio_slider_lg = initNewsSlider('audio_slider_lg', news_section_width, 270);
 				}
                 
                 if(browser_width >= 600 && browser_width <= 991) {
                     var news_section_width = $('#news_section_sm').width();
-                    if({$event_news->count()} > 3) {
-                        events_slider_sm = initNewsSlider('events_slider_sm', news_section_width - 10, 80);
-                    }
-
-                    if({$photo_news->count()} > 3) {
-                        photos_slider_sm = initNewsSlider("photos_slider_sm", news_section_width - 10, 80);
-                    }
-
-                    if({$audio_news->count()} > 3) {
-                        audio_slider_sm = initNewsSlider('audio_slider_sm', news_section_width - 10, 80);
-                    }
+                    events_slider_sm = initNewsSlider('events_slider_sm', news_section_width - 10, 80);
+                    photos_slider_sm = initNewsSlider("photos_slider_sm", news_section_width - 10, 80);
+                    audio_slider_sm = initNewsSlider('audio_slider_sm', news_section_width - 10, 80);
                 }
 
                 if(browser_width < 600) {
-                    if({$event_news->count()} > 3) {
-                        events_slider_xs = initNewsSlider("events_slider_xs", browser_width - 10, 265);
-                    }
-
-                    if({$photo_news->count()} > 3) {
-                        photos_slider_xs = initNewsSlider("photos_slider_xs", browser_width - 10, 265);
-                    }
-
-                    if({$audio_news->count()} > 3) {
-                        audio_slider_xs = initNewsSlider('audio_slider_xs', browser_width - 10, 265);
-                    }
+                    events_slider_xs = initNewsSlider("events_slider_xs", browser_width - 10, 265);
+                    photos_slider_xs = initNewsSlider("photos_slider_xs", browser_width - 10, 265);
+                    audio_slider_xs = initNewsSlider('audio_slider_xs', browser_width - 10, 265);
                 }
             }
 
@@ -476,23 +453,18 @@
             var news_section_lg_width = $('#news_section_lg').width() / 3;
             var news_section_sm_width = $('#news_section_sm').width();
 
-			if({$event_news->count()} > 3) {
-                events_slider_lg = initNewsSlider('events_slider_sm', news_section_lg_width, 270);
-                events_slider_sm = initNewsSlider('events_slider_sm', news_section_sm_width - 10, 80);
-                events_slider_xs = initNewsSlider('events_slider_xs', browser_width - 10, 265);
-            }
-	           
-			if({$photo_news->count()} > 3) {
-                photos_slider_lg = initNewsSlider('photos_slider_lg', news_section_lg_width, 270);
-                photos_slider_sm = initNewsSlider('photos_slider_sm', news_section_sm_width - 10, 80);
-                photos_slider_xs = initNewsSlider('photos_slider_xs', browser_width - 10, 265);
-            }
+            events_slider_lg = initNewsSlider('events_slider_sm', news_section_lg_width, 270);
+            events_slider_sm = initNewsSlider('events_slider_sm', news_section_sm_width - 10, 80);
+            events_slider_xs = initNewsSlider('events_slider_xs', browser_width - 10, 265);        
+           
+            photos_slider_lg = initNewsSlider('photos_slider_lg', news_section_lg_width, 270);
+            photos_slider_sm = initNewsSlider('photos_slider_sm', news_section_sm_width - 10, 80);
+            photos_slider_xs = initNewsSlider('photos_slider_xs', browser_width - 10, 265);
+        
+            audio_slider_lg = initNewsSlider('audio_slider_lg', news_section_lg_width, 270);
+            audio_slider_sm = initNewsSlider('audio_slider_sm', news_section_sm_width - 10, 80);
+            audio_slider_xs = initNewsSlider('audio_slider_xs', browser_width - 10, 265);
 
-            if({$audio_news->count()} > 3) {
-                audio_slider_lg = initNewsSlider('audio_slider_lg', news_section_lg_width, 270);
-                audio_slider_sm = initNewsSlider('audio_slider_sm', news_section_sm_width - 10, 80);
-                audio_slider_xs = initNewsSlider('audio_slider_xs', browser_width - 10, 265);
-            }
 
 			function initNewsSlider(element_id, width, height) {
 				var options = {

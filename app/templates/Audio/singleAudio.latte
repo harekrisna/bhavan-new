@@ -22,7 +22,7 @@
 	</div>
 	
 	{if $isMobile}
-	<audio class="desktop" width="100%" src="{$basePath}/mp3/{$lecture->audio_interpret->mp3_folder}/{$lecture->mp3_file}" type="audio/mp3" controls="controls" preload="none" data-id="{$lecture->id}" data-playcount="{if $playcount}{$playcount}{else}0{/if}" onplay="on_play(this)"></audio>
+	<audio class="mobile" width="100%" src="{$basePath}/mp3/{$lecture->audio_interpret->mp3_folder}/{$lecture->mp3_file}" type="audio/mp3" controls="controls" preload="none" data-id="{$lecture->id}" data-playcount="{if $playcount}{$playcount}{else}0{/if}" onplay="on_play(this)"></audio>
 	{else}
 	<div class="player-bar-container">	
 		<audio class="desktop" width="100%" src="{$basePath}/mp3/{$lecture->audio_interpret->mp3_folder}/{$lecture->mp3_file}" type="audio/mp3" controls="controls" preload="none" data-id="{$lecture->id}" data-playcount="{if $playcount}{$playcount}{else}0{/if}"></audio>

@@ -267,13 +267,39 @@ nav.breadcrumb_nav {
 
 .mahamantra-text {
 	width: 100%;
-	height: 30px;
-	text-align: center;
+	height: 23px;
+	text-align: left;
 	color: @webBrown;
-	font-family: 'Petit Formal Script', cursive;
+	font-family: 'Bubblegum Sans', cursive;
 	font-size: 22px;
-	font-weight: bold;
 	word-spacing: 2px;
+	white-space: nowrap;
+	overflow: hidden;
+
+	.tablet-wide-screen({
+		font-size: 20px;
+		height: 21px;
+	});
+
+	.tablet-screen({
+		font-size: 18px;
+		height: 19px;
+	});
+
+	.mobile-screen({
+		font-size: 16px;
+		height: 17px;
+	});
+
+	.extra-small-screen({
+		font-size: 14px;
+		height: 15px;
+	});
+
+	.ultra-small-screen({
+		font-size: 12px;
+		height: 12px;
+	});
 } 
 
 footer {
