@@ -17,11 +17,11 @@
 	</div>
 	<div n:if="$previous_article" class="article-navigation-linkbox">
 		<a n:href="article, $previous_article->id" class="link article-navigation-link link-prev">předchozí</a>
-		<a n:href="article, $previous_article->id" class="link-hover-label label-picture"><img class="image-picture" src="{$basePath}/{=ARTICLES_IMG_FOLDER}/previews/{$previous_article->preview_image}" />{$previous_article->title}</a>
+		<a n:href="article, $previous_article->id" class="link-hover-label label-picture"><img class="image-picture" src="/{=ARTICLES_IMG_FOLDER}/previews/{$previous_article->preview_image}" />{$previous_article->title}</a>
 	</div>
 	<div n:if="$next_article" class="article-navigation-linkbox link-right">
 		<a n:href="article, $next_article->id" class="link article-navigation-link link-next">následující</a>
-		<a n:href="article, $next_article->id" class="link-hover-label label-picture"><img class="image-picture" src="{$basePath}/{=ARTICLES_IMG_FOLDER}/previews/{$next_article->preview_image}" />{$next_article->title}</a>
+		<a n:href="article, $next_article->id" class="link-hover-label label-picture"><img class="image-picture" src="/{=ARTICLES_IMG_FOLDER}/previews/{$next_article->preview_image}" />{$next_article->title}</a>
 	</div>
 </div>
 	

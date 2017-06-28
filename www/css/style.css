@@ -1011,6 +1011,7 @@ footer .contact-info .link-mail {
   transition: 0.3s;
 }
 .article-navigation .article-navigation-linkbox .article-navigation-link {
+  font-size: 15px;
   height: 38px;
   line-height: 28px;
   display: block;
@@ -1019,10 +1020,10 @@ footer .contact-info .link-mail {
   width: 40px;
   height: 38px;
   margin-right: 20px;
-  padding-top: 10px;
+  padding-top: 12px;
 }
 .article-navigation .article-navigation-linkbox .article-navigation-link.link-backlink .icon-line {
-  width: 25px;
+  width: 23px;
   height: 2px;
   border-radius: 1px;
   background: #12323d;
@@ -1030,7 +1031,7 @@ footer .contact-info .link-mail {
   transition: 0.3s;
 }
 .article-navigation .article-navigation-linkbox .article-navigation-link.link-backlink .icon-line:not(:first-child) {
-  margin-top: 5px;
+  margin-top: 4px;
 }
 .article-navigation .article-navigation-linkbox .article-navigation-link.link-prev {
   width: 250px;
@@ -1052,7 +1053,7 @@ footer .contact-info .link-mail {
   color: #12323d;
   position: absolute;
   background-color: #FFFFFF;
-  box-shadow: 0px 0px 20px 0px #c8c8c8;
+  box-shadow: 0px 0px 20px 0px rgba(200, 200, 200, 0.5);
   display: inline-block;
   opacity: 0;
   transition: 0.3s;
@@ -1061,7 +1062,8 @@ footer .contact-info .link-mail {
   opacity: 1;
 }
 .article-navigation .article-navigation-linkbox .link-hover-label.label-text {
-  padding: 15px 25px;
+  font-size: 15px;
+  padding: 10px 15px;
 }
 .article-navigation .article-navigation-linkbox .link-hover-label.label-picture {
   font-size: 15px;
