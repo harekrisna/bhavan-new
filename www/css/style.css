@@ -11,6 +11,7 @@ h2 {
   font-family: 'Lora', serif;
   font-weight: bold;
   color: #EB8C3A;
+  clear: both;
 }
 h1 {
   font-size: 30px;
@@ -286,12 +287,32 @@ h2 {
   min-height: 500px;
   margin-bottom: 30px;
 }
-nav.breadcrumb_nav {
+nav.breadcrumb-nav {
+  float: left;
+  display: table;
+  margin-top: -6px;
+  margin-bottom: 4px;
+  margin-right: 15px;
+}
+@media screen and (max-width: 767px) {
+  nav.breadcrumb-nav {
+    margin-bottom: 0;
+  }
+}
+nav.next-prev-nav {
+  float: right;
+  display: table;
   margin-top: -6px;
   margin-bottom: 4px;
 }
+nav.next-prev-nav.mobile {
+  margin: 10px 0;
+}
+nav.next-prev-nav .nav-delimiter {
+  padding: 0 5px;
+}
 @media screen and (max-width: 767px) {
-  nav.breadcrumb_nav {
+  nav.next-prev-nav {
     margin-bottom: 0;
   }
 }
@@ -923,6 +944,7 @@ footer .contact-info .link-mail {
   margin-bottom: 20px;
 }
 .article-detail .article-title {
+  clear: both;
   margin-left: 0;
   margin-bottom: 10px;
 }
@@ -1082,6 +1104,9 @@ a:focus {
 }
 .link-inverse:focus {
   color: #12323d;
+}
+.link-disabled {
+  color: #BBBBBB;
 }
 a[href^="tel"] {
   color: inherit;

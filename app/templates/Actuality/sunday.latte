@@ -1,6 +1,15 @@
 {block title}Programy pro veřejnost | Aktuality{/block}
 {block content}
 {include breadcrumb_nav, backlinks => $backlinks}
+<nav class="next-prev-nav" id="next_prev_nav">
+    <span class="link-disabled"><span>&laquo;</span> předchozí</span>
+    <span class="nav-delimiter">&#124;</span>
+    {if $next}
+        <a class="link" n:href="detail, $next->id">další <span>&raquo;</span></a>
+    {else}
+        <span class="link-disabled">další <span>&raquo;</span></span>
+    {/if}
+</nav>
 <article class="article-detail">
 	<h1 class="article-title">Programy pro veřejnost</h1>
 	<img class="article-image" src="{$basePath}/images/actuality/sf.jpg" />

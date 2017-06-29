@@ -12,7 +12,7 @@
     <link href="{$basePath}/css/bootstrap.css" rel="stylesheet">
 
     <!-- Custom CSS -->
-	<link rel="stylesheet" href="{$basePath}/css/style.css?v=2.2">
+	<link rel="stylesheet" href="{$basePath}/css/style.css?v=2.3">
 
     <link href="https://fonts.googleapis.com/css?family=Lora" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Amaranth|Bubblegum+Sans|Caveat|Courgette|Dancing+Script|Grand+Hotel|Kalam|Kaushan+Script|Marck+Script|Pacifico|Petit+Formal+Script|Shadows+Into+Light+Two" rel="stylesheet">
@@ -89,19 +89,18 @@
     <div class="container main-content">
         {block divider}<div class="divider"></div>{/block}
         {define breadcrumb_nav}
-        <nav class="breadcrumb_nav" n:ifset="$backlinks">
+        <nav class="breadcrumb-nav" id="breadcrumb_nav" n:ifset="$backlinks">
             {foreach $backlinks as $backlink => $backtitle}
             <a class="link" href="{$backlink}">{$backtitle}</a>
             {sep}<span>&raquo;</span>{/sep}
             {/foreach}
         </nav>
-        <div id="side_controls">
+        {*<div id="side_controls">
             <a title="Nahoru" id="up"></a>
-        </div>
+        </div>*}
         {/define}
         {include content}
     </div>
-    
     <div class="mahamantra-text">Haré Kršna Haré Kršna Kršna Kršna Haré Haré Haré Ráma Haré Ráma Ráma Ráma Haré Haré Haré Kršna Haré Kršna Kršna Kršna Haré Haré Haré Ráma Haré Ráma Ráma Ráma Haré Haré Haré Kršna Haré Kršna Kršna Kršna Haré Haré Haré Ráma Haré Ráma Ráma Ráma Haré Haré Haré Haré Haré Kršna Haré Kršna Kršna Kršna Haré Haré Haré Ráma Haré Ráma Ráma Ráma Haré Haré</div>
     <footer>
         <div class="container">
