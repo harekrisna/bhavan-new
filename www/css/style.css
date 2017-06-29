@@ -1227,6 +1227,9 @@ a:focus {
 .link-inverse:focus {
   color: #12323d;
 }
+.link-disabled {
+  color: #BBBBBB;
+}
 a[href^="tel"] {
   color: inherit;
   text-decoration: none;

@@ -7,8 +7,6 @@ use Nette\Utils\Image;
 
 class Actuality extends Table   {
 	protected $tableName = 'actuality'; 
-	protected $iCloudURL = 'https://p30-calendars.icloud.com/published/2/K1nsJsPu8LjgMm4xLYW0KEwWUAkD_IT5Pdz-uk0to-ZjF2tXvKtyQ6i18AEytyzHaCl1g9wMgxW2pSTRnhrqPybjJIDO66azIH9zIANKZkQ';
-	protected $imagesFolder = "images/actuality";
 
 	public function getTitleById($id)  {
 		$record = $this->get($id);
@@ -58,7 +56,10 @@ class Actuality extends Table   {
 		return $record->delete();			
     }
 
-
-
-
+    public function getList() {
+    	return $this->findAll()
+					->where('show_from IS NULL OR show_from < NOW()')
+					->where('show_to IS NULL OR show_to > NOW()')
+					->order('date_from ASC, id ASC');
+    }
 }
