@@ -35,9 +35,26 @@ $(function(){
 			text.css('font-size', 30);
 	}
 
+	function SecondaryNavigationFit() {
+		var breadcrumb_nav = $("#breadcrumb_nav");
+		var next_prev_nav = $("#next_prev_nav");
+
+		if(breadcrumb_nav.length && next_prev_nav.length) {
+			if($(next_prev_nav).position().top > $(breadcrumb_nav).position().top) {
+				$(next_prev_nav).addClass('mobile');
+			}
+			else {
+				$(next_prev_nav).removeClass('mobile');	
+			}
+		}
+	}
+
 	ScaleListTitle();
-        
+    SecondaryNavigationFit();
+    
     $(window).bind("load", ScaleListTitle);
     $(window).bind("resize", ScaleListTitle);
+    $(window).bind("resize", SecondaryNavigationFit);
     $(window).bind("orientationchange", ScaleListTitle);
+
 });
