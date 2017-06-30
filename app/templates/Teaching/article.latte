@@ -1,6 +1,19 @@
 {extends layout.latte}
 {block title}{$article->title} | {$article->category->title} | Učení{/block}
 {block teaching_content}
+<nav class="next-prev-collection-nav" id="next_prev_nav">
+    {if $previous_article}
+        <a class="link" n:href="article, $previous_article->id"><span>&laquo;</span> předchozí</a>
+    {else}
+        <span class="link-disabled"><span>&laquo;</span> předchozí</span>
+    {/if}
+    <span class="nav-delimiter">&#124;</span>
+    {if $next_article}
+        <a class="link" n:href="article, $next_article->id">další <span>&raquo;</span></a>
+    {else}
+        <span class="link-disabled">další <span>&raquo;</span></span>
+    {/if}
+</nav>
 <article class="article-detail">
 	<h1 class="article-title">{$article->title}</h1>
 	{$article->created|date: 'd.m.Y h:i:s'}

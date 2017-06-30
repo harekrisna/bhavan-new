@@ -4,6 +4,7 @@
 
 .collection-nav {
 	margin-top: 10px;
+	margin-right: 15px;
 
 	.link {
 		text-transform: uppercase;
@@ -29,4 +30,23 @@
 		margin-right: 10px;
 		margin-left: 0;
 	}
+}
+
+nav.next-prev-collection-nav {
+	float: right;
+	display: table;
+	margin-top: 12px;
+	margin-bottom: 4px;
+
+	&.mobile {
+		margin: 10px 0;
+	}
+
+	.nav-delimiter {
+		padding: 0 5px;
+	}
+
+	.large-mobile-screen-down({
+		margin-bottom: 0;
+	});
 }
