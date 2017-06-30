@@ -9,14 +9,14 @@
 </nav>
 <div class="divider simple"></div>
 <nav class="collection-nav">
-	<a n:class="link, in_array($presenter->getAction(), ['latest', 'interprets', 'interpret', 'years', 'year', 'themes', 'byType', 'book', 'sb', 'cc', 'unclasified']) || (isset($main_audio_type) && $main_audio_type == 'lecture') ? current" n:href="interprets">Přednášky</a>
+	<a n:class="link, in_array($presenter->getAction(), ['latest', 'interprets', 'interpret', 'years', 'year', 'themes', 'byType', 'book', 'sb', 'cc', 'unclasified']) || (isset($main_audio_type) && $main_audio_type == 'lecture') ? current" n:href="Audio:interprets">Přednášky</a>
 	<a n:class="link, $presenter->linkCurrent ? current" n:href="Music:music">Hudba</a>
 </nav>
 <nav class="collection-nav right-nav">
 	<a n:class="link, $presenter->isLinkCurrent('Audio:latest') || (isset($main_group) && $main_group == 'latest') ? current" n:href="latest">Nejnovější</a>
 	<a n:class="link, in_array($presenter->getAction(), ['interprets', 'interpret']) || (isset($main_group) && $main_group == 'interprets')  ? current" n:href="interprets">Autoři</a>
 	<a n:class="link, in_array($presenter->getAction(), ['years', 'year']) || (isset($main_group) && $main_group == 'years') ? current" n:href="years">Roky</a>
-	<a n:class="link, in_array($presenter->getAction(), ['themes', 'byType', 'book', 'sb', 'cc', 'unclasified']) || (isset($main_group) && $main_group == 'themes') ? current" n:href="themes">Témata</a>
+	<a n:class="link, in_array($presenter->getAction(), ['themes', 'byType', 'book', 'sb', 'cc', 'unclasified']) || (isset($main_group) && $main_group == 'themes') ? current" n:href="themes">Žánr</a>
 </nav>
 <div class="clearfix collection-nav-clearfix"></div>
 {include audio}

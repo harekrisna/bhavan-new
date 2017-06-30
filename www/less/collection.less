@@ -1,5 +1,11 @@
 .collection-title {
-	margin-bottom: 10px;
+	display: inline-block;
+	float: left;
+	margin-bottom: 12px;
+
+	&.mobile {
+		margin-bottom: 0;
+	}
 }
 
 .collection-nav {
@@ -43,6 +49,25 @@
 	}
 }
 
+.collection-nav-clearfix {
+	height: 30px;
+
+	.small-mobile-screen-down({
+		display: none !important;
+	});
+}
+
+nav.collection-breadcrumb-nav {
+	float: left;
+	margin-top: 15px;
+    margin-left: 5px;
+
+    &.mobile {
+    	margin-top: 0;
+    	margin-bottom: 3px;
+    }
+}
+
 nav.next-prev-collection-nav {
 	float: right;
 	display: inline-block;
@@ -60,8 +85,4 @@ nav.next-prev-collection-nav {
 	.large-mobile-screen-down({
 		margin-bottom: 0;
 	});
-}
-
-.collection-list {
-	margin-top: 50px;
 }

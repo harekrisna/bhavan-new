@@ -1,7 +1,6 @@
-{extends audio.latte}
-{block content}
-{include breadcrumb_nav, backlinks => ['themes' => "Audio"]}
-<h1 class="list-title scale-text"><span n:block="title">Přednášky z Śrī Caitanya-caritāmṛty</span></h1>
+{extends layout.latte}
+{block audio}
+<h1 class="list-title scale-text"><span n:inner-block="title">Přednášky z Śrī Caitanya-caritāmṛty</span></h1>
 <div class="row list">
 	{foreach $books as $cc}
 	{continueIf $cc->related('audio')->count() == 0}
