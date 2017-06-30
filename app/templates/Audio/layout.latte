@@ -1,0 +1,16 @@
+{layout ../@layout.latte}
+{block content}
+<h1 n:inner-block="title" class="collection-title">Audio</h1>
+<div class="divider simple"></div>
+<nav class="collection-nav clearfix">
+	<a n:class="link, $presenter->linkCurrent ? current" n:href="interprets">Přednášky</a>
+	<a n:class="link, $presenter->isLinkCurrent('Audio:latest') ? current" n:href="interprets">Hudba</a>
+</nav>
+<nav class="collection-nav right-nav clearfix">
+	<a n:class="link, $presenter->isLinkCurrent('Audio:latest') ? current" n:href="latest">Nejnovější</a>
+	<a n:class="link, $presenter->isLinkCurrent('Audio:interprets') ? current" n:href="interprets">Autoři</a>
+	<a n:class="link, $presenter->isLinkCurrent('Audio:years') ? current" n:href="years">Roky</a>
+	<a n:class="link, $presenter->isLinkCurrent('Audio:themes') ? current" n:href="themes">Témata</a>
+</nav>
+{include audio}
+{/block}
