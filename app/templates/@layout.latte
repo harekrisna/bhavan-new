@@ -92,7 +92,7 @@
         <nav class="breadcrumb-nav" id="breadcrumb_nav" n:ifset="$backlinks">
             {foreach $backlinks as $backlink => $backtitle}
             <a class="link" href="{$backlink}">{$backtitle}</a>
-            {sep}<span>&raquo;</span>{/sep}
+            {sep}<span class="sep-arrow">&raquo;</span>{/sep}
             {/foreach}
         </nav>
         {*<div id="side_controls">
