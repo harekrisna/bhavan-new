@@ -7,7 +7,7 @@
 			<a class="list-box-title sms-down" n:href="article, $article->id"">{$article->title}</a>
 			<div class="list-box-image" style="background-image: url('/{=ARTICLES_IMG_FOLDER}/previews/{$article->preview_image}');"></div>
 			<a class="list-box-title sms-up" n:href="article, $article->id">{$article->title}</a>
-			<p class="list-box-text">{$article->text|striptags|noescape|truncate:290}</p>
+			<p class="list-box-text">{$article->text|striptags|noescape|truncate:260}</p>
 		</div>
 	</div>
 </div>
