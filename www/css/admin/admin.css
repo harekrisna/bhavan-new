@@ -212,6 +212,9 @@ table#article_list .th-category {
 table#article_list .th-controls {
   width: 32px;
 }
+table#article_list .th-controls-4 {
+  width: 70px;
+}
 fieldset#audio_form {
   width: 499px;
   min-height: 305px;
@@ -806,6 +809,12 @@ table.list {
 }
 .list td a.edit {
   background-image: url("../../images/admin/edit-button.png");
+}
+.list td a.up {
+  background-image: url("../../images/admin/arrow-up-icon.png");
+}
+.list td a.down {
+  background-image: url("../../images/admin/arrow-down-icon.png");
 }
 .list td a.photos {
   background-image: url("../../images/admin/images-icon.png");

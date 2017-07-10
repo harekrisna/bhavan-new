@@ -1,7 +1,6 @@
 {layout ../@layout.latte}
 {block left-column}
 <ul>
-	<li><a {ifCurrent 'list', 'all'}class="current"{/ifCurrent} n:href="list, all">Vše</a></li>
 	<li n:foreach="$categories as $category"><a {ifCurrent 'list', $category->id}class="current"{/ifCurrent} n:href="list, $category->id">{$category->title}</a></li>
 </ul>
 {/block}

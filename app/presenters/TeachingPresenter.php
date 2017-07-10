@@ -9,8 +9,14 @@ use Tracy\Debugger;
 class TeachingPresenter extends BasePresenter {	
 	public function renderCategory($category_id) {
 		$this->template->articles = $this->article->findBy(['category_id' => $category_id])
-												  ->order('created DESC, id DESC');
-		$this->template->category = $this->articleCategory->get($category_id);
+												  ->order('position');
+												  
+		$category = $this->articleCategory->get($category_id);
+		if($category->url == 'jak-praktikovat') {
+			$this->setView('jak-praktikovat');
+		}
+		
+		$this->template->category = $category;
 	}
 
 	public function renderArticle($article_id) {

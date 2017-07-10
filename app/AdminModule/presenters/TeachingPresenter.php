@@ -6,10 +6,11 @@ use Nette,
 use Nette\Application\UI\Form;
 use Tracy\Debugger;
 use Nette\Utils\Image;
+use Nette\Database\SqlLiteral;
 
 final class TeachingPresenter extends BasePresenter {        
 	/** @persistent */
-    public $category_id = "all";
+    public $category_id;
     
     /** @var object */
     private $record;
@@ -31,16 +32,19 @@ final class TeachingPresenter extends BasePresenter {
     }
 
 	function renderList($category_id) {
+		if($category_id == null) {
+			$category_id = $this->articleCategory->findAll()
+												 ->order('id')
+												 ->fetch()
+												 ->id;
+		}
+			
 		$this->category_id = $category_id;
+		$this->template->articles = $this->article->findBy(['category_id' => $category_id])
+												  ->order('position ASC');
 		
-		if($category_id != "all") {
-			$this->template->articles = $this->article->findBy(['category_id' => $category_id])
-													->order('created DESC');
-		}
-		else {
-			$this->template->articles = $this->article->findAll()
-												 	  ->order('created DESC');
-		}
+		$this->template->max_position = $this->model->findBy(['category_id' => $category_id])
+													->max('position');
 	}
 	
 	public function renderAdd() {
@@ -171,4 +175,25 @@ final class TeachingPresenter extends BasePresenter {
 			$form->addError('Článek s tímto URL již existuje, zvolte prosím jiné.');
 		}
     }
+    
+	function actionUpdatePosition($article_id, $new_position) {
+		$article = $this->article->get($article_id);
+        $old_position = $article->position;
+        $category_id = $article->category_id;
+		
+        if($old_position != $new_position) {
+            $max_position = $this->article->findAll()
+            							  ->where(['category_id' => $category_id])
+										  ->max('position');
+            
+            $this->article->update($article_id, ['position' => $new_position]);
+            $sign = $old_position < $new_position ? "-" : "+";
+            $this->article->findAll()
+                          ->where("id != ? AND position BETWEEN ? AND ?", $article_id, min($old_position, $new_position), max($old_position, $new_position))
+						  ->where(['category_id' => $category_id])
+                          ->update(["position" => new SqlLiteral("position {$sign} 1")]);
+        }
+        
+        $this->redirect('list', $category_id);
+	}
 }
