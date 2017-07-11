@@ -19,8 +19,16 @@
 			<td><a n:href="edit, $article->id">{$article->title}</a></td>
 			<td class="center">{$article->category->title}</td>
             <td>
-	            <a class="button up" n:if="$article->position > 1" n:href="updatePosition, $article->id, $article->position-1"></a>
-	            <a class="button down" n:if="$article->position + 1 <= $max_position" n:href="updatePosition, $article->id, $article->position+1"></a>
+            {if $article->position > 1}
+	            <a class="button up" n:href="updatePosition, $article->id, $article->position-1"></a>
+	        {else}
+	        	<div class="button"></div>
+	        {/if}
+	        {if $article->position + 1 <= $max_position}
+	            <a class="button down" n:href="updatePosition, $article->id, $article->position+1"></a>
+	        {else}
+	        	<div class="button"></div>
+	        {/if}
 	            <a class="button edit" n:href="edit, $article->id"></a>
 	            <a class="button remove" n:href="delete!, $article->id"></a>
 	        </td>

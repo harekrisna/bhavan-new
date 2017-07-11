@@ -45,6 +45,19 @@ class RouterFactory
 				Route::FILTER_IN => function ($url) use($container) { return $container->getService('articleCategory')->getIdByTitle($url);},
 			),
 		));
+
+		$router[] = new Route('uceni/<category_id>/<article_id>', array(
+			'presenter' => 'Teaching',
+			'action' => 'article',
+			'category_id' => array(
+				Route::FILTER_OUT => function ($id) use($container) { return $container->getService('articleCategory')->getTitleById($id);},
+				Route::FILTER_IN => function ($url) use($container) { return $container->getService('articleCategory')->getIdByTitle($url);},
+			),
+			'article_id' => array(
+				Route::FILTER_OUT => function ($id) use($container) { return $container->getService('article')->getTitleById($id);},
+				Route::FILTER_IN => function ($url) use($container) { return $container->getService('article')->getIdByTitle($url);},
+			),
+		));
 		
 		$router[] = new Route('fotky/<galery_id>', array(
 			'presenter' => 'Galery',

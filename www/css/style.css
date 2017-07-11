@@ -588,6 +588,22 @@ footer .contact-info .link-mail {
   min-height: 110px;
   cursor: pointer;
 }
+.list .list-box.list-box-highlighted {
+  height: 120px;
+  background-color: #FFF6D8;
+  box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.3);
+  padding-top: 5px;
+  margin-top: 5px !important;
+  padding-right: 5px;
+  margin-right: -5px;
+  padding-left: 10px;
+  margin-left: -10px;
+}
+@media screen and (max-width: 599px) {
+  .list .list-box.list-box-highlighted {
+    height: 148px;
+  }
+}
 .list .list-box:hover .list-box-title {
   color: #663200;
   transition: 0.3s;
@@ -706,6 +722,31 @@ footer .contact-info .link-mail {
   margin-top: 5px;
   padding-right: 10px;
   float: right;
+}
+.list-simple {
+  margin-bottom: 50px;
+  margin-left: 10px;
+}
+.list-simple .list-simple-title {
+  margin: 5px 0 15px 0;
+  font-size: 24px;
+}
+.list-simple .list-simple-item {
+  font-size: 20px;
+  color: #eb8c3a;
+  max-width: 600px;
+  transition: 0.3s;
+}
+.list-simple .list-simple-item:hover {
+  color: #61503c;
+  transition: 0.3s;
+}
+.list-simple .list-simple-item .list-simple-link {
+  font-family: 'Lora';
+  font-weight: bold;
+  padding-left: 25px;
+  margin-left: -25px;
+  display: block;
 }
 .collection-title {
   margin-bottom: 10px;
@@ -1250,8 +1291,25 @@ a:focus {
 .link-inverse:focus {
   color: #12323d;
 }
+.link-colorful {
+  color: #eb8c3a;
+  transition: 0.3s;
+}
+.link-colorful.current {
+  color: #61503c;
+}
+.link-colorful:hover {
+  color: #61503c;
+  transition: 0.3s;
+}
+.link-colorful:focus {
+  color: #61503c;
+}
 .link-disabled {
   color: #BBBBBB;
+}
+.link-disabled:hover {
+  color: #BBBBBB !important;
 }
 a[href^="tel"] {
   color: inherit;

@@ -177,8 +177,30 @@ a:hover, a:focus{
     }
 }
 
+.link-colorful {
+    color: @webTextColorHover;
+    transition: 0.3s; 
+
+    &.current {
+        color: @webBrown;
+    }   
+
+    &:hover {
+        color: @webBrown;
+        transition: 0.3s; 
+    }
+    
+    &:focus {
+        color: @webBrown;
+    }
+}
+
 .link-disabled {
     color: #BBBBBB;
+
+    &:hover {
+        color: #BBBBBB !important;
+    };
 }
 
 a[href^="tel"]{

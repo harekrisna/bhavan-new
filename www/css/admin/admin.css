@@ -794,7 +794,7 @@ table.list {
 .list .tablesorter-helper {
   display: none;
 }
-.list td a.button {
+.list td .button {
   width: 16px;
   height: 16px;
   float: left;
