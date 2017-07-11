@@ -1050,6 +1050,11 @@ nav.next-prev-collection-nav .nav-delimiter {
     height: 30px;
   }
 }
+@media screen and (min-width: 992px) {
+  .article-detail .article-text {
+    width: 66%;
+  }
+}
 .article-detail .article-image {
   width: 50%;
   border-radius: 70px 0;
