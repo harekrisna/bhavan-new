@@ -3,7 +3,7 @@
 {block teaching_content}
 <div class="row list">
 	<div n:foreach="$articles as $article" class="col-md-6">
-		<div n:class="list-box, $article->main ? list-box-highlighted">
+		<div n:class="list-box, $iterator->first ? list-box-highlighted">
 			<a class="list-box-title sms-down" n:href="article, $article->id"">{$article->title}</a>
 			<div class="list-box-image" style="background-image: url('/{=ARTICLES_IMG_FOLDER}/previews/{$article->preview_image}');"></div>
 			<a class="list-box-title sms-up" n:href="article, $article->id">{$article->title}</a>

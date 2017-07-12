@@ -109,7 +109,7 @@ final class TeachingPresenter extends BasePresenter {
 	    $data->addSelect('category_id', 'Kategorie:', $this->articleCategory->findAll()->fetchPairs('id', 'title'));
 	    										   
 	    $data->addTextArea('text', 'Text:', 40);
-	    $data->addCheckbox('main', 'Zvýraznit');
+	    //$data->addCheckbox('main', 'Zvýraznit');
 
         $form->addSubmit('insert', 'Uložit')
 		     ->onClick[] = array($this, 'articleFormInsert');
