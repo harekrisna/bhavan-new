@@ -10,10 +10,11 @@ application:
 	mapping:
 		*: App\*Module\Presenters\*Presenter
 
-
 session:
 	expiration: 14 days
 
+constants:
+	ARTICLES_IMG_FOLDER = images/articles
 
 services:
 	- App\AdminModule\Model\UserManager
@@ -23,6 +24,8 @@ services:
 	newsType: App\Model\NewsType
 	actuality: App\Model\Actuality
 	slide: App\Model\Slide
+	article: App\Model\Article
+	articleCategory: App\Model\ArticleCategory
 	interpret: App\Model\Interpret
 	audio_collection: App\Model\AudioCollection
 	galery: App\Model\Galery

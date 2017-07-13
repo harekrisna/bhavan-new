@@ -588,6 +588,22 @@ footer .contact-info .link-mail {
   min-height: 110px;
   cursor: pointer;
 }
+.list .list-box.list-box-highlighted {
+  height: 120px;
+  background-color: #FFF6D8;
+  box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.3);
+  padding-top: 5px;
+  margin-top: 5px !important;
+  padding-right: 5px;
+  margin-right: -5px;
+  padding-left: 10px;
+  margin-left: -10px;
+}
+@media screen and (max-width: 599px) {
+  .list .list-box.list-box-highlighted {
+    height: 148px;
+  }
+}
 .list .list-box:hover .list-box-title {
   color: #663200;
   transition: 0.3s;
@@ -706,6 +722,77 @@ footer .contact-info .link-mail {
   margin-top: 5px;
   padding-right: 10px;
   float: right;
+}
+.list-simple {
+  margin-bottom: 50px;
+  margin-left: 10px;
+}
+.list-simple .list-simple-title {
+  margin: 5px 0 15px 0;
+  font-size: 24px;
+}
+.list-simple .list-simple-item {
+  font-size: 20px;
+  color: #eb8c3a;
+  max-width: 600px;
+  transition: 0.3s;
+}
+.list-simple .list-simple-item:hover {
+  color: #61503c;
+  transition: 0.3s;
+}
+.list-simple .list-simple-item .list-simple-link {
+  font-family: 'Lora';
+  font-weight: bold;
+  padding-left: 25px;
+  margin-left: -25px;
+  display: block;
+}
+.collection-title {
+  margin-bottom: 10px;
+}
+.collection-nav {
+  margin-top: 10px;
+  margin-right: 15px;
+}
+.collection-nav .link {
+  text-transform: uppercase;
+  display: block;
+  float: left;
+  padding-left: 10px;
+}
+.collection-nav .link:after,
+.collection-nav .link:first-child:before {
+  content: '|';
+  font-size: 1.2em;
+  color: #12323d;
+  margin-left: 10px;
+  position: relative;
+  top: -1px;
+}
+.collection-nav .link:first-child {
+  padding-left: 0;
+}
+.collection-nav .link:first-child:before {
+  margin-right: 10px;
+  margin-left: 0;
+}
+nav.next-prev-collection-nav {
+  float: right;
+  display: table;
+  margin-top: 12px;
+  margin-bottom: 4px;
+}
+nav.next-prev-collection-nav.mobile {
+  margin: 10px 0;
+}
+nav.next-prev-collection-nav .nav-delimiter {
+  padding: 0 5px;
+}
+@media screen and (max-width: 767px) {
+  nav.next-prev-collection-nav {
+    margin-bottom: 0;
+  }
 }
 .slideshow {
   position: relative;
@@ -947,9 +1034,9 @@ footer .contact-info .link-mail {
   margin-bottom: 20px;
 }
 .article-detail .article-title {
-  clear: both;
   margin-left: 0;
   margin-bottom: 10px;
+  clear: both;
 }
 @media screen and (min-width: 600px) and (max-width: 767px) {
   .article-detail .article-title {
@@ -961,6 +1048,11 @@ footer .contact-info .link-mail {
   .article-detail .article-title {
     font-size: 20px;
     height: 30px;
+  }
+}
+@media screen and (min-width: 992px) {
+  .article-detail .article-text {
+    width: 66%;
   }
 }
 .article-detail .article-image {
@@ -980,6 +1072,100 @@ footer .contact-info .link-mail {
   .article-detail .article-image {
     border-radius: 20px 0;
   }
+}
+.article-navigation {
+  font-size: 16px;
+  height: 110px;
+  margin-top: 60px;
+}
+.article-navigation .article-navigation-linkbox {
+  float: left;
+}
+.article-navigation .article-navigation-linkbox.link-right {
+  float: right;
+}
+.article-navigation .article-navigation-linkbox.link-right .link-hover-label {
+  position: inherit;
+}
+.article-navigation .article-navigation-linkbox:hover .article-navigation-link {
+  color: #eb8c3a;
+}
+.article-navigation .article-navigation-linkbox:hover .link-hover-label {
+  opacity: 1;
+  transition: 0.3s;
+}
+.article-navigation .article-navigation-linkbox:hover .link-backlink .icon-line {
+  background: #eb8c3a !important;
+  transition: 0.3s;
+}
+.article-navigation .article-navigation-linkbox .article-navigation-link {
+  font-size: 15px;
+  height: 38px;
+  line-height: 28px;
+  display: block;
+}
+.article-navigation .article-navigation-linkbox .article-navigation-link.link-backlink {
+  width: 40px;
+  height: 38px;
+  margin-right: 20px;
+  padding-top: 12px;
+}
+.article-navigation .article-navigation-linkbox .article-navigation-link.link-backlink .icon-line {
+  width: 23px;
+  height: 2px;
+  border-radius: 1px;
+  background: #12323d;
+  margin: 0 auto;
+  transition: 0.3s;
+}
+.article-navigation .article-navigation-linkbox .article-navigation-link.link-backlink .icon-line:not(:first-child) {
+  margin-top: 4px;
+}
+.article-navigation .article-navigation-linkbox .article-navigation-link.link-prev {
+  width: 250px;
+  padding: 5px 10px;
+}
+.article-navigation .article-navigation-linkbox .article-navigation-link.link-prev:before {
+  content: '«';
+  margin-right: 5px;
+}
+.article-navigation .article-navigation-linkbox .article-navigation-link.link-next {
+  text-align: right;
+  padding: 5px 10px;
+}
+.article-navigation .article-navigation-linkbox .article-navigation-link.link-next:after {
+  content: '»';
+  margin-left: 5px;
+}
+.article-navigation .article-navigation-linkbox .link-hover-label {
+  color: #12323d;
+  position: absolute;
+  background-color: #FFFFFF;
+  box-shadow: 0px 0px 20px 0px rgba(200, 200, 200, 0.5);
+  display: inline-block;
+  opacity: 0;
+  transition: 0.3s;
+}
+.article-navigation .article-navigation-linkbox .link-hover-label:hover {
+  opacity: 1;
+}
+.article-navigation .article-navigation-linkbox .link-hover-label.label-text {
+  font-size: 15px;
+  padding: 10px 15px;
+}
+.article-navigation .article-navigation-linkbox .link-hover-label.label-picture {
+  font-size: 15px;
+  line-height: 61px;
+  height: 79px;
+  padding: 10px 20px 10px 10px;
+}
+.article-navigation .article-navigation-linkbox .link-hover-label.label-picture .image-picture {
+  width: 58px;
+  height: 58px;
+  margin-right: 20px;
+  border-radius: 10px 0 10px 0;
+  display: block;
+  float: left;
 }
 .audio_nav .link:not(:last-child):after {
   content: '|';
@@ -1110,8 +1296,25 @@ a:focus {
 .link-inverse:focus {
   color: #12323d;
 }
+.link-colorful {
+  color: #eb8c3a;
+  transition: 0.3s;
+}
+.link-colorful.current {
+  color: #61503c;
+}
+.link-colorful:hover {
+  color: #61503c;
+  transition: 0.3s;
+}
+.link-colorful:focus {
+  color: #61503c;
+}
 .link-disabled {
   color: #BBBBBB;
+}
+.link-disabled:hover {
+  color: #BBBBBB !important;
 }
 a[href^="tel"] {
   color: inherit;

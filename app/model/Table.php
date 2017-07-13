@@ -145,5 +145,17 @@ abstract class Table extends Nette\Object
     public function truncate() {
 	    return $this->db->query("TRUNCATE {$this->tableName}");
     }
-
+    
+	public function getTitleById($id)  {
+		$record = $this->get($id);
+		if($record)
+			return $record->url;
+	}
+	
+	public function getIdByTitle($url)  {
+		$record = $this->findBy(array("url" => $url))->fetch();
+		if($record) {
+			return $record->id;	
+		}
+	}
 }

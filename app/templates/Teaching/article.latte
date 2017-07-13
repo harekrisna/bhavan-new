@@ -1,0 +1,52 @@
+{extends layout.latte}
+{block title}{$article->title} | {$article->category->title} | Učení{/block}
+{block teaching_content}
+<nav class="next-prev-collection-nav" id="next_prev_nav">
+    {if $previous_article}
+        <a class="link" n:href="article, $previous_article->id"><span>&laquo;</span> předchozí</a>
+    {else}
+        <span class="link-disabled"><span>&laquo;</span> předchozí</span>
+    {/if}
+    <span class="nav-delimiter">&#124;</span>
+    {if $next_article}
+        <a class="link" n:href="article, $next_article->id">následující <span>&raquo;</span></a>
+    {else}
+        <span class="link-disabled">následující <span>&raquo;</span></span>
+    {/if}
+</nav>
+<article class="article-detail">
+	<h1 class="article-title">{$article->title}</h1>
+	<div class="article-text">{$article->text|noescape}</div>
+</article>
+<div class="article-navigation">
+	<div class="article-navigation-linkbox">
+		<a n:href="category, $article->category->id" class="link article-navigation-link link-backlink">
+			<div class="icon-line"></div>
+			<div class="icon-line"></div>
+			<div class="icon-line"></div>
+		</a>
+		<a n:href="category, $article->category->id" class="link-hover-label label-text">zpět na výpis článků</a>
+	</div>
+	{if $previous_article}
+	<div class="article-navigation-linkbox">
+		<a n:href="article, $previous_article->id" class="link article-navigation-link link-prev">předchozí</a>
+		<a n:href="article, $previous_article->id" n:class="link-hover-label, $previous_article->preview_image ? label-picture : label-text"><img n:if="$previous_article->preview_image" class="image-picture" src="/{=ARTICLES_IMG_FOLDER}/previews/{$previous_article->preview_image}" />{$previous_article->title}</a>
+	</div>
+	{else}
+	<div class="article-navigation-linkbox">
+		<div class="link article-navigation-link link-prev link-disabled">předchozí</div>
+	</div>
+	{/if}
+	{if $next_article}
+	<div class="article-navigation-linkbox link-right">
+		<a n:href="article, $next_article->id" class="link article-navigation-link link-next">následující</a>
+		<a n:href="article, $next_article->id" n:class="link-hover-label, $next_article->preview_image ? label-picture : label-text"><img n:if="$next_article->preview_image" class="image-picture" src="/{=ARTICLES_IMG_FOLDER}/previews/{$next_article->preview_image}" />{$next_article->title}</a>
+	</div>
+	{else}
+	<div class="article-navigation-linkbox link-right">
+		<div class="link article-navigation-link link-next link-disabled">následující</div>
+	</div>
+	{/if}
+</div>
+	
+{/block}

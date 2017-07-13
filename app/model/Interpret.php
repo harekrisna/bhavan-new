@@ -19,15 +19,15 @@ class Interpret extends Table   {
     }
     
 	public function getTitleById($id)  {
-		$interpret = $this->get($id);
-		if($interpret)
-			return $interpret->url;
+		$record = $this->get($id);
+		if($record)
+			return $record->url;
 	}
 	
 	public function getIdByTitle($url)  {
-		$interpret = $this->findBy(array("url" => $url))->fetch();
-		if($interpret) {
-			return $interpret->id;	
+		$record = $this->findBy(array("url" => $url))->fetch();
+		if($record) {
+			return $record->id;	
 		}
 	}
 }

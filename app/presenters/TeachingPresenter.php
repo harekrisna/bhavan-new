@@ -4,11 +4,38 @@ namespace App\Presenters;
 
 use Nette,
 	App\Model;
+use Tracy\Debugger;
 
 class TeachingPresenter extends BasePresenter {	
-	public function renderArticle($id) {
-		$this->setView($id);
-	    $this->template->id = $id;
-  		$this->template->backlinks = [$this->link('list') => "Články"];
+	/** @persistent */
+    public $category_id;
+
+	public function renderCategory($category_id) {
+		$this->template->articles = $this->article->findBy(['category_id' => $category_id])
+												  ->order('position DESC');
+												  
+		$category = $this->articleCategory->get($category_id);
+		
+		if($category->url == 'jak-praktikovat') {
+			$this->setView('categoryList');
+		}
+		
+		$this->category_id = $category->id;
+		$this->template->category = $category;
+	}
+
+	public function renderArticle($article_id) {
+		$article = $this->article->get($article_id);
+		
+		$prev = $this->article->findBy(['category_id' => $article->category_id, 'position < ?' => $article->position])
+							  ->order('position DESC');
+
+		$next = $this->article->findBy(['category_id' => $article->category_id, 'position > ?' => $article->position])
+							  ->order('position ASC');;
+		
+		$this->template->previous_article = $prev->fetch();
+		$this->template->next_article = $next->fetch();
+		$this->template->article = $article;
+		$this->template->category = $this->articleCategory->get($article->category_id);
 	}
 }

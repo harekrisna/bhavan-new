@@ -1,0 +1,61 @@
+{extends ./layout.latte}
+{block head}
+{include parent}
+    <script src="{$basePath}/js/jquery.form.min.js"></script>
+{/block}
+{block article-content}
+<fieldset id="article_form">
+	<legend n:block="title">{$form_title}</legend>
+	{form articleForm}
+	<ul class="error" n:if="$form->hasErrors()">
+	    <li n:foreach="$form->errors as $error">{$error}</li>
+	</ul>
+	<table>
+		<tr><th>{label data-title /}</th><td>{input data-title}</td></tr>
+		<tr><th>{label data-url /}</th><td>{input data-url}</td></tr>
+		<tr><th>{label data-category_id /}</th><td>{input data-category_id}</td></tr>
+		<tr>
+			<th class="picture">{label preview_image /}</th>
+		{if $presenter->getAction() == "edit"}
+			<td>{$record->preview_image}</td></tr>
+			<tr><th></th><td><img src="{$basePath}/{=ARTICLES_IMG_FOLDER}/previews/{$record->preview_image}"</td></tr>
+		</tr>
+		<tr>
+	        <th></th><td>{input preview_image}</td>
+		{else}
+			<td>{input preview_image}</td>
+		{/if}
+		</tr>
+		<tr><th>{label data-text /}</th><td>{input data-text}</td></tr>
+		{*<tr><th>{label data-main /}</th><td>{input data-main}</td></tr>*}
+		<tr>
+			<th></th>
+			<td>
+			{if $presenter->getAction() == "edit"}
+				{input update}
+			{else}
+				{input insert}
+			{/if}
+			</td>
+		</tr>
+	</table>
+	{/form}
+</fieldset>
+{/block}
+{block scripts}
+{include parent}
+    <script type="text/javascript" src="{$basePath}/js/ckeditor/ckeditor.js"></script>
+	<script type="text/javascript" src="{$basePath}/js/admin/forms.js"></script>
+    <script type="text/javascript" src="{$basePath}/js/admin.js"></script>
+    <script>
+		$(function() {						
+			$("input[name='data[title]'], input[name='data[url]']").keyup(function() {
+				$("input[name='data[url]']").val(stringToNiceURL(this.value));
+			});
+			
+			CKEDITOR.replace('frm-actualityForm-description', {
+				filebrowserBrowseUrl: '/browser/browse.php',
+			});
+    	});    
+	</script>
+{/block}

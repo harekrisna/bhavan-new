@@ -1,0 +1,16 @@
+{layout ../@layout.latte}
+{block left-column}
+<ul>
+	<li n:foreach="$categories as $category"><a {ifCurrent 'list', $category->id}class="current"{/ifCurrent} n:href="list, $category->id">{$category->title}</a></li>
+</ul>
+{/block}
+{block content}
+<div id="head_line">
+	<h1>Učení</h1>
+	<nav id="sub_actions">
+		<a class="articles-icon" n:href="list">Články</a>
+		<a class="add" n:href="add">Přidat článek</a>
+	</nav>
+</div>
+{include article-content}
+{/block}

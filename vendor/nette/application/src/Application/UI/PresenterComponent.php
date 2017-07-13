@@ -9,7 +9,6 @@ namespace Nette\Application\UI;
 
 use Nette;
 
-
 /**
  * PresenterComponent is the base class for all Presenter components.
  *

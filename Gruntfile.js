@@ -14,7 +14,7 @@
             }
         },
         watch: {
-            files: "www/less/*.less",
+            files: ['www/less/*.less', 'www/less/admin/*.less'],
             tasks: ["less"]
         },
     });

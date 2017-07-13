@@ -1,6 +1,7 @@
 @import "news.less";
 @import "actuality.less";
 @import "slides.less";
+@import "article.less";
 @import "audio.less";
 @import "galery.less";
 @import "switch.less";
@@ -196,6 +197,7 @@ nav#sub_actions {
 		&.sort { background-image: url('../../images/admin/sort-icon.png') }
 		&.interprets { background-image: url('../../images/admin/guru-icon.png') }
 		&.collections { background-image: url('../../images/admin/collection-icon.png') }
+    &.articles-icon { background-image: url('../../images/admin/articles-icon.png') }
 	
 		&:not(:last-child):after { 
 			content: " :" ;
@@ -391,7 +393,7 @@ table.list {
 	display: none;
 }
 
-.list td a.button {
+.list td .button {
     width: 16px;
     height: 16px;
     float: left;
@@ -408,6 +410,14 @@ table.list {
 
 .list td a.edit {
     background-image: url("../../images/admin/edit-button.png"); 
+}
+
+.list td a.up {
+    background-image: url("../../images/admin/arrow-up-icon.png"); 
+}
+
+.list td a.down {
+    background-image: url("../../images/admin/arrow-down-icon.png"); 
 }
 
 .list td a.photos {

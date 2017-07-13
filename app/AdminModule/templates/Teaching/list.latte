@@ -1,0 +1,49 @@
+{extends layout.latte}
+{block title}Učení{/block}
+{block article-content}
+<table id="article_list" class="list">
+	<thead>
+    	<tr>
+	        <th class="th-created"><span>Vytvořeno</span></th>
+	        <th><span>Název</span></th>
+	        <th class="th-category"><span>Kategorie</span></th>
+	        <th class="th-controls-4"></th>
+		</tr>
+    </thead>
+    <tbody id="table_list">
+    {foreach $articles as $article}
+        <tr id="{$article->id}">
+	        <td class="date">
+		        <span class="sort-helper">{$article->created|date: 'Y'}x{$article->created|date: 'm'}x{$article->created|date: 'd'}x{$article->created|date: 'H:i:s'}</span>{$article->created|date: 'j.n.Y H:i:s'}
+		    </td>
+			<td><a n:href="edit, $article->id">{$article->title} {$article->position}</a></td>
+			<td class="center">{$article->category->title}</td>
+            <td>
+            {if $article->position + 1 <= $max_position}
+	            <a class="button up" n:href="updatePosition, $article->id, $article->position + 1"></a>
+	        {else}
+	        	<div class="button"></div>
+	        {/if}
+	        {if $article->position > 1}
+	            <a class="button down" n:href="updatePosition, $article->id, $article->position - 1"></a>
+	        {else}
+	        	<div class="button"></div>
+	        {/if}
+	            <a class="button edit" n:href="edit, $article->id"></a>
+	            <a class="button remove" n:href="delete!, $article->id"></a>
+	        </td>
+		</tr>        
+    {/foreach}
+    </tbody>
+</table>
+{/block}
+{block scripts}
+{include parent}
+  <script src="{$basePath}/js/admin.js"></script>
+  <script src="{$basePath}/js/jquery.tablesorter.min.js"></script>
+  <script>      
+	$(function(){
+		$('#table_list').tablesorter();
+	});
+  </script>
+{/block}

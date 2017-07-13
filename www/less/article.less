@@ -28,6 +28,7 @@
 		clear: both;
 		margin-left: 0;
 		margin-bottom: 10px;
+		clear: both;
 
 		.large-mobile-screen({
 			font-size: 25px;
@@ -39,7 +40,11 @@
 			height: 30px;
 		})
 	}
-
+	
+	.article-text {
+		.ts-up({width: 66%})
+	}
+	
 	.article-image {
 		width:50%; 
 		border-radius: 70px 0;
@@ -55,5 +60,121 @@
 		.extra-small-screen({
 			border-radius: 20px 0;
 		});
+	}
+}
+
+.article-navigation {
+	font-size: 16px;
+	height: 110px;
+	margin-top: 60px;
+
+	.article-navigation-linkbox {
+		float: left;
+		
+		&.link-right {
+			float: right;
+			
+			.link-hover-label {
+				position: inherit;
+			}
+		}
+		
+		&:hover {
+			.article-navigation-link {
+				color: @webTextColorHover;	
+			}
+			
+			.link-hover-label {
+				opacity: 1;
+				transition: 0.3s; 
+			}
+			
+			.link-backlink .icon-line{	 
+				background: @webTextColorHover !important;	
+				transition: 0.3s; 
+			}
+		}
+		
+		.article-navigation-link {
+			font-size: 15px;
+			height: 38px;
+			line-height: 28px;
+			display: block;
+			
+			&.link-backlink {
+				width: 40px;
+				height: 38px;
+				margin-right: 20px;
+				padding-top: 12px;
+
+				.icon-line {
+					width: 23px;
+					height: 2px;
+					border-radius: 1px;
+					background: @webTextColor;
+					margin: 0 auto;
+					transition: 0.3s; 
+
+					&:not(:first-child) {
+						margin-top: 4px;
+					}
+				}
+			}
+
+			&.link-prev {
+				width: 250px;
+				padding: 5px 10px;
+
+				&:before {
+					content:'«';
+					margin-right: 5px;
+				}
+			}
+			
+			&.link-next {
+				text-align: right;
+				padding: 5px 10px;
+
+				&:after {
+					content:'»';
+					margin-left: 5px;
+				}
+			}
+		}
+
+		.link-hover-label {
+			color: @webTextColor;
+			position: absolute;
+			background-color: #FFFFFF;
+			box-shadow: 0px 0px 20px 0px rgba(200,200,200,0.5);
+			display: inline-block;
+			opacity: 0;
+			transition: 0.3s;
+
+			&:hover {
+				opacity: 1;
+			}
+
+			&.label-text {
+				font-size: 15px;
+				padding: 10px 15px;
+			}
+
+			&.label-picture {
+				font-size: 15px;
+				line-height: 61px;
+				height: 79px;
+				padding: 10px 20px 10px 10px;
+
+				.image-picture {
+					width: 58px;
+					height: 58px;
+					margin-right: 20px;
+					border-radius: 10px 0 10px 0;
+					display: block;
+					float: left;
+				}
+			}
+		}
 	}
 }

@@ -200,6 +200,21 @@ fieldset#slide_form span.input_info {
 fieldset#slide_form select {
   margin-right: 5px;
 }
+table#article_list {
+  min-width: 700px;
+}
+table#article_list .th-created {
+  width: 130px;
+}
+table#article_list .th-category {
+  width: 130px;
+}
+table#article_list .th-controls {
+  width: 32px;
+}
+table#article_list .th-controls-4 {
+  width: 70px;
+}
 fieldset#audio_form {
   width: 499px;
   min-height: 305px;
@@ -606,6 +621,9 @@ nav#sub_actions a.interprets {
 nav#sub_actions a.collections {
   background-image: url('../../images/admin/collection-icon.png');
 }
+nav#sub_actions a.articles-icon {
+  background-image: url('../../images/admin/articles-icon.png');
+}
 nav#sub_actions a:not(:last-child):after {
   content: " :";
   color: #404040;
@@ -776,7 +794,7 @@ table.list {
 .list .tablesorter-helper {
   display: none;
 }
-.list td a.button {
+.list td .button {
   width: 16px;
   height: 16px;
   float: left;
@@ -791,6 +809,12 @@ table.list {
 }
 .list td a.edit {
   background-image: url("../../images/admin/edit-button.png");
+}
+.list td a.up {
+  background-image: url("../../images/admin/arrow-up-icon.png");
+}
+.list td a.down {
+  background-image: url("../../images/admin/arrow-down-icon.png");
 }
 .list td a.photos {
   background-image: url("../../images/admin/images-icon.png");
