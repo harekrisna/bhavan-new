@@ -1,9 +1,8 @@
-{extends audio.latte}
+{extends layout.latte}
 {block head}
 	<link rel="stylesheet" media="screen" href="{$basePath}/css/mediaelementplayer.min.css">
 	<link rel="stylesheet" media="screen" href="{$basePath}/css/audio-player.css">
 {/block}
-{block title}Audio{/block}
 {block audio}
 <section n:if="$last_30_days->count()" class="lectures-group">
 	<div class="group-header">

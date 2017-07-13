@@ -1,12 +1,11 @@
+{extends layout.latte}
 {block head}
 	<link rel="stylesheet" media="screen" href="{$basePath}/css/mediaelementplayer.min.css">
 	<link rel="stylesheet" media="screen" href="{$basePath}/css/audio-player.css"> 
 {/block}
-{block title}Audio{/block}
-{block content}
+{block audio}
 {var $displayed_collections = []}
-{include breadcrumb_nav, backlinks => $backlinks}
-<h1>{$interpret->title}</h1>
+<h1 class="scale-text"><span>{$interpret->title}</span></h1>
 <nav class="audio_nav">
 	<span>Seskupit podle:</span>
 	<a class="link{ifCurrent Audio:interpret, $interpret->id, 'book_id'} current{/ifCurrent}" n:href="interpret, $interpret->id, 'book_id'">Témat</a>
@@ -150,7 +149,7 @@
 			{/if}
 		{/foreach}
 	</section>
-	{if $last_60_days->count() || $last_30_days->count()}
+	{if $lectures}
 	<section class="lectures-group">
 		<div class="group-header">
 			<div class="group-header-label label-text infinity">&infin;</div>

@@ -1,10 +1,9 @@
+{extends layout.latte}
 {block head}
 	<link rel="stylesheet" media="screen" href="{$basePath}/css/mediaelementplayer.min.css">
 	<link rel="stylesheet" media="screen" href="{$basePath}/css/audio-player.css">
 {/block}
-{block title}Audio{/block}
-{block content}
-{include breadcrumb_nav, backlinks => $backlinks}
+{block audio}
 {var playcount = $lecture->related('audio_playcount')->sum(playcount)}
 {var douwnloadcount = $lecture->related('audio_downloadcount')->sum(downloadcount)}
 
