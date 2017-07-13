@@ -21,24 +21,3 @@
 <div class="clearfix collection-nav-clearfix"></div>
 {include audio}
 {/block}
-{block scripts}
-<script n:ifset="$backlinks">
-	function BreadcrumbNavigationFit() {
-		var breadcrumb_nav = $("#breadcrumb_nav");
-		var collection_title = $(".collection-title");
-
-		if(breadcrumb_nav.length && collection_title.length) {
-			if($(collection_title).position().top < $(breadcrumb_nav).position().top) {
-				$(collection_title).addClass('mobile');
-				$(breadcrumb_nav).addClass('mobile');
-			}
-			else {
-				$(collection_title).removeClass('mobile');
-				$(breadcrumb_nav).removeClass('mobile');	
-			}
-		}
-	}
-
-	$(window).bind("resize", BreadcrumbNavigationFit);
-</script>
-{/block}
