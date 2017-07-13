@@ -49,12 +49,15 @@ class AudioPresenter extends BasePresenter	{
 												->order('time_created DESC')
 												->limit(20);
 												
-		$this->session->backlinks = [$this->link('latest') => "Audio"];
+		$this->session->backlinks = [$this->link('latest') => "Nejnovější"];
+		$this->session->main_group = "latest";
 	}
 	
 	public function renderInterprets()	{
 		$this->template->interprets = $this->interpret->getAll()
-													  ->order('sort_order ASC');	
+													  ->order('sort_order ASC');
+
+		$this->session->main_group = "interprets";													  
     }
 	
 	public function renderYears()	{
@@ -62,6 +65,8 @@ class AudioPresenter extends BasePresenter	{
 											 ->select('audio_year AS year, COUNT(*) AS count')
 											 ->group('audio_year')
 											 ->order('audio_year DESC');
+
+		$this->session->main_group = "years";
 	}
 	
 	public function renderYear($year, $group_by = 'audio_interpret_id') {
@@ -102,18 +107,16 @@ class AudioPresenter extends BasePresenter	{
 
 		}
 		
-		$this->template->backlinks = [$this->link('years') => "Audio"];
+		$this->template->backlinks = [$this->link('years') => "Roky"];
 		$this->template->groups = $groups;
 		$this->template->lectures = $lectures;
 		$this->template->year = $year;
 		$this->template->group_by = $group_by;
-		$this->session->backlinks = [$this->link('years') => "Audio",
+		$this->session->backlinks = [$this->link('years') => "Roky",
 								     $this->link('year', $year, $group_by) => "Rok ".$year];
 		
 		$detect = new Mobile_Detect;
    		$this->template->isMobile = $detect->isMobile();
-   		
-   		$this->template->back = "years";				
 	}
 
 	public function renderThemes()	{
@@ -140,6 +143,8 @@ class AudioPresenter extends BasePresenter	{
 		$this->template->unclasified = $this->audio->findAll()
 												   ->where('book_id IS NULL AND seminar = ? AND sankirtan = ?', array(0, 0))
 												   ->count();
+
+		$this->session->main_group = "themes";
 	}
 	
 	public function renderBook($book_id, $group_by = 'audio_interpret_id') {
@@ -174,7 +179,7 @@ class AudioPresenter extends BasePresenter	{
 		$this->template->groups = $groups;
 		$this->template->lectures = $lectures;
 		$book = $this->book->get($book_id);
-		$backlinks = [$this->link('themes') => "Audio"];
+		$backlinks = [$this->link('themes') => "Témata"];
 		
 		if(strpos($book->abbreviation, "ŚB") === 0) {
 			$backlinks[$this->link('sb')] = "Śrīmad-Bhāgavatam";
@@ -233,10 +238,10 @@ class AudioPresenter extends BasePresenter	{
 												->order('audio_year DESC, audio_month DESC, audio_day DESC');
 		}
 		
-		$this->template->backlinks = [$this->link('themes') => "Audio"];
-		$this->session->backlinks = [$this->link('themes') => "Audio",
+		$this->template->backlinks = [$this->link('themes') => "Témata"];
+		$this->session->backlinks = [$this->link('themes') => "Témata",
 								     $this->link('byType', $type, $group_by) => $title];
-
+		
 		$this->template->title = $title;									 
 		$this->template->groups = $groups;
 		$this->template->lectures = $lectures;
@@ -274,7 +279,7 @@ class AudioPresenter extends BasePresenter	{
 												->order('audio_year DESC, audio_month DESC, audio_day DESC');
 		}
 		
-		$backlinks = [$this->link('themes') => "Audio"];
+		$backlinks = [$this->link('themes') => "Témata"];
 		
 		$this->template->backlinks = $backlinks;		
 		$backlinks[$this->link('unclasified', $group_by)] = "Nezařazené";
@@ -282,7 +287,6 @@ class AudioPresenter extends BasePresenter	{
 		$this->template->groups = $groups;
 		$this->template->lectures = $lectures;
 		$this->template->book = false;
-		$this->template->back = "themes";
 		$this->template->group_by = $group_by;
    		$detect = new Mobile_Detect;
    		$this->template->isMobile = $detect->isMobile();
@@ -292,7 +296,7 @@ class AudioPresenter extends BasePresenter	{
 		$this->template->books = $this->book->findAll()
 											->where("book.abbreviation LIKE 'SB%'");
 											
-		$this->template->backlinks = [$this->link('themes') => "Audio"];											
+		$this->template->backlinks = [$this->link('themes') => "Témata"];											
 	}
 	
 
@@ -300,7 +304,7 @@ class AudioPresenter extends BasePresenter	{
 		$this->template->books = $this->book->findAll()	
 											->where("book.abbreviation LIKE 'CC%'");
 											
-		$this->template->backlinks = [$this->link('themes') => "Audio"];
+		$this->template->backlinks = [$this->link('themes') => "Témata"];
 	}	
 		
 	public function renderInterpret($interpret_id, $group_by = "audio_year") {
@@ -371,8 +375,8 @@ class AudioPresenter extends BasePresenter	{
 		}
 		
 		$interpret = $this->interpret->get($interpret_id);
-		$this->template->backlinks = [$this->link('interprets') => "Audio"];
-		$this->session->backlinks = [$this->link('interprets') => "Audio",
+		$this->template->backlinks = [$this->link('interprets') => "Autoři"];
+		$this->session->backlinks = [$this->link('interprets') => "Autoři",
 								     $this->link('interpret', $interpret_id, $group_by) => $interpret->title];
 									     
 		$this->template->groups = $groups;
@@ -421,6 +425,8 @@ class AudioPresenter extends BasePresenter	{
 		$this->template->lecture = $audio_mp3;
 		$this->template->categories = $categories;
 		$this->template->backlinks = $this->session->backlinks;
+		$this->template->main_group = $this->session->main_group;
+		$this->template->main_audio_type = "lecture";
 		
 		$detect = new Mobile_Detect;
 		$this->template->isMobile = $detect->isMobile();
@@ -435,6 +441,8 @@ class AudioPresenter extends BasePresenter	{
 		$this->template->collection = $this->collection->get($collection_id);
 		$this->template->audio_collection = $audio_collection;
 		$this->template->backlinks = $this->session->backlinks;
+		$this->template->main_group = $this->session->main_group;
+		$this->template->main_audio_type = "lecture";
 		
 		$detect = new Mobile_Detect;
 		$this->template->isMobile = $detect->isMobile();

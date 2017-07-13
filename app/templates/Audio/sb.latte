@@ -1,6 +1,5 @@
-{extends audio.latte}
-{block content}
-{include breadcrumb_nav, backlinks => ['themes' => "Audio"]}
+{extends layout.latte}
+{block audio}
 <h1 class="list-title scale-text"><span n:inner-block="title">Přednášky z Śrīmad-Bhāgavatamu</span></h1>
 <div class="row list">
 	{foreach $books as $sb}

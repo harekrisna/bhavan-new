@@ -1,11 +1,11 @@
+{extends layout.latte}
 {block head}
 	<link rel="stylesheet" media="screen" href="{$basePath}/css/mediaelementplayer.min.css">
 	<link rel="stylesheet" media="screen" href="{$basePath}/css/audio-player.css">
 {/block}
 {block title}{$collection->title} | Audio{/block}
-{block content}
-{include breadcrumb_nav, backlinks => $backlinks}
-<h1>{$collection->title}</h1>
+{block audio}
+<h1 class="scale-text"><span>{$collection->title}</span></h1>
 {foreach $audio_collection as $lecture} 
 	{include player-bar.latte, lecture => $lecture, show_interpret_abbr => true, title_only_text => true}
 {/foreach}
