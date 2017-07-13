@@ -10,6 +10,12 @@ class TeachingPresenter extends BasePresenter {
 	/** @persistent */
     public $category_id;
 
+    public function beforeRender() {
+		parent::beforeRender();
+		$this->template->article_categories = $this->articleCategory->findAll()
+							  										->order('position');
+	}
+
 	public function renderCategory($category_id) {
 		$this->template->articles = $this->article->findBy(['category_id' => $category_id])
 												  ->order('position DESC');
