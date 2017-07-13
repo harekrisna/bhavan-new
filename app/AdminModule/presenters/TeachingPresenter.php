@@ -41,7 +41,7 @@ final class TeachingPresenter extends BasePresenter {
 			
 		$this->category_id = $category_id;
 		$this->template->articles = $this->article->findBy(['category_id' => $category_id])
-												  ->order('position ASC');
+												  ->order('position DESC');
 		
 		$this->template->max_position = $this->model->findBy(['category_id' => $category_id])
 													->max('position');
@@ -84,8 +84,12 @@ final class TeachingPresenter extends BasePresenter {
 
 		if (!$record)
             throw new Nette\Application\BadRequestException;
-        
-   		$record->delete($id);
+
+		$this->model->findBy(['category_id' => $record->category_id])
+					->where('position > ?', $record->position)
+					->update(['position' => new SqlLiteral("position - 1")]);
+
+   		$record->delete();
    		@unlink(ARTICLES_IMG_FOLDER."/previews/".$record->preview_image);
 		$this->payload->success = TRUE;
 		$this->sendPayload();
@@ -124,8 +128,13 @@ final class TeachingPresenter extends BasePresenter {
         $form = $button->form;
         $values = $form->getValues();
         $preview_image = $values->preview_image;
+        $data = $values['data'];
+        $max_position = $this->model->findBy(['category_id' => $data['category_id']])
+        							->max('position');
 
-		$new_row = $this->article->insert($values['data']);
+		$data['position'] = $max_position + 1;
+
+		$new_row = $this->article->insert($data);
 		
 		if($new_row) {
 			if($preview_image->isOk()) {
