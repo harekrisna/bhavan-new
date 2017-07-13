@@ -749,11 +749,17 @@ footer .contact-info .link-mail {
   display: block;
 }
 .collection-title {
-  margin-bottom: 10px;
+  display: inline-block;
+  float: left;
+  margin-bottom: 12px;
+}
+.collection-title.mobile {
+  margin-bottom: 0;
 }
 .collection-nav {
   margin-top: 10px;
   margin-right: 15px;
+  float: left;
 }
 .collection-nav .link {
   text-transform: uppercase;
@@ -764,7 +770,7 @@ footer .contact-info .link-mail {
 .collection-nav .link:after,
 .collection-nav .link:first-child:before {
   content: '|';
-  font-size: 1.2em;
+  font-size: 1.0em;
   color: #12323d;
   margin-left: 10px;
   position: relative;
@@ -777,9 +783,33 @@ footer .contact-info .link-mail {
   margin-right: 10px;
   margin-left: 0;
 }
+.collection-nav.right-nav {
+  margin-right: 0;
+  float: right;
+}
+.collection-nav.right-nav .link {
+  text-transform: none;
+}
+.collection-nav-clearfix {
+  height: 30px;
+}
+@media screen and (max-width: 599px) {
+  .collection-nav-clearfix {
+    display: none !important;
+  }
+}
+nav.collection-breadcrumb-nav {
+  float: left;
+  margin-top: 15px;
+  margin-left: 5px;
+}
+nav.collection-breadcrumb-nav.mobile {
+  margin-top: 0;
+  margin-bottom: 3px;
+}
 nav.next-prev-collection-nav {
   float: right;
-  display: table;
+  display: inline-block;
   margin-top: 12px;
   margin-bottom: 4px;
 }
