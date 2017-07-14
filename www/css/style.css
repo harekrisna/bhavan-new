@@ -302,22 +302,66 @@ nav.breadcrumb-nav .sep-arrow {
     margin-bottom: 0;
   }
 }
+/*
 nav.next-prev-nav {
+	float: right;
+	display: table;
+	margin-top: -6px;
+	margin-bottom: 4px;
+
+	&.mobile {
+		margin: 10px 0;
+	}
+
+	.nav-delimiter {
+		padding: 0 5px;
+	}
+
+	.large-mobile-screen-down({
+		margin-bottom: 0;
+	});
+}
+*/
+.next-prev-nav-labels-container {
+  position: relative;
+  width: 100%;
   float: right;
-  display: table;
-  margin-top: -6px;
-  margin-bottom: 4px;
+  clear: both;
+  margin-top: -10px;
 }
-nav.next-prev-nav.mobile {
-  margin: 10px 0;
+.next-prev-nav-labels-container .link-hover-label {
+  position: absolute;
+  visibility: hidden;
+  z-index: 100;
+  right: 0;
+  color: #12323d;
+  background-color: #FFFFFF;
+  box-shadow: 0px 0px 20px 0px rgba(200, 200, 200, 0.5);
+  display: inline-block;
+  opacity: 0;
+  transition: 0.3s;
 }
-nav.next-prev-nav .nav-delimiter {
-  padding: 0 5px;
+.next-prev-nav-labels-container .link-hover-label.hover {
+  visibility: visible;
+  opacity: 1;
 }
-@media screen and (max-width: 767px) {
-  nav.next-prev-nav {
-    margin-bottom: 0;
-  }
+.next-prev-nav-labels-container .link-hover-label.label-text {
+  font-size: 15px;
+  padding: 10px 15px;
+}
+.next-prev-nav-labels-container .link-hover-label.label-picture {
+  font-size: 15px;
+  line-height: 61px;
+  height: 79px;
+  padding: 10px 20px 10px 10px;
+}
+.next-prev-nav-labels-container .link-hover-label.label-picture .image-picture {
+  width: 58px;
+  height: 58px;
+  margin-right: 20px;
+  border-radius: 10px 0 10px 0;
+  display: block;
+  float: left;
 }
 .mahamantra-text {
   width: 100%;
@@ -756,6 +800,18 @@ footer .contact-info .link-mail {
 .collection-title.mobile {
   margin-bottom: 0;
 }
+.next-prev-nav {
+  float: right;
+  display: inline-block;
+  margin-top: 8px;
+  margin-bottom: 10px;
+}
+.next-prev-nav .link {
+  display: inline-block;
+}
+.next-prev-nav .nav-delimiter {
+  padding: 0 5px;
+}
 .collection-nav {
   margin-top: 10px;
   margin-right: 15px;
@@ -798,23 +854,14 @@ footer .contact-info .link-mail {
     display: none !important;
   }
 }
-nav.collection-breadcrumb-nav {
+.collection-breadcrumb-nav {
   float: left;
   margin-top: 15px;
   margin-left: 5px;
 }
-nav.collection-breadcrumb-nav.mobile {
+.collection-breadcrumb-nav.mobile {
   margin-top: 0;
   margin-bottom: 3px;
-}
-nav.next-prev-collection-nav {
-  float: right;
-  display: inline-block;
-  margin-top: 8px;
-  margin-bottom: 10px;
-}
-nav.next-prev-collection-nav .nav-delimiter {
-  padding: 0 5px;
 }
 .slideshow {
   position: relative;

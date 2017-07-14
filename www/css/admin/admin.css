@@ -215,6 +215,10 @@ table#article_list .th-controls {
 table#article_list .th-controls-4 {
   width: 70px;
 }
+.textarea {
+  width: 400px;
+  height: 80px;
+}
 fieldset#audio_form {
   width: 499px;
   min-height: 305px;

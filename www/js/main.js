@@ -35,20 +35,6 @@ $(function(){
 			text.css('font-size', 30);
 	}
 
-	function SecondaryNavigationFit() {
-		var breadcrumb_nav = $("#breadcrumb_nav");
-		var next_prev_nav = $("#next_prev_nav");
-
-		if(breadcrumb_nav.length && next_prev_nav.length) {
-			if($(next_prev_nav).position().top > $(breadcrumb_nav).position().top) {
-				$(next_prev_nav).addClass('mobile');
-			}
-			else {
-				$(next_prev_nav).removeClass('mobile');	
-			}
-		}
-	}
-
 	function CollectionBreadcrumbNavigationFit() {
 		var breadcrumb_nav = $("#breadcrumb_nav");
 		var collection_title = $(".collection-title");
@@ -65,18 +51,45 @@ $(function(){
 		}
 	}
 
+
+	function CollectionNextPrevNavigationFit() {
+		var breadcrumb_nav = $("#breadcrumb_nav");
+		var next_prev_nav = $("#next_prev_nav");
+
+		if(breadcrumb_nav.length && next_prev_nav.length) {
+			if($(next_prev_nav).position().top > $(breadcrumb_nav).position().top) {
+				$(next_prev_nav).addClass('mobile');
+			}
+			else {
+				$(next_prev_nav).removeClass('mobile');	
+			}
+		}
+	}
+
+	function CollectionNextPrevHoverLabelFit() {
+		var next_prev_nav = $("#next_prev_nav");
+		var label_prev = $("#label_prev");
+		var label_next = $("#label_next");
+
+		$(label_next).css("left", $(next_prev_nav).outerWidth() - $(label_next).outerWidth());
+		$(label_prev).css("left", $(next_prev_nav).outerWidth() - $(label_prev).outerWidth());
+
+	}
+
 	ScaleListTitle();
-    SecondaryNavigationFit();
     CollectionBreadcrumbNavigationFit();
+    CollectionNextPrevNavigationFit();
+    //CollectionNextPrevHoverLabelFit();
     
     $(window).bind("load", ScaleListTitle);
-    $(window).bind("load", SecondaryNavigationFit);
+    $(window).bind("load", CollectionNextPrevNavigationFit);
     $(window).bind("load", CollectionBreadcrumbNavigationFit);
+    //$(window).bind("load", CollectionNextPrevHoverLabelFit);
     $(window).bind("resize", ScaleListTitle);
-    $(window).bind("resize", SecondaryNavigationFit);
+    $(window).bind("resize", CollectionNextPrevNavigationFit);
     $(window).bind("resize", CollectionBreadcrumbNavigationFit);
     $(window).bind("orientationchange", ScaleListTitle);
-    $(window).bind("orientationchange", SecondaryNavigationFit);
+    $(window).bind("orientationchange", CollectionNextPrevNavigationFit);
     $(window).bind("orientationchange", CollectionBreadcrumbNavigationFit);
 
 });
