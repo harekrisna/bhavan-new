@@ -1,9 +1,16 @@
 {layout ../@layout.latte}
 {block content}
 <h1 class="collection-title">Učení</h1>
+<nav class="collection-breadcrumb-nav" id="breadcrumb_nav" n:ifset="$backlinks">
+    {foreach $backlinks as $backlink => $backtitle}
+    <span>&raquo;</span>
+    <a class="link" href="{$backlink}">{$backtitle}</a>
+    {/foreach}
+</nav>
 <div class="divider simple"></div>
-<nav class="collection-nav clearfix" n:inner-foreach="$article_categories AS $article_category">
+<nav class="collection-nav" n:inner-foreach="$article_categories AS $article_category">
 	<a n:class="link, $article_category->id == $category->id ? current" n:href="Teaching:category, $article_category->id">{$article_category->title}</a>
 </nav>
+<div class="clearfix collection-nav-clearfix"></div>
 {include teaching_content}
 {/block}

@@ -810,19 +810,11 @@ nav.collection-breadcrumb-nav.mobile {
 nav.next-prev-collection-nav {
   float: right;
   display: inline-block;
-  margin-top: 12px;
-  margin-bottom: 4px;
-}
-nav.next-prev-collection-nav.mobile {
-  margin: 10px 0;
+  margin-top: 8px;
+  margin-bottom: 10px;
 }
 nav.next-prev-collection-nav .nav-delimiter {
   padding: 0 5px;
-}
-@media screen and (max-width: 767px) {
-  nav.next-prev-collection-nav {
-    margin-bottom: 0;
-  }
 }
 .slideshow {
   position: relative;

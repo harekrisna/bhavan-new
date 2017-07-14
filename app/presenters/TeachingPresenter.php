@@ -43,5 +43,6 @@ class TeachingPresenter extends BasePresenter {
 		$this->template->next_article = $next->fetch();
 		$this->template->article = $article;
 		$this->template->category = $this->articleCategory->get($article->category_id);
+		$this->template->backlinks = [$this->link('category', $article->category_id) => $article->category->title];
 	}
 }
