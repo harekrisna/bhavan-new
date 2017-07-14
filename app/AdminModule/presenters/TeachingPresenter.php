@@ -41,7 +41,7 @@ final class TeachingPresenter extends BasePresenter {
 			
 		$this->category_id = $category_id;
 		$this->template->articles = $this->article->findBy(['category_id' => $category_id])
-												  ->order('position DESC');
+												  ->order('position');
 		
 		$this->template->max_position = $this->model->findBy(['category_id' => $category_id])
 													->max('position');

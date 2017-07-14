@@ -733,12 +733,12 @@ footer .contact-info .link-mail {
 }
 .list-simple .list-simple-item {
   font-size: 20px;
-  color: #eb8c3a;
+  color: #12323d;
   max-width: 600px;
   transition: 0.3s;
 }
 .list-simple .list-simple-item:hover {
-  color: #61503c;
+  color: #eb8c3a;
   transition: 0.3s;
 }
 .list-simple .list-simple-item .list-simple-link {

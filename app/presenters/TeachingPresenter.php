@@ -18,7 +18,7 @@ class TeachingPresenter extends BasePresenter {
 
 	public function renderCategory($category_id) {
 		$this->template->articles = $this->article->findBy(['category_id' => $category_id])
-												  ->order('position DESC');
+												  ->order('position');
 												  
 		$category = $this->articleCategory->get($category_id);
 		

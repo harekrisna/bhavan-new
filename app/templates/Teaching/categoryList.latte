@@ -4,7 +4,7 @@
 <div class="row list-simple">
 	<h2 class="list-simple-title">Obsah</h2>
 	<ul n:inner-foreach="$articles as $article">
-		<li class="list-simple-item"><a class="link-colorful list-simple-link" n:href="article, $article->id"">{$article->title}</a></li>
+		<li class="list-simple-item"><a class="link list-simple-link" n:href="article, $article->id">{$article->title}</a></li>
 	</ul>
 </div>
 {/block}
