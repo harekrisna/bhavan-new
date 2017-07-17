@@ -1,45 +1,30 @@
 {block title}{$actuality->title} | Aktuality{/block}
 {block content}
 {include breadcrumb_nav, backlinks => $backlinks}
-<div>
-<nav class="next-prev-nav" id="next_prev_nav">
+<nav class="next-prev-nav stand-alone" id="next_prev_nav">
     {if $prev}
-        <a class="link" id="nav_next" n:href="detail, $prev->id">&laquo; předchozí</a>
+        <a id="top_link_prev" class="link" n:href="detail, $prev->id">&laquo; předchozí</a>
     {else}
-        <a class="link" n:href="sunday">&laquo; předchozí</a>
+        <a id="top_link_prev" class="link" n:href="sunday">&laquo; předchozí</a>
     {/if}
     <span class="nav-delimiter">&#124;</span>
     {if $next}
-        <a class="link" id="nav_prev" n:href="detail, $next->id">následující &raquo;</a>
+        <a id="top_link_next" class="link link-next" n:href="detail, $next->id">následující &raquo;</a>
     {else}
         <span class="link-disabled">následující &raquo;</span>
     {/if}
 </nav>
-<div class="next-prev-nav-labels-container">
-    <div id="label_prev" n:class="link-hover-label, $prev->preview_image ? label-picture : label-text"><img n:if="$prev->preview_image" class="image-picture" src="/{=ARTICLES_IMG_FOLDER}/previews/{$prev->preview_image}" />{$prev->title}</div>
-    <div id="label_next" n:class="link-hover-label, label-prev, $next->preview_image ? label-picture : label-text"><img n:if="$next->preview_image" class="image-picture" src="/{=ARTICLES_IMG_FOLDER}/previews/{$next->preview_image}" />{$next->title}</div>
-</div>
+<div class="next-prev-nav-labels-container nav-top">
+    {if $prev}
+        <div id="top_label_prev" n:class="link-hover-label, $prev->preview_image ? label-picture : label-text"><img n:if="$prev->preview_image" class="image-picture" src="{$basePath}/{=ACTUALITIES_IMG_FOLDER}/previews/{$prev->preview_image}" />{$prev->title}</div>
+    {else}
+        <div id="top_label_prev" class="link-hover-label label-picture"><img class="image-picture" src="{$basePath}/{=ACTUALITIES_IMG_FOLDER}/previews/program.jpg" />Programy pro veřejnost</div>
+    {/if}
+    <div n:if="$next" id="top_label_next" id="label_next" n:class="link-hover-label, label-prev, $next->preview_image ? label-picture : label-text"><img n:if="$next->preview_image" class="image-picture" src="{$basePath}/{=ACTUALITIES_IMG_FOLDER}/previews/{$next->preview_image}" />{$next->title}</div>
 </div>
 <article class="article-detail">
 	<h1 class="article-title">{$actuality->title}</h1>
 	<img n:if="$actuality->article_image" class="article-image" src="{$basePath}/images/actuality/{$actuality->article_image}" />
 	{!$actuality->description}
 </article>
-{/block}	
-{block scripts}
-<script>
-    $('#nav_next').hover(function() {
-        $('#label_next').addClass('hover');
-    })
-    .mouseout(function() {
-        $('#label_next').removeClass('hover');
-    });
-
-    $('#nav_prev').hover(function() {
-        $('#label_prev').addClass('hover');
-    })
-    .mouseout(function() {
-        $('#label_prev').removeClass('hover');
-    });
-</script>
 {/block}

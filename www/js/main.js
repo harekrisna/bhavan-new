@@ -66,30 +66,50 @@ $(function(){
 		}
 	}
 
-	function CollectionNextPrevHoverLabelFit() {
-		var next_prev_nav = $("#next_prev_nav");
-		var label_prev = $("#label_prev");
-		var label_next = $("#label_next");
-
-		$(label_next).css("left", $(next_prev_nav).outerWidth() - $(label_next).outerWidth());
-		$(label_prev).css("left", $(next_prev_nav).outerWidth() - $(label_prev).outerWidth());
-
-	}
-
 	ScaleListTitle();
     CollectionBreadcrumbNavigationFit();
     CollectionNextPrevNavigationFit();
-    //CollectionNextPrevHoverLabelFit();
     
     $(window).bind("load", ScaleListTitle);
     $(window).bind("load", CollectionNextPrevNavigationFit);
     $(window).bind("load", CollectionBreadcrumbNavigationFit);
-    //$(window).bind("load", CollectionNextPrevHoverLabelFit);
     $(window).bind("resize", ScaleListTitle);
     $(window).bind("resize", CollectionNextPrevNavigationFit);
     $(window).bind("resize", CollectionBreadcrumbNavigationFit);
     $(window).bind("orientationchange", ScaleListTitle);
     $(window).bind("orientationchange", CollectionNextPrevNavigationFit);
     $(window).bind("orientationchange", CollectionBreadcrumbNavigationFit);
+	
+	// hover label pro horní next/prev navigaci
+    $('#top_link_prev').hover(function() {
+		$('#top_label_prev').addClass('hover');
+	}).mouseout(function() {
+		$('#top_label_prev').removeClass('hover');
+	});
 
+	$('#top_link_next').hover(function() {
+		$('#top_label_next').addClass('hover');
+	}).mouseout(function() {
+		$('#top_label_next').removeClass('hover');
+	});
+
+
+	// hover label pro spodní next/prev navigaci
+    $('#bottom_link_back').mouseover(function() {
+		$('#bottom_label_back').addClass('hover');
+	}).mouseout(function() {
+		$('#bottom_label_back').removeClass('hover');
+	});
+
+	$('#bottom_link_prev').hover(function() {
+		$('#bottom_label_prev').addClass('hover');
+	}).mouseout(function() {
+		$('#bottom_label_prev').removeClass('hover');
+	});
+	
+    $('#bottom_link_next').hover(function() {
+		$('#bottom_label_next').addClass('hover');
+	}).mouseout(function() {
+		$('#bottom_label_next').removeClass('hover');
+	});
 });

@@ -78,7 +78,7 @@
                         <li><a n:class="link, $presenter->isLinkCurrent('About:*') ? current" href="{link About:about}">O nás</a></li>
                         <li><a n:class="link, $presenter->isLinkCurrent('Teaching:*') ? current" href="{link Teaching:category, 1}">Učení</a></li>
                         <li><a n:class="link, $presenter->isLinkCurrent('Galery:*') ? current" href="{link Galery:galeries}">Foto</a></li>
-                        <li><a n:class="link, $presenter->isLinkCurrent('Audio:*') ? current" href="{link Audio:interprets}">Audio</a></li>
+                        <li><a n:class="link, $presenter->isLinkCurrent('Audio:*') || $presenter->isLinkCurrent('Music:*') ? current" href="{link Audio:interprets}">Audio</a></li>
                         <li><a n:class="link, $presenter->isLinkCurrent('Contact:*') ? current" href="{link Contact:contact}">Kontakt</a></li>
                         <li><a n:class="link, $presenter->isLinkCurrent('Links:*') ? current" href="{link Links:default}">Odkazy</a></li>
                     </ul>

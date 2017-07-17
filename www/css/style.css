@@ -302,38 +302,36 @@ nav.breadcrumb-nav .sep-arrow {
     margin-bottom: 0;
   }
 }
-/*
-nav.next-prev-nav {
-	float: right;
-	display: table;
-	margin-top: -6px;
-	margin-bottom: 4px;
-
-	&.mobile {
-		margin: 10px 0;
-	}
-
-	.nav-delimiter {
-		padding: 0 5px;
-	}
-
-	.large-mobile-screen-down({
-		margin-bottom: 0;
-	});
+.next-prev-nav {
+  float: right;
+  display: inline-block;
+  margin-top: 8px;
+  margin-bottom: 10px;
 }
-*/
+.next-prev-nav .link {
+  display: inline-block;
+  padding: 0 10px;
+}
+.next-prev-nav .link-next {
+  padding-right: 0;
+}
+.next-prev-nav .nav-delimiter {
+  margin: 0 -5px;
+}
+.next-prev-nav.stand-alone {
+  margin-top: -6px;
+}
 .next-prev-nav-labels-container {
   position: relative;
   width: 100%;
   float: right;
   clear: both;
-  margin-top: -10px;
+  margin-top: -7px;
 }
-.next-prev-nav-labels-container .link-hover-label {
+.link-hover-label {
   position: absolute;
   visibility: hidden;
   z-index: 100;
-  right: 0;
   color: #12323d;
   background-color: #FFFFFF;
   box-shadow: 0px 0px 20px 0px rgba(200, 200, 200, 0.5);
@@ -341,21 +339,21 @@ nav.next-prev-nav {
   opacity: 0;
   transition: 0.3s;
 }
-.next-prev-nav-labels-container .link-hover-label.hover {
+.link-hover-label.hover {
   visibility: visible;
   opacity: 1;
 }
-.next-prev-nav-labels-container .link-hover-label.label-text {
+.link-hover-label.label-text {
   font-size: 15px;
   padding: 10px 15px;
 }
-.next-prev-nav-labels-container .link-hover-label.label-picture {
+.link-hover-label.label-picture {
   font-size: 15px;
   line-height: 61px;
   height: 79px;
   padding: 10px 20px 10px 10px;
 }
-.next-prev-nav-labels-container .link-hover-label.label-picture .image-picture {
+.link-hover-label.label-picture .image-picture {
   width: 58px;
   height: 58px;
   margin-right: 20px;
@@ -800,18 +798,6 @@ footer .contact-info .link-mail {
 .collection-title.mobile {
   margin-bottom: 0;
 }
-.next-prev-nav {
-  float: right;
-  display: inline-block;
-  margin-top: 8px;
-  margin-bottom: 10px;
-}
-.next-prev-nav .link {
-  display: inline-block;
-}
-.next-prev-nav .nav-delimiter {
-  padding: 0 5px;
-}
 .collection-nav {
   margin-top: 10px;
   margin-right: 15px;
@@ -862,6 +848,9 @@ footer .contact-info .link-mail {
 .collection-breadcrumb-nav.mobile {
   margin-top: 0;
   margin-bottom: 3px;
+}
+.next-prev-nav-labels-container.nav-top .link-hover-label {
+  right: 0;
 }
 .slideshow {
   position: relative;
@@ -1143,43 +1132,24 @@ footer .contact-info .link-mail {
   }
 }
 .article-navigation {
-  font-size: 16px;
-  height: 110px;
-  margin-top: 60px;
+  margin-bottom: 40px;
 }
-.article-navigation .article-navigation-linkbox {
-  float: left;
-}
-.article-navigation .article-navigation-linkbox.link-right {
-  float: right;
-}
-.article-navigation .article-navigation-linkbox.link-right .link-hover-label {
-  position: inherit;
-}
-.article-navigation .article-navigation-linkbox:hover .article-navigation-link {
-  color: #eb8c3a;
-}
-.article-navigation .article-navigation-linkbox:hover .link-hover-label {
-  opacity: 1;
-  transition: 0.3s;
-}
-.article-navigation .article-navigation-linkbox:hover .link-backlink .icon-line {
-  background: #eb8c3a !important;
-  transition: 0.3s;
-}
-.article-navigation .article-navigation-linkbox .article-navigation-link {
-  font-size: 15px;
+.article-navigation .links-container {
+  width: 100%;
   height: 38px;
-  line-height: 28px;
-  display: block;
 }
-.article-navigation .article-navigation-linkbox .article-navigation-link.link-backlink {
+.article-navigation .links-container .nav-link {
+  display: block;
+  padding: 0 10px;
+}
+.article-navigation .links-container .link-backlink {
+  float: left;
   width: 40px;
   height: 38px;
   margin-right: 20px;
   padding-top: 12px;
 }
-.article-navigation .article-navigation-linkbox .article-navigation-link.link-backlink .icon-line {
+.article-navigation .links-container .link-backlink .icon-line {
   width: 23px;
   height: 2px;
   border-radius: 1px;
@@ -1187,54 +1157,26 @@ footer .contact-info .link-mail {
   margin: 0 auto;
   transition: 0.3s;
 }
-.article-navigation .article-navigation-linkbox .article-navigation-link.link-backlink .icon-line:not(:first-child) {
+.article-navigation .links-container .link-backlink .icon-line:not(:first-child) {
   margin-top: 4px;
 }
-.article-navigation .article-navigation-linkbox .article-navigation-link.link-prev {
-  width: 250px;
-  padding: 5px 10px;
-}
-.article-navigation .article-navigation-linkbox .article-navigation-link.link-prev:before {
-  content: '«';
-  margin-right: 5px;
-}
-.article-navigation .article-navigation-linkbox .article-navigation-link.link-next {
-  text-align: right;
-  padding: 5px 10px;
-}
-.article-navigation .article-navigation-linkbox .article-navigation-link.link-next:after {
-  content: '»';
-  margin-left: 5px;
-}
-.article-navigation .article-navigation-linkbox .link-hover-label {
-  color: #12323d;
-  position: absolute;
-  background-color: #FFFFFF;
-  box-shadow: 0px 0px 20px 0px rgba(200, 200, 200, 0.5);
-  display: inline-block;
-  opacity: 0;
+.article-navigation .links-container .link-backlink:hover .icon-line {
+  background: #eb8c3a !important;
   transition: 0.3s;
 }
-.article-navigation .article-navigation-linkbox .link-hover-label:hover {
-  opacity: 1;
-}
-.article-navigation .article-navigation-linkbox .link-hover-label.label-text {
-  font-size: 15px;
-  padding: 10px 15px;
-}
-.article-navigation .article-navigation-linkbox .link-hover-label.label-picture {
-  font-size: 15px;
-  line-height: 61px;
-  height: 79px;
-  padding: 10px 20px 10px 10px;
-}
-.article-navigation .article-navigation-linkbox .link-hover-label.label-picture .image-picture {
-  width: 58px;
-  height: 58px;
-  margin-right: 20px;
-  border-radius: 10px 0 10px 0;
-  display: block;
+.article-navigation .links-container .link-prev {
+  margin-top: 7px;
   float: left;
+}
+.article-navigation .links-container .link-next {
+  margin-top: 7px;
+  float: right;
+}
+.article-navigation .next-prev-nav-labels-container .label-prev {
+  left: 60px;
+}
+.article-navigation .next-prev-nav-labels-container .label-next {
+  right: 0;
 }
 .audio_nav .link:not(:last-child):after {
   content: '|';

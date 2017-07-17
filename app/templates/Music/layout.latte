@@ -9,8 +9,8 @@
 </nav>
 <div class="divider simple"></div>
 <nav class="collection-nav">
-	<a n:class="link, in_array($presenter->getAction(), ['latest', 'interprets', 'interpret', 'years', 'year', 'themes', 'byType', 'book', 'sb', 'cc', 'unclasified']) || (isset($main_audio_type) && $main_audio_type == 'lecture') ? current" n:href="Audio:interprets">Přednášky</a>
-	<a n:class="link, $presenter->linkCurrent ? current" n:href="Music:music">Hudba</a>
+	<a n:class="link, $presenter->getPresenter() == 'Audio' || (isset($main_audio_type) && $main_audio_type == 'lecture') ? current" n:href="Audio:interprets">Přednášky</a>
+	<a n:class="link, $presenter->linkCurrent ? current" n:href="Music:interprets">Hudba</a>
 </nav>
 <nav class="collection-nav right-nav">
 	<a n:class="link, $presenter->isLinkCurrent('Audio:latest') || (isset($main_group) && $main_group == 'latest') ? current" n:href="latest">Nejnovější</a>
@@ -20,25 +20,4 @@
 </nav>
 <div class="clearfix collection-nav-clearfix"></div>
 {include audio}
-{/block}
-{block scripts}
-<script n:ifset="$backlinks">
-	function BreadcrumbNavigationFit() {
-		var breadcrumb_nav = $("#breadcrumb_nav");
-		var collection_title = $(".collection-title");
-
-		if(breadcrumb_nav.length && collection_title.length) {
-			if($(collection_title).position().top < $(breadcrumb_nav).position().top) {
-				$(collection_title).addClass('mobile');
-				$(breadcrumb_nav).addClass('mobile');
-			}
-			else {
-				$(collection_title).removeClass('mobile');
-				$(breadcrumb_nav).removeClass('mobile');	
-			}
-		}
-	}
-
-	$(window).bind("resize", BreadcrumbNavigationFit);
-</script>
 {/block}

@@ -14,6 +14,7 @@ session:
 	expiration: 14 days
 
 constants:
+	ACTUALITIES_IMG_FOLDER = images/actuality
 	ARTICLES_IMG_FOLDER = images/articles
 
 services:
@@ -26,13 +27,15 @@ services:
 	slide: App\Model\Slide
 	article: App\Model\Article
 	articleCategory: App\Model\ArticleCategory
-	interpret: App\Model\Interpret
-	audio_collection: App\Model\AudioCollection
 	galery: App\Model\Galery
 	photo: App\Model\Photo
+	interpret: App\Model\Interpret
 	audio: App\Model\Audio
 	audio_playcount: App\Model\AudioPlaycount
 	audio_downloadcount: App\Model\AudioDownloadcount	
+	audio_collection: App\Model\AudioCollection
+	music: App\Model\Music
+	music_interpret: App\Model\MusicInterpret
 	book: App\Model\Book
 	page: App\Model\Page
 	router: App\RouterFactory::createRouter

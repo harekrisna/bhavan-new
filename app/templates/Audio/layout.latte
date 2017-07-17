@@ -7,10 +7,11 @@
     <a class="link" href="{$backlink}">{$backtitle}</a>
     {/foreach}
 </nav>
+{dump $presenter->getRequest()}
 <div class="divider simple"></div>
 <nav class="collection-nav">
-	<a n:class="link, in_array($presenter->getAction(), ['latest', 'interprets', 'interpret', 'years', 'year', 'themes', 'byType', 'book', 'sb', 'cc', 'unclasified']) || (isset($main_audio_type) && $main_audio_type == 'lecture') ? current" n:href="interprets">Přednášky</a>
-	<a n:class="link, $presenter->linkCurrent ? current" n:href="Music:music">Hudba</a>
+	<a n:class="link, $presenter->isLinkCurrent('Audio:*') || (isset($main_audio_type) && $main_audio_type == 'lecture') ? current" n:href="Audio:interprets">Přednášky</a>
+	<a n:class="link, $presenter->isLinkCurrent('Music:*') || (isset($main_audio_type) && $main_audio_type == 'music') ? current" n:href="Music:interprets">Hudba</a>
 </nav>
 <nav class="collection-nav right-nav">
 	<a n:class="link, $presenter->isLinkCurrent('Audio:latest') || (isset($main_group) && $main_group == 'latest') ? current" n:href="latest">Nejnovější</a>
