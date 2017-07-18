@@ -16,6 +16,8 @@
 		<tr><th>{label place /}</th><td>{input place}</td></tr>	
 		<tr><th><label>Datum:</label></th><td>{input music_day}.{input music_month}.{input music_year}</td></tr>
 		<tr><th>Soubor:</th><td>{if $form_type == "add"}{input mp3_file}{else}{$record->mp3_file}{/if}</td></tr>
+		<tr><th>{label music_album_id /}</th><td>{input music_album_id}</td></tr>
+		<tr><th>{label music_genre_id /}</th><td>{input music_genre_id}</td></tr>
 		<tr n:if="$presenter->getAction() == 'add'"><th>{label add_to_news /}</th><td>{input add_to_news}</td></tr>
 		<tr><th>{input mp3_file_name}</th><td>{if $form_type == "add"}{input insert}{else}{input update}{/if}</td></tr>
 	</table>

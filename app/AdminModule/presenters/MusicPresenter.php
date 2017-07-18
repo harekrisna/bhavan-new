@@ -69,7 +69,7 @@ final class MusicPresenter extends BasePresenter {
 	}
 
 	public function actionEdit($record_id) {
-		$this->record = $this->audio->get($record_id);
+		$this->record = $this->music->get($record_id);
 
 		if (!$this->record)
             throw new Nette\Application\BadRequestException;
@@ -79,7 +79,7 @@ final class MusicPresenter extends BasePresenter {
 
         unset($this["audioForm"]['mp3_file']);
         $this["audioForm"]->setDefaults($defaults);
-		$mp3_file = $this->mp3_folder."/".$this->record->audio_interpret->mp3_folder."/".$this->record->mp3_file;
+		$mp3_file = $this->mp3_folder."/".$this->record->music_interpret->mp3_folder."/".$this->record->mp3_file;
 		$mp3_tag = new MP3($mp3_file);
 		$this->template->mp3_tag = $mp3_tag;
 		
@@ -102,14 +102,14 @@ final class MusicPresenter extends BasePresenter {
 	}
 
 
-	public function handleDelete($audio_id) {
-		$audio = $this->audio->get($audio_id);
+	public function handleDelete($music_id) {
+		$music = $this->music->get($music_id);
 
-		if (!$audio)
+		if (!$music)
             throw new Nette\Application\BadRequestException;
         
-   		$this->audio->delete($audio_id);
-		@unlink("mp3/".$audio->audio_interpret->mp3_folder."/".$audio->mp3_file);
+   		$this->music->delete($music_id);
+		@unlink("mp3/".$music->music_interpret->mp3_folder."/".$music->mp3_file);
 		
 		$this->payload->success = TRUE;
 		$this->sendPayload();
@@ -215,10 +215,15 @@ final class MusicPresenter extends BasePresenter {
 		     ->setRequired('Zadejte alespoň rok.')
 			 ->setDefaultValue(date('Y'));
 
-
 	    $form->addSelect('mp3_file', 'Soubor:')
    	    	 ->setPrompt('- nevybrán -');
-	    											
+
+	    $form->addSelect('music_album_id', 'Album:', $this->musicAlbum->findAll()->fetchPairs('id', 'title'))
+		     ->setPrompt('- žádné -');
+
+		$form->addSelect('music_genre_id', 'Žánr:', $this->musicGenre->findAll()->fetchPairs('id', 'title'))
+		     ->setPrompt('- žádné -');
+
 		$form->addCheckbox('add_to_news', "Přidat do novinek?");
 		$form->addHidden('mp3_file_name');
         $form->addSubmit('insert', 'Uložit')
@@ -256,6 +261,8 @@ final class MusicPresenter extends BasePresenter {
 				   						 'music_month' => $values['music_month'],
 				   						 'music_day' => $values['music_day'],
 				   	   					 'mp3_file' => $values['mp3_file_name'],
+				   	   					 'music_album_id' => $values['music_album_id'],
+				   	   					 'music_genre_id' => $values['music_genre_id'],
 				   	   					));
 		
 		if($ok) {				
@@ -284,29 +291,23 @@ final class MusicPresenter extends BasePresenter {
         $form = $button->form;
         $values = $form->getValues();
         
-		$update = $this->audio->update($this->record->id, 
+		$update = $this->music->update($this->record->id, 
 									   array('title' => $values['title'],
-				   	   				   		 'audio_interpret_id' => $values['audio_interpret_id'],
+				   	   				   		 'music_interpret_id' => $values['music_interpret_id'],
 				   	   				   		 'place' => $values['place'],
-				   	   				   		 'book_id' => $values['book_id'],
-					   	   					 'chapter' => $values['chapter'],
-					   	   					 'verse' => $values['verse'],
-				   	   				   		 'audio_year' => $values['audio_year'],
-				   	   				   		 'audio_month' => $values['audio_month'],
-				   	   				   		 'audio_day' => $values['audio_day'],
-				   	   				   		 'type' => $values['type'],
-				   	   				   		 'audio_collection_id' => $values['audio_collection_id'],
-				   	   				   		 'seminar' => $values['seminar'],
-					   	   					 'sankirtan' => $values['sankirtan'],
-					   	   					 'varnasrama' => $values['varnasrama'],
+				   	   				   		 'music_year' => $values['music_year'],
+					   						 'music_month' => $values['music_month'],
+					   						 'music_day' => $values['music_day'],
+					   	   					 'music_album_id' => $values['music_album_id'],
+					   	   					 'music_genre_id' => $values['music_genre_id'],
 				   	   					));
 		
 		if($update !== false) {
-			if($this->record->audio_interpret_id != $values->audio_interpret_id) { // interpret byl změněn
-				$old_interpret = $this->interpret->get($this->record->audio_interpret_id);
-				$new_interpret = $this->interpret->get($values->audio_interpret_id);
-				$old_filepath = "mp3/".$old_interpret->mp3_folder."/".$this->record->mp3_file;
-				$new_filepath = "mp3/".$new_interpret->mp3_folder."/".$this->record->mp3_file;
+			if($this->record->music_interpret_id != $values->music_interpret_id) { // interpret byl změněn
+				$old_interpret = $this->musicInterpret->get($this->record->music_interpret_id);
+				$new_interpret = $this->musicInterpret->get($values->music_interpret_id);
+				$old_filepath = "mp3_music/".$old_interpret->mp3_folder."/".$this->record->mp3_file;
+				$new_filepath = "mp3_music/".$new_interpret->mp3_folder."/".$this->record->mp3_file;
 
 				// přesun mp3 souboru do adresáře nového interpreta
 				rename($old_filepath, $new_filepath);

@@ -5,7 +5,7 @@
 	<div n:foreach="$articles as $article" class="col-md-6">
 		<div n:class="list-box, $iterator->first ? list-box-highlighted">
 			<a class="list-box-title sms-down" n:href="article, $article->id">{$article->title}</a>
-			<div class="list-box-image" style="background-image: url('/{=ARTICLES_IMG_FOLDER}/previews/{$article->preview_image}');"></div>
+			<div class="list-box-image" style="background-image: url('{$basePath}/{=ARTICLES_IMG_FOLDER}/previews/{$article->preview_image}');"></div>
 			<a class="list-box-title sms-up" n:href="article, $article->id">{$article->title}</a>
 			<p class="list-box-text">{$article->preview_text}</p>
 		</div>

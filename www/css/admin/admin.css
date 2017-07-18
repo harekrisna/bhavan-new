@@ -625,6 +625,9 @@ nav#sub_actions a.interprets {
 nav#sub_actions a.collections {
   background-image: url('../../images/admin/collection-icon.png');
 }
+nav#sub_actions a.albums {
+  background-image: url('../../images/admin/note-icon.png');
+}
 nav#sub_actions a.articles-icon {
   background-image: url('../../images/admin/articles-icon.png');
 }

@@ -1,0 +1,48 @@
+{extends layout.latte}
+{block head}
+	<link rel="stylesheet" media="screen" href="{$basePath}/css/mediaelementplayer.min.css">
+	<link rel="stylesheet" media="screen" href="{$basePath}/css/audio-player.css">
+{/block}
+{block audio}
+{var $displayed_albums = []}
+<h1 n:inner-block="title">{$genre->title}</h1>
+<nav class="audio_nav">
+	<span>Seskupit podle:</span>
+	<a n:href="genre, $genre->id, 'music_interpret_id'" class="link {ifCurrent Music:genre, $genre->id, 'music_interpret_id'} current{/ifCurrent}">Autorů</a>
+	<a n:href="genre, $genre->id, 'music_year'" class="link {ifCurrent Music:genre, $genre->id, 'music_year'} current{/ifCurrent}">Roků</a>
+</nav>
+{foreach $groups as $group}
+{continueIf $group_by == 'genre_id' && $group->genre_id == ""} {* přeskočit nezařazené knihy *}
+<section class="lectures-group">
+	{if $group_by == 'music_interpret_id'}
+	<div class="group-header">
+		<div class="group-header-label" style="background-image: url('{$basePath}/images/music_interpret_avatars/{$group->music_interpret->image}')"></div>
+		<h2 class="group-header-title">{$group->music_interpret->title}</h2>
+	</div>
+	{/if}
+	{if $group_by == 'music_year'}
+	<div class="group-header">
+		<div n:class="group-header-label, label-text, year-label, $group->music_year < 2000 ? 'alt-color'">{$group->music_year}</div>
+		<h2 class="group-header-title">Skladby z roku {$group->music_year}</h2>
+	</div>
+	{/if}
+	{foreach $records[$group->id] as $record} 
+		{if $record->music_album_id}
+			{continueIf in_array($record->music_album_id, $displayed_albums)}
+			{include album-link.latte, record => $record, show_interpret_abbr => ($group_by != 'music_interpret_id') ? true, album_count => $albums_count[$record->music_album_id]}
+			{var $displayed_albums[] = $record->music_album_id}
+		{else}
+			{include player-bar.latte, record => $record, show_interpret_abbr => ($group_by != 'music_interpret_id') ? true}
+		{/if}
+	{/foreach}
+</section>
+{/foreach}
+
+{/block}
+{block scripts}
+{include parent}
+{if !$isMobile}
+	<script src="{$basePath}/js/mediaelement-and-player.min.js"></script>
+	<script src="{$basePath}/js/mediaelement-and-player.init.js"></script>
+{/if}
+{/block}

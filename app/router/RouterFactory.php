@@ -161,6 +161,8 @@ class RouterFactory
 			),
 		));
 		
+		$router[] = new Route('hudba/<id [0-9]+>', 'Music:singleAudio');
+
 		/*
 		$router[] = new Route('audio/knihy/<book_id>', array(
 			'presenter' => 'Audio',

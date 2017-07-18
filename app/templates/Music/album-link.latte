@@ -1,0 +1,13 @@
+{var $show_interpret_abbr = empty($show_interpret_abbr) ? false : $show_interpret_abbr}
+<div class="audio-player">
+	<div class="title-line">
+		<a class="title" n:href="album, $record->music_album_id">{$record->music_album->title}</a>
+	</div>
+	<div class="audio-info">
+		<div class="place-time">{$record->place} {$record->music_year, $record->music_month, $record->music_day|dynamicDate}</div>
+		<div class="verse-autor">
+			<a n:if="$show_interpret_abbr" class="link" n:href="interpret, $record->music_interpret->id, $group_by" title="{$record->music_interpret->title}">{$record->music_interpret->abbreviation}</a>
+		</div>
+	</div>
+	<span class="collection-text">Album {ifset $album_count}{$album_count}{/ifset} skladeb</span>
+</div>

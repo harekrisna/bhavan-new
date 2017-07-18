@@ -36,6 +36,10 @@ services:
 	audio_collection: App\Model\AudioCollection
 	music: App\Model\Music
 	music_interpret: App\Model\MusicInterpret
+	music_album: App\Model\MusicAlbum
+	music_genre: App\Model\MusicGenre
+	music_playcount: App\Model\MusicPlaycount
+	music_downloadcount: App\Model\MusicDownloadcount	
 	book: App\Model\Book
 	page: App\Model\Page
 	router: App\RouterFactory::createRouter

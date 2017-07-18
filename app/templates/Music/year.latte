@@ -1,0 +1,67 @@
+{extends layout.latte}
+{block head}
+	<link rel="stylesheet" media="screen" href="{$basePath}/css/mediaelementplayer.min.css">
+	<link rel="stylesheet" media="screen" href="{$basePath}/css/audio-player.css">
+{/block}
+{block audio}
+{var $displayed_albums = []}
+<h1>Skladby z roku {$year}</h1>
+<nav class="audio_nav">
+	<span>Seskupit podle:</span>
+	<a n:href="year, $year, 'music_interpret_id'" class="link{ifCurrent Music:year, $year, 'music_interpret_id'} current{/ifCurrent}">Autorů</a>
+	<a n:href="year, $year, 'music_genre_id'" class="link{ifCurrent Music:year, $year, 'music_genre_id'} current{/ifCurrent}">Žánrů</a>
+</nav>
+
+{if $group_by == 'music_interpret_id'}
+	{foreach $groups as $group}
+	<section class="lectures-group">
+		<div class="group-header">
+			<div class="group-header-label" style="background-image: url('{$basePath}/images/interpret_avatars/{$group->music_interpret->image}')"></div>
+			<h2 class="group-header-title">{$group->music_interpret->title}</h2>
+		</div>
+		{foreach $records[$group->id] as $record}
+			{if $record->music_album_id}
+				{continueIf in_array($record->music_album_id, $displayed_albums)}
+				{include album-link.latte, record => $record, show_interpret_abbr => true, album_count => $albums_count[$record->music_album_id]}
+				{var $displayed_albums[] = $record->music_album_id}
+			{else}
+				{include player-bar.latte, show_interpret_abbr => true, record => $record}
+			{/if}
+		{/foreach}
+	</section>
+	{/foreach}
+{/if}
+
+{if $group_by == 'music_genre_id'}
+	{foreach $groups as $group}
+	<section class="lectures-group">
+		<div class="group-header">
+		{if $group->music_genre_id == ""}
+			<div n:class="group-header-label" style="background-image: url('{$basePath}/images/music_genres/unclasified.jpg')"></div>
+			<h2 class="group-header-title">Nezařazené</h2>
+		{else}
+			<div n:class="group-header-label" style="background-image: url('{$basePath}/images/music_genres/{$group->music_genre->image_file}')"></div>
+			<h2 class="group-header-title">{$group->music_genre->title}</h2>
+		{/if}
+		</div>
+		{foreach $records[$group->id] as $record}
+			{if $record->music_album_id}
+				{continueIf in_array($record->music_album_id, $displayed_albums)}
+				{include album-link.latte, record => $record, album_count => $albums_count[$record->music_album_id]}
+				{var $displayed_albums[] = $record->music_album_id}
+			{else}
+				{include player-bar.latte, record => $record}
+			{/if}
+		{/foreach}
+	</section>
+	{/foreach}
+{/if}
+
+{/block}
+{block scripts}
+{include parent}
+{if !$isMobile}
+	<script src="{$basePath}/js/mediaelement-and-player.min.js"></script>
+	<script src="{$basePath}/js/mediaelement-and-player.init.js"></script>
+{/if}
+{/block}

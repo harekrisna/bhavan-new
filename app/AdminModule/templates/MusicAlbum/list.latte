@@ -1,0 +1,33 @@
+{extends layout.latte}
+{block title}Audio{/block}
+{block interpret-content}
+<table id="collection_list" class="list">
+	<thead>
+		<tr>
+			<th class="title">Název</th>
+			<th class="url">URL</th>
+			<th class="lessons">Skladeb</th>
+			<th class="actions"></th>
+		</tr>
+	</thead>
+	<tbody>
+	<tr n:foreach="$albums as $album" id="{$album->id}">
+		<td><a n:href="edit, $album->id">{$album->title}</a></td>
+		<td>{$album->url}</td>		
+		<td class="center">{$album->related('music')->count()}</td>
+        <td>
+	        <a class="button edit" n:href="edit, $album->id"></a>
+	        <a class="button remove" n:href="remove!, $album->id"></a>
+	    </td>
+	</tr>
+	</tbody>
+</table>
+{/block}
+{block scripts}
+{include parent}
+  <script src="{$basePath}/js/admin.js"></script>
+  <script src="{$basePath}/js/jquery.tablesorter.min.js"></script>
+  <script type="text/javascript">    
+    $('#collection_list').tablesorter();
+  </script>
+{/block}
