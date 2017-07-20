@@ -1,4 +1,4 @@
-{var $show_interpret_abbr = empty($show_interpret_abbr) ? false : $show_interpret_abbr}
+{var $show_interpret_link = empty($show_interpret_link) ? false : $show_interpret_link}
 {var $group_by = empty($group_by) ? "time_created" : $group_by}
 {var douwnloadcount = $lecture->related('audio_downloadcount')->sum(downloadcount)}
 {var playcount = $lecture->related('audio_playcount')->sum(playcount)}
@@ -16,7 +16,7 @@
 		<div class="place-time">{$lecture->place} {$lecture->audio_year, $lecture->audio_month, $lecture->audio_day|dynamicDate}</div>
 		<div class="verse-autor">
 			<span n:if="$lecture->book_id">{$lecture->book->abbreviation, $lecture->chapter, $lecture->verse|verseReadable}</span>
-			<a n:if="$show_interpret_abbr" class="link" n:href="interpret, $lecture->audio_interpret->id, $group_by" title="{$lecture->audio_interpret->title}">{$lecture->audio_interpret->abbreviation}</a>
+			<a n:if="$show_interpret_link" class="link" n:href="interpret, $lecture->audio_interpret->id, $group_by" title="{$lecture->audio_interpret->title}">{$lecture->audio_interpret->title|replace:['HG ', 'HH '], ['']}</a>
 		</div>
 	</div>
 	

@@ -5,13 +5,13 @@
     {if $previous_article}
         <a id="top_link_prev" class="link" n:href="article, $previous_article->id">&laquo; předchozí</a>
     {else}
-        <span class="link-disabled">&laquo; předchozí</span>
+        <div class="link link-disabled">&laquo; předchozí</div>
     {/if}
     <span class="nav-delimiter">&#124;</span>
     {if $next_article}
         <a id="top_link_next" class="link link-next" n:href="article, $next_article->id">následující &raquo;</a>
     {else}
-        <span class="link-disabled">následující &raquo;</span>
+        <div class="link link-disabled link-next">následující &raquo;</div>
     {/if}
 </nav>
 <div class="next-prev-nav-labels-container nav-top">
@@ -22,6 +22,16 @@
 	<h1 class="article-title">{$article->title}</h1>
 	<div class="article-text">{$article->text|noescape}</div>
 </article>
+<div n:if="$child_articles->count()" class="row list">
+    <div n:foreach="$child_articles as $child_article" class="col-md-6">
+        <div n:class="list-box">
+            <a class="list-box-title sms-down" n:href="article, $child_article->id">{$child_article->title}</a>
+            <div class="list-box-image" style="background-image: url('{$basePath}/{=ARTICLES_IMG_FOLDER}/previews/{$child_article->preview_image}');"></div>
+            <a class="list-box-title sms-up" n:href="article, $child_article->id">{$child_article->title}</a>
+            <p class="list-box-text">{$child_article->preview_text}</p>
+        </div>
+    </div>
+</div>
 <div class="article-navigation">
     <div class="links-container">
         <a n:href="category, $article->category->id" id="bottom_link_back" class="link link-backlink">

@@ -15,7 +15,7 @@
 	<div class="audio-info">
 		<div class="place-time">{$record->place} {$record->music_year, $record->music_month, $record->music_day|dynamicDate}</div>
 		<div class="verse-autor">
-			<a class="link" n:href="interpret, $record->music_interpret->id, 'time_created'" title="{$record->music_interpret->title}">{$record->music_interpret->abbreviation}</a>
+			<a class="link" n:href="interpret, $record->music_interpret->id, 'time_created'" title="{$record->music_interpret->title}">{$record->music_interpret->title|replace:['HG ', 'HH '], ['']}</a>
 		</div>
 	</div>
 	

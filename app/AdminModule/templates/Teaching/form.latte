@@ -7,13 +7,21 @@
 <fieldset id="article_form">
 	<legend n:block="title">{$form_title}</legend>
 	{form articleForm}
+	{dump $form->errors}
 	<ul class="error" n:if="$form->hasErrors()">
 	    <li n:foreach="$form->errors as $error">{$error}</li>
 	</ul>
 	<table>
 		<tr><th>{label data-title /}</th><td>{input data-title}</td></tr>
 		<tr><th>{label data-url /}</th><td>{input data-url}</td></tr>
-		<tr><th>{label data-category_id /}</th><td>{input data-category_id}</td></tr>
+		<tr><th>{label data-article_id /}</th><td>{input data-article_id}</td></tr>
+		<tr>
+			<th>{label data-category_id /}</th>
+			<td>
+				<span id="no_category_label" style="display: none;">-- dle rodiče --</span>
+				{input data-category_id}
+			</td>
+		</tr>
 		<tr>
 			<th class="picture">{label preview_image /}</th>
 		{if $presenter->getAction() == "edit"}
@@ -54,9 +62,31 @@
 				$("input[name='data[url]']").val(stringToNiceURL(this.value));
 			});
 			
-			CKEDITOR.replace('frm-actualityForm-description', {
+			CKEDITOR.replace('frm-articleForm-data-text', {
 				filebrowserBrowseUrl: '/browser/browse.php',
 			});
-    	});    
+    	});
+
+    	$('#frm-articleForm-data-article_id').on('change', function() {
+    		var selected_parent = $(this).val();
+    		if(selected_parent == "") {
+    			$('#frm-articleForm-data-category_id').css("display", "block");
+    			$('#no_category_label').css("display", "none");	
+    		}
+    		else {
+    			$('#frm-articleForm-data-category_id').css("display", "none");
+    			$('#no_category_label').css("display", "block");
+    		}
+    	});
+
+    	var selected_parent = $('#frm-articleForm-data-article_id').val();
+		if(selected_parent == "") {
+			$('#frm-articleForm-data-category_id').css("display", "block");
+			$('#no_category_label').css("display", "none");	
+		}
+		else {
+			$('#frm-articleForm-data-category_id').css("display", "none");
+			$('#no_category_label').css("display", "block");
+		}
 	</script>
 {/block}

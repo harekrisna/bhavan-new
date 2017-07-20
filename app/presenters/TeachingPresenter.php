@@ -17,7 +17,8 @@ class TeachingPresenter extends BasePresenter {
 	}
 
 	public function renderCategory($category_id) {
-		$this->template->articles = $this->article->findBy(['category_id' => $category_id])
+		$this->template->articles = $this->article->findBy(['category_id' => $category_id,
+															'article_id' => NULL])
 												  ->order('position');
 												  
 		$category = $this->articleCategory->get($category_id);
@@ -32,17 +33,33 @@ class TeachingPresenter extends BasePresenter {
 
 	public function renderArticle($article_id) {
 		$article = $this->article->get($article_id);
-		
-		$next = $this->article->findBy(['category_id' => $article->category_id, 'position < ?' => $article->position])
-							  ->order('position DESC');
 
-		$prev = $this->article->findBy(['category_id' => $article->category_id, 'position > ?' => $article->position])
-							  ->order('position ASC');;
+		$this->template->child_articles = $this->article->findBy(['article_id' => $article_id])
+														->order('position');
+		
+		$next = $this->article->findBy(['category_id' => $article->category_id, 
+										'article_id' => $article->article_id, 
+										'position > ?' => $article->position])
+							  ->order('position ASC');
+
+		$prev = $this->article->findBy(['category_id' => $article->category_id, 
+										'article_id' => $article->article_id,
+										'position < ?' => $article->position])
+							  ->order('position DESC');;
 		
 		$this->template->previous_article = $prev->fetch();
 		$this->template->next_article = $next->fetch();
 		$this->template->article = $article;
 		$this->template->category = $this->articleCategory->get($article->category_id);
-		$this->template->backlinks = [$this->link('category', $article->category_id) => $article->category->title];
+
+		$backlinks = [];
+		while($article->article_id != NULL) {
+			$article = $this->article->get($article->article_id);
+			$backlinks = [$this->link('article', $article->id) => $article->title] + $backlinks;
+		}
+
+		
+		$backlinks = [$this->link('category', $article->category_id) => $article->category->title] + $backlinks;
+		$this->template->backlinks = $backlinks;
 	}
 }

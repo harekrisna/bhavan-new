@@ -74,19 +74,55 @@ class MusicPresenter extends BasePresenter	{
 		}
 		
 		$this->template->albums_count = $albums_count;
-								   
-		if($group_by == "music_year") {
-			$group_by_column = "music_year";
-			$groups->order('music_year DESC')
-				   ->group($group_by_column);
-		}			
-		elseif($group_by == "music_genre_id") {
-			$group_by_column = "music_genre_id";
-			$groups->order('music_genre_id DESC')
-				   ->group($group_by_column);
-		}				
 		
-		if($group_by == 'time_created') {
+		$records = [];
+
+		if($group_by == "music_year") {
+			$groups->order('music_year DESC')
+				   ->group('music_year');
+
+			foreach($groups as $group) {	
+				$records[$group->id] = $this->music->findBy(['music_interpret_id' => $interpret_id, 
+											  				 'music_year' => $group->music_year])
+											  	   ->order('music_year DESC, music_month DESC, music_day DESC'); 
+			}				   
+		}			
+		
+		if($group_by == "music_genre_id") {
+			$groups->order('music_genre_id DESC')
+				   ->group('music_genre_id');
+			
+			foreach($groups as $group) {	
+				$records[$group->id] = $this->music->findBy(['music_interpret_id' => $interpret_id, 
+											  				 'music_genre_id' => $group->music_genre_id])
+											  	   ->order('music_year DESC, music_month DESC, music_day DESC'); 
+			}
+		}
+		
+		if($group_by == "alphabetical") {
+			$groups = [];
+			$records = $this->music->findBy(['music_interpret_id' => $interpret_id])
+									->order('title');
+
+			foreach ($records as $record) {
+				$first_letter = substr($record->title, 0, 2); // UTF8 literal
+				if(strlen(utf8_decode($first_letter)) == 2) {
+					$first_letter = substr($first_letter, 0, 1);
+				}
+
+				if(intval($first_letter)) {
+					$groups['1-9'][] = $record;
+				}
+				elseif($first_letter == "Ś") {
+					$groups["Š"][] = $record;
+				}
+				else {
+					$groups[$first_letter][] = $record;
+				}
+			}
+		}
+		
+		if($group_by == "time_created") {
 			$this->template->last_30_days = $this->music->findBy(['music_interpret_id' => $interpret_id])
 														->where(new SqlLiteral("`time_created` BETWEEN CURDATE() - INTERVAL 30 DAY AND (CURDATE() + 1)"))
 														->order('time_created DESC');
@@ -98,14 +134,6 @@ class MusicPresenter extends BasePresenter	{
 			$records = $this->music->findBy(['music_interpret_id' => $interpret_id])
 									->where(new SqlLiteral("`time_created` < CURDATE() - INTERVAL 60 DAY"))
 									->order('time_created DESC');
-		}	
-		else {
-			$records = [];
-			foreach($groups as $group) {	
-				$records[$group->id] = $this->music->findBy(['music_interpret_id' => $interpret_id, 
-											  				 $group_by_column => $group->$group_by_column])
-											  	   ->order('music_year DESC, music_month DESC, music_day DESC'); 
-			}
 		}
 		
 		$interpret = $this->musicInterpret->get($interpret_id);
@@ -146,25 +174,53 @@ class MusicPresenter extends BasePresenter	{
 		
 		$this->template->albums_count = $albums_count;
 
+		$records = [];
+
 		if($group_by == "music_interpret_id") {
-			$group_by_column = "music_interpret_id";
 			$groups->order('music_year DESC')
-				   ->group($group_by_column);
+				   ->group('music_interpret_id');
+
+			foreach($groups as $group) {
+				$records[$group->id] = $this->music->findBy(['music_year' => $year, 
+															 'music_interpret_id' => $group->music_interpret_id
+															]);
+			}
 		}			
-		elseif($group_by == "music_genre_id") {
-			$group_by_column = "music_genre_id";
+		
+		if($group_by == "music_genre_id") {
 			$groups->order('music_genre_id DESC')
-				   ->group($group_by_column);
+				   ->group('music_genre_id');
+
+			foreach($groups as $group) {
+				$records[$group->id] = $this->music->findBy(['music_year' => $year, 
+															 'music_genre_id' => $group->music_genre_id
+															]);
+			}				   
 		}
 
-		$records = [];
-									  
-		foreach($groups as $group) {
-			$records[$group->id] = $this->music->findBy(['music_year' => $year, 
-														  $group_by => $group->$group_by
-														]);
+		if($group_by == "alphabetical") {
+			$groups = [];
+			$records = $this->music->findBy(['music_year' => $year])
+									->order('title');
+
+			foreach ($records as $record) {
+				$first_letter = substr($record->title, 0, 2); // UTF8 literal
+				if(strlen(utf8_decode($first_letter)) == 2) {
+					$first_letter = substr($first_letter, 0, 1);
+				}
+
+				if(intval($first_letter)) {
+					$groups['1-9'][] = $record;
+				}
+				elseif($first_letter == "Ś") {
+					$groups["Š"][] = $record;
+				}
+				else {
+					$groups[$first_letter][] = $record;
+				}
+			}
 		}
-		
+
 		$this->template->backlinks = [$this->link('years') => "Roky"];
 		$this->template->groups = $groups;
 		$this->template->records = $records;

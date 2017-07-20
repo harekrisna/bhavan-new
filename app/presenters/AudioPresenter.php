@@ -70,8 +70,7 @@ class AudioPresenter extends BasePresenter	{
 	}
 	
 	public function renderYear($year, $group_by = 'audio_interpret_id') {
-		$groups = $this->audio->findBy(['audio_year' => $year])
-							  ->group($group_by);
+		$groups = $this->audio->findBy(['audio_year' => $year]);
 							  
   		$collections = $this->audio->findBy(['audio_year' => $year])
   								   ->select("COUNT('*') AS count, audio_collection_id")
@@ -83,20 +82,27 @@ class AudioPresenter extends BasePresenter	{
 		}
 		
 		$this->template->collections_count = $collections_count;
-		$lectures = [];
-									  
-		foreach($groups as $group) {
-			$lectures[$group->id] = $this->audio->findBy(['audio_year' => $year, 
-														  $group_by => $group->$group_by
-														])
-												->order('audio_year DESC');
-		}
 		
+		$lectures = [];
+		
+		if($group_by == 'audio_interpret_id') {
+			$groups->group('audio_interpret_id');
+
+			foreach($groups as $group) {
+				$lectures[$group->id] = $this->audio->findBy(['audio_year' => $year, 
+															  'book_id' => $group->book_id
+															])
+													->order('audio_year DESC');
+			}
+		}
+
 		if($group_by == 'book_id') {
+			$groups->group('book_id');
+
 			$this->template->unclasified = $this->audio->findBy(['audio_year' => $year])
 									   				   ->where('book_id IS NULL AND seminar = ? AND sankirtan = ? AND varnasrama = ?', array(0, 0, 0));
 									   				   
-				$this->template->seminars = $this->audio->findBy(['audio_year' => $year])
+			$this->template->seminars = $this->audio->findBy(['audio_year' => $year])
 													->where('seminar = ?', 1);
 													
 			$this->template->sankirtan = $this->audio->findBy(['audio_year' => $year])
@@ -104,7 +110,36 @@ class AudioPresenter extends BasePresenter	{
 													 
 			$this->template->varnasrama = $this->audio->findBy(['audio_year' => $year])
 													  ->where('varnasrama = ?', 1);													 
+			
+			foreach($groups as $group) {
+				$lectures[$group->id] = $this->audio->findBy(['audio_year' => $year, 
+															  'book_id' => $group->book_id
+															])
+													->order('audio_year DESC');
+			}													  
+		}
 
+		if($group_by == "alphabetical") {
+			$groups = [];
+			$lectures = $this->audio->findBy(['audio_year' => $year])
+									->order('title');
+
+			foreach ($lectures as $lecture) {
+				$first_letter = substr($lecture->title, 0, 2); // UTF8 literal
+				if(strlen(utf8_decode($first_letter)) == 2) {
+					$first_letter = substr($first_letter, 0, 1);
+				}
+
+				if(intval($first_letter)) {
+					$groups['1-9'][] = $lecture;
+				}
+				elseif($first_letter == "Ś") {
+					$groups["Š"][] = $lecture;
+				}
+				else {
+					$groups[$first_letter][] = $lecture;
+				}
+			}
 		}
 		
 		$this->template->backlinks = [$this->link('years') => "Roky"];
@@ -320,44 +355,30 @@ class AudioPresenter extends BasePresenter	{
 		}
 		
 		$this->template->collections_count = $collections_count;
-								   
-		if($group_by == "audio_year") {
-			$group_by_column = "audio_year";
-			$groups->order('audio_year DESC')
-				   ->group($group_by_column);
-		}			
-		elseif($group_by == "book_id") {
-			$group_by_column = "book_id";
-			$groups->order('book.id ASC')
-				   ->group($group_by_column);
-		}				
-			
+		
 		$lectures = [];
-									  
-		foreach($groups as $group) {			
-			if($group_by == 'time_created') {
-										  		
-				$this->template->last_30_days = $this->audio->findBy(['audio_interpret_id' => $interpret_id])
-															->where(new SqlLiteral("`time_created` BETWEEN CURDATE() - INTERVAL 30 DAY AND (CURDATE() + 0)"))
-															->order('time_created DESC');
-													
-				$this->template->last_60_days = $this->audio->findBy(['audio_interpret_id' => $interpret_id])
-															->where(new SqlLiteral("`time_created` BETWEEN (CURDATE() - INTERVAL 60 DAY) AND (CURDATE() - INTERVAL 30 DAY)"))
-															->order('time_created DESC');													
-				
-				$lectures = $this->audio->findBy(['audio_interpret_id' => $interpret_id])
-										->where(new SqlLiteral("`time_created` < CURDATE() - INTERVAL 60 DAY"))
-										->order('time_created DESC');
-			}
-			else {
+
+		if($group_by == "audio_year") {
+			$groups->order('audio_year DESC')
+				   ->group('audio_year');
+
+			foreach($groups as $group) {			
 				$lectures[$group->id] = $this->audio->findBy(['audio_interpret_id' => $interpret_id, 
-											  				  $group_by_column => $group->$group_by_column])
+											  				  'audio_year' => $group->audio_year])
 											  		->order('audio_year DESC, audio_month DESC, audio_day DESC'); 
 			}
-		}
+		}			
 		
-		
-		if($group_by == 'book_id') {
+		if($group_by == "book_id") {
+			$groups->order('book.id ASC')
+				   ->group('book_id');
+
+			foreach($groups as $group) {			
+				$lectures[$group->id] = $this->audio->findBy(['audio_interpret_id' => $interpret_id, 
+											  				  'book_id' => $group->book_id])
+											  		->order('audio_year DESC, audio_month DESC, audio_day DESC'); 
+			}
+
 			$this->template->unclasified = $this->audio->findBy(['audio_interpret_id' => $interpret_id])
 									   				   ->where('book_id IS NULL AND seminar = ? AND sankirtan = ? AND varnasrama = ?', array(0, 0, 0));
 									   				   
@@ -374,6 +395,43 @@ class AudioPresenter extends BasePresenter	{
 													  ->order('time_created DESC');													 
 		}
 		
+		if($group_by == 'time_created') {
+			$this->template->last_30_days = $this->audio->findBy(['audio_interpret_id' => $interpret_id])
+														->where(new SqlLiteral("`time_created` BETWEEN CURDATE() - INTERVAL 30 DAY AND (CURDATE() + 0)"))
+														->order('time_created DESC');
+												
+			$this->template->last_60_days = $this->audio->findBy(['audio_interpret_id' => $interpret_id])
+														->where(new SqlLiteral("`time_created` BETWEEN (CURDATE() - INTERVAL 60 DAY) AND (CURDATE() - INTERVAL 30 DAY)"))
+														->order('time_created DESC');													
+			
+			$lectures = $this->audio->findBy(['audio_interpret_id' => $interpret_id])
+									->where(new SqlLiteral("`time_created` < CURDATE() - INTERVAL 60 DAY"))
+									->order('time_created DESC');
+		}		
+		
+		if($group_by == "alphabetical") {
+			$groups = [];
+			$lectures = $this->audio->findBy(['audio_interpret_id' => $interpret_id])
+									->order('title');
+
+			foreach ($lectures as $lecture) {
+				$first_letter = substr($lecture->title, 0, 2); // UTF8 literal
+				if(strlen(utf8_decode($first_letter)) == 2) {
+					$first_letter = substr($first_letter, 0, 1);
+				}
+
+				if(intval($first_letter)) {
+					$groups['1-9'][] = $lecture;
+				}
+				elseif($first_letter == "Ś") {
+					$groups["Š"][] = $lecture;
+				}
+				else {
+					$groups[$first_letter][] = $lecture;
+				}
+			}
+		}
+
 		$interpret = $this->interpret->get($interpret_id);
 		$this->template->backlinks = [$this->link('interprets') => "Autoři"];
 		$this->session->backlinks = [$this->link('interprets') => "Autoři",

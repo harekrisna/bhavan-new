@@ -11,6 +11,7 @@
 	<a class="link{ifCurrent Audio:interpret, $interpret->id, 'book_id'} current{/ifCurrent}" n:href="interpret, $interpret->id, 'book_id'">Témat</a>
 	<a class="link{ifCurrent Audio:interpret, $interpret->id, 'audio_year'} current{/ifCurrent}" n:href="interpret, $interpret->id, 'audio_year'">Roků</a>
 	<a class="link{ifCurrent Audio:interpret, $interpret->id, 'time_created'} current{/ifCurrent}" n:href="interpret, $interpret->id, 'time_created'">Nejnovější</a>
+	<a class="link{ifCurrent Audio:interpret, $interpret->id, 'alphabetical'} current{/ifCurrent}" n:href="interpret, $interpret->id, 'alphabetical'">Abecedně</a>
 </nav>
 {if $group_by == 'book_id'}
 	<section n:if="count($sankirtan)" class="lectures-group">
@@ -118,7 +119,6 @@
 {/if}
 
 {if $group_by == 'time_created'}
-	
 	<section n:if="$last_30_days->count()" class="lectures-group">
 		<div class="group-header">
 			<div class="group-header-label label-text">30</div>
@@ -168,6 +168,20 @@
 	{if $last_60_days->count() || $last_30_days->count()}
 	</section>
 	{/if}
+{/if}
+
+{if $group_by == 'alphabetical'}
+	{foreach $groups as $group_letter => $group}
+	<section class="lectures-group">
+		<div class="group-header">
+			<div n:class="group-header-label, label-text">{$group_letter}</div>
+			<h2 class="group-header-title">{$group_letter}</h2>
+		</div>
+		{foreach $group as $lecture}
+			{include player-bar.latte, lecture => $lecture}
+		{/foreach}
+	</section>
+	{/foreach}
 {/if}
 {/block}
 {block scripts}
