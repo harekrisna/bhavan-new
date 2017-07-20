@@ -690,6 +690,11 @@ footer .contact-info .link-mail {
 .list .list-box .list-box-image.image-by-text.alt-color {
   background-color: #796956;
 }
+.list .list-box .list-box-image.image-by-text.unknown-label {
+  font-size: 35px;
+  padding-top: 22px;
+  background-color: #BBBBBB;
+}
 .list .list-box .list-box-image .list-box-image-title {
   width: 100%;
   height: 25px;
@@ -1233,6 +1238,9 @@ footer .contact-info .link-mail {
 }
 .lectures-group .group-header .group-header-label.alt-color {
   background-color: #796956;
+}
+.lectures-group .group-header .group-header-label.unknown-label {
+  background-color: #BBBBBB;
 }
 /**********************
        CONSTANTS

@@ -17,8 +17,8 @@
 	{foreach $groups as $group}
 	<section class="lectures-group">
 		<div class="group-header">
-			<div n:class="group-header-label, label-text, year-label, $group->music_year < 2000 ? 'alt-color'">{$group->music_year}</div>
-			<h2 class="group-header-title">Skladby z roku {$group->music_year}</h2>
+			<div n:class="group-header-label, label-text, !$group->music_year ? 'unknown-label' : 'year-label', $group->music_year < 2000 ? 'alt-color'">{$group->music_year ?: "?"}</div>
+			<h2 class="group-header-title">{if $group->music_year}Skladby z roku {$group->music_year}{else}Neznámý rok{/if}</h2>
 		</div>
 		{foreach $records[$group->id] as $record}
 			{if $record->music_album_id}
