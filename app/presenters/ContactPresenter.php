@@ -13,8 +13,6 @@ class ContactPresenter extends BasePresenter {
     	$page = $this->page->findBy(['page' => 'contact'])
     	                   ->fetch();
 
-    	Debugger::fireLog($page);
-
         $html = Html::el()->setHtml($page->text);
         $this->template->text = $html;		
 	}
