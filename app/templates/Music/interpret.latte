@@ -9,7 +9,7 @@
 <nav class="audio_nav">
 	<span>Seskupit podle:</span>
 	<a class="link{ifCurrent Music:interpret, $interpret->id, 'music_genre_id'} current{/ifCurrent}" n:href="interpret, $interpret->id, 'music_genre_id'">Žánrů</a>
-	<a class="link{ifCurrent Music:interpret, $interpret->id, 'music_year'} current{/ifCurrent}" n:href="interpret, $interpret->id, 'music_year'">Roků</a>
+	{*<a class="link{ifCurrent Music:interpret, $interpret->id, 'music_year'} current{/ifCurrent}" n:href="interpret, $interpret->id, 'music_year'">Roků</a>*}
 	<a class="link{ifCurrent Music:interpret, $interpret->id, 'time_created'} current{/ifCurrent}" n:href="interpret, $interpret->id, 'time_created'">Nejnovější</a>
 	<a class="link{ifCurrent Music:interpret, $interpret->id, 'alphabetical'} current{/ifCurrent}" n:href="interpret, $interpret->id, 'alphabetical'">Abecedně</a>
 </nav>
