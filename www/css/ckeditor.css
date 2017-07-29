@@ -1,0 +1,6 @@
+img {
+	width: 30%; 
+	margin: 5px 0 10px 15px;
+	float: right;
+	box-shadow: 10px 9px 22px -10px rgba(0,0,0,0.75);
+}

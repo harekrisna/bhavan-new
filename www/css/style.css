@@ -1077,6 +1077,12 @@ footer .contact-info .link-mail {
   text-align: justify;
   margin-bottom: 20px;
 }
+.article-detail img {
+  width: 30%;
+  margin: 5px 0 10px 15px;
+  float: right;
+  box-shadow: 10px 9px 22px -10px rgba(0, 0, 0, 0.75);
+}
 .article-detail .article-title {
   margin-left: 0;
   margin-bottom: 10px;
@@ -1097,24 +1103,6 @@ footer .contact-info .link-mail {
 @media screen and (min-width: 992px) {
   .article-detail .article-text {
     width: 66%;
-  }
-}
-.article-detail .article-image {
-  width: 50%;
-  border-radius: 70px 0;
-  margin: 30px 0 0px 15px;
-  float: right;
-  position: relative;
-  top: -20px;
-}
-@media screen and (max-width: 991px) {
-  .article-detail .article-image {
-    border-radius: 40px 0;
-  }
-}
-@media (max-width: 544px) {
-  .article-detail .article-image {
-    border-radius: 20px 0;
   }
 }
 .article-navigation {
