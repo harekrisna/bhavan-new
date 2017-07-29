@@ -22,11 +22,12 @@
 				{input data-category_id}
 			</td>
 		</tr>
+		<tr><th>{label data-list_style /}</th><td>{input data-list_style}</td></tr>
 		<tr>
 			<th class="picture">{label preview_image /}</th>
 		{if $presenter->getAction() == "edit"}
 			<td>{$record->preview_image}</td></tr>
-			<tr><th></th><td><img src="{$basePath}/{=ARTICLES_IMG_FOLDER}/previews/{$record->preview_image}"</td></tr>
+			<tr><th></th><td><img src="{$basePath}/{=ARTICLES_IMG_FOLDER}/previews/{$record->preview_image}"></td></tr>
 		</tr>
 		<tr>
 	        <th></th><td>{input preview_image}</td>

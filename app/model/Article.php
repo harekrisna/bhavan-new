@@ -29,5 +29,5 @@ class Article extends Table   {
 	        else
 	            throw $e;
 	    }
-	}	
+	}
 }

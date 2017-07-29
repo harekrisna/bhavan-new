@@ -142,10 +142,11 @@ final class TeachingPresenter extends BasePresenter {
 			 ->addCondition($form::FILLED)
 				 ->addRule($form::IMAGE, 'Obrázek musí být JPEG, PNG nebo GIF');
 
-	    $data->addSelect('category_id', 'Kategorie:', $this->articleCategory->findAll()->fetchPairs('id', 'title'));
-
 	    $data->addSelect('article_id', 'Rodič:')
 	    	 ->setPrompt("- žádný -");
+
+		$data->addSelect('category_id', 'Kategorie:', $this->articleCategory->findAll()->fetchPairs('id', 'title'));
+		$data->addSelect('list_style', 'Styl seznamu:', ['box' => "Boxy", 'line-link' => "Řádky - odkazy", 'line-collapse' => "Řádky - rozbalovací"]);
 	    										   
 	    $data->addTextArea('text', 'Text:', 40);
 	    $data->addTextArea('preview_text', 'Text v přehledu:', 40);

@@ -4,6 +4,18 @@ $(function(){
       	window.location.href = href;
     });
 
+	$('.list-simple .list-simple-item').click(function() {
+      	var item_text = $(this).next();
+      	if($(this).hasClass('item-expanded')) {
+      		$(this).removeClass('item-expanded');	
+      		$(item_text).slideUp();
+      	}
+      	else {
+      		$(this).addClass('item-expanded');
+      		$(item_text).slideDown();
+      	}
+    });
+
     function ScaleListTitle() {
 		var container = $('.scale-text');
 		var text = container.find('span');
