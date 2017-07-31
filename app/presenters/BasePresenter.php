@@ -4,11 +4,13 @@ namespace App\Presenters;
 
 use Nette,
 	App\Model;
+use Nette\Application\UI\Form;
 use Tracy\Debugger;
 /**
  * Base presenter for all application presenters.
  */
 abstract class BasePresenter extends Nette\Application\UI\Presenter {
+    protected $search;
 	protected $actuality;
 	protected $slide;
     protected $news;
@@ -42,6 +44,7 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter {
 			$this->redirectUrl("http://www.bhavan.cz");
 		}
 		
+        $this->search = $this->context->getService("search");
         $this->actuality = $this->context->getService("actuality");
         $this->slide = $this->context->getService("slide");
         $this->news = $this->context->getService("news");
@@ -72,7 +75,25 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter {
 													   ->where('show_from IS NULL OR show_from < NOW()')
 													   ->where('show_to IS NULL OR show_to > NOW()')
 													   ->order('date_from ASC, id ASC');
-													   
 		$this->template->back = "";													   
 	}
+
+    protected function createComponentSearchForm(){
+        $form = new Form();
+
+        $form->addText('search_text', 'Hledat');
+        $form->addSubmit('search', 'Hledat');
+        $form->setMethod('GET');
+
+        $form->onSuccess[] = array($this, 'search');
+        return $form;
+    }
+
+    public function search(Form $form, $values) {  
+        $this->setView('../Search/search-results'); 
+        $search_text = trim($values->search_text);
+
+        $this->template->search_articles = $this->search->searchArticles($search_text);
+        $this->template->search_text = $values->search_text;
+    }    
 }

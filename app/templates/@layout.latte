@@ -63,7 +63,7 @@
     					<div id="actuality_slider" class="slideshow">
     					    <div u="slides">
     						    <div>
-    					        	<a n:href="Actuality:sunday">Programy pro veřejnost</a>
+    					        	<a n:href="Actuality:sunday">Programy pro veřejnost Programyyyyyy pro veřejnost</a>
     						    </div>
     					        <div n:foreach="$actualities as $actuality">
     					        	<a n:href="Actuality:detail, $actuality->id">{$actuality->title}</a>
@@ -72,9 +72,9 @@
     				    </div>
     		        </nav>
     		        <div class="site-search">
-						<form action="" autocomplete="on">
-							<input id="search" name="search" type="text" class="site-search-input" placeholder="Co hledáš, jako co?">
-							<input id="search_submit" class="site-search-submit" type="submit">
+						<form action="{plink SiteSearch:search}" autocomplete="on">
+							<input id="search_text" name="q" type="text" class="site-search-input" placeholder="Co hledáš, jako co?">
+							<input id="search_sumbit" class="site-search-submit" type="submit">
 						</form>
 					</div>
                     <a href="https://www.facebook.com/pages/Prabhup%C3%A1d-Bhavan/160940383943087" target="_blank" class="facebook-link">f</a>
@@ -161,6 +161,21 @@
             };
 
             var actuality_slider = new $JssorSlider$("actuality_slider", options);
+
+            $('#search_sumbit').on("click",function() {
+                var search_text = $('#search_text');
+                console.log(search_text.val());
+                if($(search_text).hasClass('focus')) {
+                    if(search_text.val() == "") {
+                        $(search_text).removeClass('focus').focusout();
+                        event.preventDefault();
+                    }
+                }
+                else {
+                    $(search_text).addClass('focus').focus();
+                    event.preventDefault();
+                }
+            });
         });
 
     </script>
