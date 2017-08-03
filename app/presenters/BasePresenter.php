@@ -10,7 +10,6 @@ use Tracy\Debugger;
  * Base presenter for all application presenters.
  */
 abstract class BasePresenter extends Nette\Application\UI\Presenter {
-    protected $search;
 	protected $actuality;
 	protected $slide;
     protected $news;
@@ -44,7 +43,6 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter {
 			$this->redirectUrl("http://www.bhavan.cz");
 		}
 		
-        $this->search = $this->context->getService("search");
         $this->actuality = $this->context->getService("actuality");
         $this->slide = $this->context->getService("slide");
         $this->news = $this->context->getService("news");

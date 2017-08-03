@@ -166,8 +166,6 @@ final class TeachingPresenter extends BasePresenter {
         $values = $form->getValues();
         $preview_image = $values->preview_image;
         $data = $values['data'];
-        Debugger::fireLog($values);
-        exit;
 
 		if($data['article_id'] != NULL) {
 			$data['category_id'] = $this->article->get($data['article_id'])->category_id;

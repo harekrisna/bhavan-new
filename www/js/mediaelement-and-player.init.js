@@ -36,7 +36,7 @@ $(function(){
 		var audio = $(this).closest('.audio-player').find('audio');
 		
 		if(button == 'Play') {
-			on_play(audio);
+			on_play(audio, $(audio).data('presenter'));
 		}
 		
 		if(button == 'Pause') {
@@ -45,13 +45,18 @@ $(function(){
 	});
 });
 
-function on_play(audio) {
+function on_play(audio, presenter = null) {
 	var audio_player = $(audio).closest('.audio-player');
 	var hidder = audio_player.find('.hidder');
 	var audio_id = $(audio).data('id');
 	
 	hidder.removeClass('hidder-hide');
-	$.get('increase-mp3-playcount/' + audio_id, 
+	var url = 'increase-mp3-playcount/' + audio_id;
+	
+	if(presenter != null)
+		url = presenter + "/" + url;
+
+	$.get(url, 
         function(payload) {
             redraw_playcount_title(audio, payload.playcount)
         }

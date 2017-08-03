@@ -22,4 +22,9 @@ class Music extends Table   {
 				
 		return parent::update($id, $data);
 	}	
+
+	public function searchRecords($pattern) {
+		return $this->findAll()
+					->where("title LIKE ?", "%".$pattern."%");
+	}
 }

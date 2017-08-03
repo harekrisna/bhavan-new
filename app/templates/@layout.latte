@@ -161,10 +161,9 @@
             };
 
             var actuality_slider = new $JssorSlider$("actuality_slider", options);
-
+            
             $('#search_sumbit').on("click",function() {
                 var search_text = $('#search_text');
-                console.log(search_text.val());
                 if($(search_text).hasClass('focus')) {
                     if(search_text.val() == "") {
                         $(search_text).removeClass('focus').focusout();
@@ -175,7 +174,14 @@
                     $(search_text).addClass('focus').focus();
                     event.preventDefault();
                 }
+
+                if(search_text.val().length == 1) {
+                    alert("Pro vyhledávání zadejte alespoň 2 znaky.");
+                    $(search_text).focus();
+                    event.preventDefault();
+                }
             });
+            
         });
 
     </script>

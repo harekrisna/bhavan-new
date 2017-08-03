@@ -21,7 +21,6 @@ services:
 	- App\AdminModule\Model\UserManager
 	filters: App\Templates\Filters
 	common: App\AdminModule\Model\Common 
-	search: App\Model\Search
 	news: App\Model\News
 	newsType: App\Model\NewsType
 	actuality: App\Model\Actuality

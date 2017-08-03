@@ -6,24 +6,24 @@
 <div class="audio-player">
 	<div class="title-line">
 	{if isset($title_only_text) && $title_only_text == true}
-		<div n:class="title, $isMobile ? 'title-padding'" n:href="singleAudio, $record->id">{$record->title}</div>
+		<div n:class="title, $isMobile ? 'title-padding'" n:href="Music:singleAudio, $record->id">{$record->title}</div>
 	{else}
-		<a n:class="title, $isMobile ? 'title-padding'" n:href="singleAudio, $record->id">{$record->title}</a>
+		<a n:class="title, $isMobile ? 'title-padding'" n:href="Music:singleAudio, $record->id">{$record->title}</a>
 	{/if}
 		{if $isMobile}<a href="{$basePath}/mp3_music/{$record->music_interpret->mp3_folder}/{$record->mp3_file}" class="link download-link" title="Staženo: {if $douwnloadcount}{$douwnloadcount}x{else}0x{/if}" download>Stáhnout</a>{/if}
 	</div>
 	<div class="audio-info">
 		<div class="place-time">{$record->place} {$record->music_year, $record->music_month, $record->music_day|dynamicDate}</div>
 		<div class="verse-autor">
-			<a n:if="$show_interpret_link" class="link" n:href="interpret, $record->music_interpret->id, $group_by" title="{$record->music_interpret->title}">{$record->music_interpret->title|replace:['HG ', 'HH '], ['']}</a>
+			<a n:if="$show_interpret_link" class="link" n:href="Music:interpret, $record->music_interpret->id, $group_by" title="{$record->music_interpret->title}">{$record->music_interpret->title|replace:['HG ', 'HH '], ['']}</a>
 		</div>
 	</div>
 	
 	{if $isMobile}
-	<audio class="mobile" width="100%" src="{$basePath}/mp3_music/{$record->music_interpret->mp3_folder}/{$record->mp3_file}" type="audio/mp3" controls="controls" preload="none" data-id="{$record->id}" data-playcount="{if $playcount}{$playcount}{else}0{/if}" onplay="on_play(this)"></audio>
+	<audio class="mobile" width="100%" src="{$basePath}/mp3_music/{$record->music_interpret->mp3_folder}/{$record->mp3_file}" type="audio/mp3" controls="controls" preload="none" data-id="{$record->id}" data-playcount="{if $playcount}{$playcount}{else}0{/if}" onplay="on_play(this, 'music')"></audio>
 	{else}
 	<div class="player-bar-container">	
-		<audio class="desktop" width="100%" src="{$basePath}/mp3_music/{$record->music_interpret->mp3_folder}/{$record->mp3_file}" type="audio/mp3" controls="controls" preload="none" data-id="{$record->id}" data-playcount="{if $playcount}{$playcount}{else}0{/if}"></audio>
+		<audio class="desktop" width="100%" src="{$basePath}/mp3_music/{$record->music_interpret->mp3_folder}/{$record->mp3_file}" type="audio/mp3" controls="controls" preload="none" data-id="{$record->id}" data-presenter="music" data-playcount="{if $playcount}{$playcount}{else}0{/if}"></audio>
 		<div class="hidder hidder-hide">
 			<div class="hidder-row">
 				<div class="hidder-cell transparent-part"></div>

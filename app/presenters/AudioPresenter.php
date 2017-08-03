@@ -483,7 +483,18 @@ class AudioPresenter extends BasePresenter	{
 		$this->template->lecture = $audio_mp3;
 		$this->template->categories = $categories;
 		$this->template->backlinks = $this->session->backlinks;
+
+		if($this->session->backlinks == []) {
+			$this->template->backlinks = [$this->link('interprets') => "Autoři",
+							     		  $this->link('interpret', $audio_mp3->interpret_id) => $audio_mp3->interpret->title];
+		}
+
 		$this->template->main_group = $this->session->main_group;
+
+		if($this->session->main_group == "") {
+			$this->template->main_group = "interprets";
+		}
+		
 		$this->template->main_audio_type = "lecture";
 		
 		$detect = new Mobile_Detect;
