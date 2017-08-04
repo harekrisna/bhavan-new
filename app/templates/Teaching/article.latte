@@ -20,7 +20,37 @@
 </div>
 <article class="article-detail in-content clearfix">
 	<h1 class="article-title">{$article->title}</h1>
-	<div class="article-text">{$article->text|noescape}</div>
+    <div class="article-container">
+    	<div class="article-text">{$article->text|noescape}</div>
+        {if $child_articles->count()}
+        {switch $article->list_style}
+            {case box}
+                <div class="row list">
+                    <div n:foreach="$child_articles as $child_article" class="col-md-6">
+                        <div n:class="list-box">
+                            <a class="list-box-title sms-down" n:href="article, $child_article->id">{$child_article->title}</a>
+                            <div class="list-box-image" style="background-image: url('{$basePath}/{=ARTICLES_IMG_FOLDER}/previews/{$child_article->preview_image}');"></div>
+                            <a class="list-box-title sms-up" n:href="article, $child_article->id">{$child_article->title}</a>
+                            <p class="list-box-text">{$child_article->preview_text}</p>
+                        </div>
+                    </div>
+                </div>
+            {case line-link}
+                <div class="row list-simple">
+                    <ul n:inner-foreach="$child_articles as $article">
+                        <li class="list-simple-item link"><a class="link list-simple-link" n:href="article, $article->id">{$article->title}</a></li>
+                    </ul>
+                </div>
+            {case line-collapse}
+                <div class="row list-simple">
+                    <ul n:inner-foreach="$child_articles as $article">
+                        <li class="list-simple-item link">{$article->title}</li>
+                        <li class="list-simple-text text-hidden">{!$article->text}</li>
+                    </ul>
+                </div>
+        {/switch}
+        {/if}
+    </div>
     <div class="article-category-links">
         <div class="article-category-links-title">{$article->category->title}</div>
         <ul n:inner-foreach="$category_articles as $category_article" class="article-category-links-list">
@@ -40,35 +70,6 @@
         </ul>
     </div>
 </article>
-
-{if $child_articles->count()}
-{switch $article->list_style}
-    {case box}
-        <div class="row list">
-            <div n:foreach="$child_articles as $child_article" class="col-md-6">
-                <div n:class="list-box">
-                    <a class="list-box-title sms-down" n:href="article, $child_article->id">{$child_article->title}</a>
-                    <div class="list-box-image" style="background-image: url('{$basePath}/{=ARTICLES_IMG_FOLDER}/previews/{$child_article->preview_image}');"></div>
-                    <a class="list-box-title sms-up" n:href="article, $child_article->id">{$child_article->title}</a>
-                    <p class="list-box-text">{$child_article->preview_text}</p>
-                </div>
-            </div>
-        </div>
-    {case line-link}
-        <div class="row list-simple">
-            <ul n:inner-foreach="$child_articles as $article">
-                <li class="list-simple-item link"><a class="link list-simple-link" n:href="article, $article->id">{$article->title}</a></li>
-            </ul>
-        </div>
-    {case line-collapse}
-        <div class="row list-simple">
-            <ul n:inner-foreach="$child_articles as $article">
-                <li class="list-simple-item link">{$article->title}</li>
-                <li class="list-simple-text text-hidden">{!$article->text}</li>
-            </ul>
-        </div>
-{/switch}
-{/if}
 
 <div class="article-navigation">
     <div class="links-container">

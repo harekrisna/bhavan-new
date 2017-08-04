@@ -1,8 +1,35 @@
+{block divider}<div class="divider broken"></div>{/block}
 {block content}
-<h1 n:block=title>Page Not Found</h1>
-
-<p>The page you requested could not be found. It is possible that the address is
-incorrect, or that the page no longer exists. Please use a search engine to find
-what you are looking for.</p>
-
-<p><small>error 404</small></p>
+	<div class="error404">
+		<div class="error-broken-glass-label">
+		<h1 n:inner-block=title>Stránka nenalezena</h1>
+		<p>Požadovaná stránka nebyla nalezena. Je možné, že je adresa nesprávná nebo již neexistuje.<br /><small>error 404</small></p>
+		</div>
+    </div>
+	<style>
+		#footer {
+			margin-top: 0;
+		}
+		#container {
+			padding-top: 30px;
+		}
+		
+		#content {
+			margin-bottom: 0;
+		}
+		
+		header {
+			-ms-transform: rotate(6deg) translate(40px, 0);
+			-webkit-transform: rotate(6deg) translate(40px, 0);
+			transform: rotate(6deg) translate(40px, 0);
+		}
+		
+		.facebook {
+			-ms-transform: rotate(84deg) translate(565px, -30px);
+			-webkit-transform: rotate(84deg) translate(565px, -30px);
+			transform: rotate(84deg) translate(565px, -30px);
+		}
+		
+		
+	</style>
+{/block}

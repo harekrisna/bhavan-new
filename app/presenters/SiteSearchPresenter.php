@@ -22,6 +22,7 @@ class SiteSearchPresenter extends BasePresenter {
 			$this->terminate();
 		}
 
+		$this->statsSearch->insert(['pattern' => $q, 'ip' => $_SERVER['REMOTE_ADDR']]);
         $this->setView('search-results'); 
         $query = trim($q);
 

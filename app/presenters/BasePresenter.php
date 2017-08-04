@@ -30,6 +30,7 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter {
     protected $musicDownloadcount;
     protected $book;
     protected $page;
+    protected $statsSearch;
     
     protected $httpRequest;
 	    
@@ -40,6 +41,9 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter {
 		$this->httpRequest = $httpRequest;
 		$host = $httpRequest->getUrl()->getHost();
 		if($host == "www.prabhupadbhavan.cz" || $host == "prabhupadbhavan.cz") {
+            $this->context->getService("stats_access")
+                          ->insert(['hostname' => $host, 'ip' => $_SERVER['REMOTE_ADDR']]);
+
 			$this->redirectUrl("http://www.bhavan.cz");
 		}
 		
@@ -63,6 +67,7 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter {
         $this->musicDownloadcount = $this->context->getService("music_downloadcount");
         $this->book = $this->context->getService("book");
         $this->page = $this->context->getService("page");
+        $this->statsSearch = $this->context->getService("stats_search");
 	}
   
   	public function beforeRender() {

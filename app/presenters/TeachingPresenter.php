@@ -35,7 +35,8 @@ class TeachingPresenter extends BasePresenter {
 		$article = $this->article->get($article_id);
 
 		$category_articles = $this->article->findBy(['category_id' => $article->category_id,
-													 'article_id' => $article->article_id]);
+													 'article_id' => $article->article_id])
+										   ->order('position');
 
 		$child_articles = $this->article->findBy(['article_id' => $article_id])
 										->order('position');
