@@ -1,6 +1,7 @@
 .article-detail {
 	font-family: Georgia, serif;
 	font-size: 16px;
+	width: 100%;
 	margin-bottom: 50px;
 
 	&.font-inherit {
@@ -59,7 +60,46 @@
 	}
 	
 	.article-text {
+		float: left;
 		.ts-up({width: 66%})
+	}
+
+	.article-category-links {
+		width: 32%;
+		min-height: 500px;
+		background-color: #FFF6D8;
+		box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.3);
+		float: right;
+
+		.article-category-links-list {
+			list-style: none;
+		}
+
+		.article-category-links-title {
+			font-size: 20px;
+			padding: 10px 0 10px 20px;
+		}
+
+		.article-category-links-item {
+			padding-bottom: 10px;
+			clear: both;
+
+			.article-category-links-item-link {
+				display: inline-block;
+				min-width: 200px;
+				height: 50px;
+			}
+
+			.article-category-links-item-image {
+				width: 50px;
+				height: 50px;
+				background-size: 50px 50px;
+				float: left;
+			}
+
+		}
+
+		.tws-down({display: none;});
 	}
 }
 

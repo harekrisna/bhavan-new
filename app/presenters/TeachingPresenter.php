@@ -34,8 +34,11 @@ class TeachingPresenter extends BasePresenter {
 	public function renderArticle($article_id) {
 		$article = $this->article->get($article_id);
 
-		$this->template->child_articles = $this->article->findBy(['article_id' => $article_id])
-														->order('position');
+		$category_articles = $this->article->findBy(['category_id' => $article->category_id,
+													 'article_id' => $article->article_id]);
+
+		$child_articles = $this->article->findBy(['article_id' => $article_id])
+										->order('position');
 		
 		$next = $this->article->findBy(['category_id' => $article->category_id, 
 										'article_id' => $article->article_id, 
@@ -47,6 +50,8 @@ class TeachingPresenter extends BasePresenter {
 										'position < ?' => $article->position])
 							  ->order('position DESC');;
 		
+		$this->template->category_articles = $category_articles;
+		$this->template->child_articles = $child_articles;
 		$this->template->previous_article = $prev->fetch();
 		$this->template->next_article = $next->fetch();
 		$this->template->article = $article;

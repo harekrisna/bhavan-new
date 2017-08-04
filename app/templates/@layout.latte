@@ -63,7 +63,7 @@
     					<div id="actuality_slider" class="slideshow">
     					    <div u="slides">
     						    <div>
-    					        	<a n:href="Actuality:sunday">Programy pro veřejnost Programyyyyyy pro veřejnost</a>
+    					        	<a n:href="Actuality:sunday">Programy pro veřejnost</a>
     						    </div>
     					        <div n:foreach="$actualities as $actuality">
     					        	<a n:href="Actuality:detail, $actuality->id">{$actuality->title}</a>
@@ -74,6 +74,7 @@
     		        <div class="site-search">
 						<form action="{plink SiteSearch:search}" autocomplete="on">
 							<input id="search_text" name="q" type="text" class="site-search-input" placeholder="Co hledáš, jako co?">
+                            <div id="search_text_border" class="site-search-input-border"></div>
 							<input id="search_sumbit" class="site-search-submit" type="submit">
 						</form>
 					</div>
@@ -162,21 +163,25 @@
 
             var actuality_slider = new $JssorSlider$("actuality_slider", options);
             
-            $('#search_sumbit').on("click",function() {
+            $('#search_sumbit').on("click",function(event) {
                 var search_text = $('#search_text');
+                var search_text_border = $('#search_text_border');
+
                 if($(search_text).hasClass('focus')) {
                     if(search_text.val() == "") {
                         $(search_text).removeClass('focus').focusout();
+                        $(search_text_border).removeClass('focus');
                         event.preventDefault();
                     }
                 }
                 else {
                     $(search_text).addClass('focus').focus();
+                    $(search_text_border).addClass('focus');
                     event.preventDefault();
                 }
 
                 if(search_text.val().length == 1) {
-                    alert("Pro vyhledávání zadejte alespoň 2 znaky.");
+                    alert("Pro vyhledávání zadejte prosím alespoň 2 znaky.");
                     $(search_text).focus();
                     event.preventDefault();
                 }

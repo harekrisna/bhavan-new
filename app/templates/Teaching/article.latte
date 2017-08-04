@@ -18,9 +18,27 @@
 	<div n:if="$previous_article" id="top_label_prev" n:class="link-hover-label, $previous_article->preview_image ? label-picture : label-text"><img n:if="$previous_article->preview_image" class="image-picture" src="/{=ARTICLES_IMG_FOLDER}/previews/{$previous_article->preview_image}" />{$previous_article->title}</div>
 	<div n:if="$next_article" id="top_label_next" n:class="link-hover-label, label-prev, $next_article->preview_image ? label-picture : label-text"><img n:if="$next_article->preview_image" class="image-picture" src="/{=ARTICLES_IMG_FOLDER}/previews/{$next_article->preview_image}" />{$next_article->title}</div>
 </div>
-<article class="article-detail in-content">
+<article class="article-detail in-content clearfix">
 	<h1 class="article-title">{$article->title}</h1>
 	<div class="article-text">{$article->text|noescape}</div>
+    <div class="article-category-links">
+        <div class="article-category-links-title">{$article->category->title}</div>
+        <ul n:inner-foreach="$category_articles as $category_article" class="article-category-links-list">
+            <li class="article-category-links-item">
+                {ifCurrent 'article', $category_article->id}
+                <div class="article-category-links-item-link">
+                    <div class="article-category-links-item-image" style="background-image: url('{$basePath}/{=ARTICLES_IMG_FOLDER}/previews/{$category_article->preview_image}');"></div>
+                    <span>{$category_article->title}</span>
+                </div>
+                {else}
+                <a class="article-category-links-item-link" n:href="article, $category_article->id">
+                    <div class="article-category-links-item-image" style="background-image: url('{$basePath}/{=ARTICLES_IMG_FOLDER}/previews/{$category_article->preview_image}');"></div>
+                    <span>{$category_article->title}</span>
+                </a>
+                {/ifCurrent}
+            </li>
+        </ul>
+    </div>
 </article>
 
 {if $child_articles->count()}

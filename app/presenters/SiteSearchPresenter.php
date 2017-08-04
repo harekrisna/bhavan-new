@@ -142,10 +142,10 @@ class SiteSearchPresenter extends BasePresenter {
 		
 		// Nahrazeni hledaneho vyrazu regexpem
 		// "pocitac" se bude hledat jako: [pṗṕþ][oõǒôŏǫòȯóőö][cčĉċćç][iĩǐîĭįìıíï][tťṫẗţ][aãǎâăåąàȧáä][cčĉċćç]
-		$needle=preg_replace($map1,$map2,$needle);
-		
+		$needle = preg_replace($map1,$map2,$needle);
+
 		// Finalni nahrazeni hledaneho vyrazu v textu
-		$haystack=preg_replace("/${needle}/iu","<".$this->highlight_tag.">\$0</".$this->highlight_tag.">",$haystack);
+		$haystack = preg_replace("/${needle}/iu","<".$this->highlight_tag.">\$0</".$this->highlight_tag.">",$haystack);
 		
 		return $haystack;
 	} 
