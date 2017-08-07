@@ -5,6 +5,18 @@ $(function(){
 	    iPadUseNativeControls: false,
 	    iPhoneUseNativeControls: false,
 	    AndroidUseNativeControls: false,
+
+	    success: function (mediaElement, domObject) {
+
+	        // Event listeners
+
+	        mediaElement.addEventListener('seeking', function (e) {
+	            var audio_player = $(mediaElement).closest('.audio-player');
+	            var time_float = $(audio_player).find('.mejs__controls .mejs__time-float');
+	            $(time_float).show();
+
+	        }, false);
+        }
 	});
 	
 	$('section.lectures-group audio').each(function(index) {
@@ -43,6 +55,8 @@ $(function(){
 			on_pause(audio);
 		}
 	});
+
+	$('.player-bar-container').show();
 });
 
 function on_play(audio, presenter = null) {
@@ -50,6 +64,8 @@ function on_play(audio, presenter = null) {
 	var hidder = audio_player.find('.hidder');
 	var audio_id = $(audio).data('id');
 	
+	$('.audio-player .hidder').addClass("hidder-hide");
+
 	hidder.removeClass('hidder-hide');
 	var url = 'increase-mp3-playcount/' + audio_id;
 	

@@ -56,8 +56,12 @@ audio.mobile {
 .mejs-container.wide {
   width: 581px !important;
 }
-player-bar-container {
+.player-bar-wrapper {
+  height: 40px;
+}
+.player-bar-container {
   position: relative;
+  display: none;
 }
 .hidder {
   width: 87px;

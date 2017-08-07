@@ -78,6 +78,10 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter {
 													   ->where('show_from IS NULL OR show_from < NOW()')
 													   ->where('show_to IS NULL OR show_to > NOW()')
 													   ->order('date_from ASC, id ASC');
+
+        $this->template->article_categories = $this->articleCategory->findAll()
+                                                                    ->order('position');
+                                                                    
 		$this->template->back = "";													   
 	}
 

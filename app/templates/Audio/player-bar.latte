@@ -23,19 +23,21 @@
 	{if $isMobile}
 	<audio class="mobile" width="100%" src="{$basePath}/mp3/{$lecture->audio_interpret->mp3_folder}/{$lecture->mp3_file}" type="audio/mp3" controls="controls" preload="none" data-id="{$lecture->id}" data-playcount="{if $playcount}{$playcount}{else}0{/if}" onplay="on_play(this, 'audio')"></audio>
 	{else}
-	<div class="player-bar-container">	
-		<audio class="desktop" width="100%" src="{$basePath}/mp3/{$lecture->audio_interpret->mp3_folder}/{$lecture->mp3_file}" type="audio/mp3" controls="controls" preload="none" data-id="{$lecture->id}" data-presenter="audio" data-playcount="{if $playcount}{$playcount}{else}0{/if}"></audio>
-		<div class="hidder hidder-hide">
-			<div class="hidder-row">
-				<div class="hidder-cell transparent-part"></div>
-				<div class="hidder-cell download-part">
-					<div class="download-part-background">
-						<div class="mejs__button audio-download">
-							<a href="{$basePath}/mp3/{$lecture->audio_interpret->mp3_folder}/{$lecture->mp3_file}" class="download-button" title="Staženo: {if $douwnloadcount}{$douwnloadcount}x{else}0x{/if}" download></a>
+	<div class="player-bar-wrapper">
+		<div class="player-bar-container">	
+			<audio class="desktop" width="100%" src="{$basePath}/mp3/{$lecture->audio_interpret->mp3_folder}/{$lecture->mp3_file}" type="audio/mp3" controls="controls" preload="none" data-id="{$lecture->id}" data-presenter="audio" data-playcount="{if $playcount}{$playcount}{else}0{/if}"></audio>
+			<div class="hidder hidder-hide">
+				<div class="hidder-row">
+					<div class="hidder-cell transparent-part"></div>
+					<div class="hidder-cell download-part">
+						<div class="download-part-background">
+							<div class="mejs__button audio-download">
+								<a href="{$basePath}/mp3/{$lecture->audio_interpret->mp3_folder}/{$lecture->mp3_file}" class="download-button" title="Staženo: {if $douwnloadcount}{$douwnloadcount}x{else}0x{/if}" download></a>
+							</div>
 						</div>
 					</div>
+					<div class="hidder-cell hidder-part"></div>
 				</div>
-				<div class="hidder-cell hidder-part"></div>
 			</div>
 		</div>
 	</div>

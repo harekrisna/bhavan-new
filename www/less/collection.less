@@ -8,10 +8,35 @@
 	}
 }
 
+.category-title {
+	margin: 15px 0px 15px 0px;
+
+	.large-mobile-screen-up({
+		display: none;
+	});
+}
+
 .collection-nav {
 	margin-top: 10px;
 	margin-right: 15px;
 	float: left;
+
+	.mobile-screen({
+		display: none;
+	});
+
+	&.right-nav {
+		margin-right: 0;
+		float: right;
+
+		.link {
+			text-transform: none;
+		}
+	}
+
+	&.nav-taller {
+		margin-bottom: 12px;
+	}
 
 	.link {
 		text-transform: uppercase;
@@ -36,15 +61,6 @@
 	.link:first-child:before {
 		margin-right: 10px;
 		margin-left: 0;
-	}
-
-	&.right-nav {
-		margin-right: 0;
-		float: right;
-
-		.link {
-			text-transform: none;
-		}
 	}
 }
 
