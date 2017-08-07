@@ -1,7 +1,7 @@
 {block content}
     <div class="error-404-wrapper">
 		<div class="error-404-label">
-			<h1 class="error-title"><span>{block title}Stránka nenalezena{/block}</span></h1>
+			<h1 class="error-title scale-text"><span>{block title}Stránka nenalezena{/block}</span></h1>
 			<p class="error-text">Požadovaná stránka nebyla nalezena.<br /> Je možné, že je adresa nesprávná nebo již neexistuje.<br /><small>error 404</small></p>
 		</div>
 	</div>
@@ -41,14 +41,6 @@
 		}		
 		
 		@media screen and (max-width: 767px) {
-			.error-404-wrapper {
-				width: calc(100% + 30px);	
-			}
-			
-			.error-404-label {
-				left: -15px;
-			}
-			
 			.error-title {
 				padding-left: 15px;
 			}
@@ -59,6 +51,8 @@
 						
 			.main-content {
 				margin-bottom: 0;
+				padding-left: 0;
+				padding-right: 0;
 			}
 			
 			.error-title {
