@@ -88,26 +88,26 @@ class SiteSearchPresenter extends BasePresenter {
 	
     private function highlight($needle, $haystack) {
 		// Priprava na slozeni regexpu (obsazeni temer vsech moznych akcentu)
-		$map1[]="/[aãǎâăåąàȧáä]/iu";
+		$map1[]="/[aãǎâăåąàȧáäā]/iu";
 		$map1[]="/[bḃ]/iu";
 		$map1[]="/[cčĉċćç]/iu";
-		$map1[]="/[dďḋḑ]/iu";
-		$map1[]="/[eěêĕęèéëȩ]/iu";
+		$map1[]="/[dďḋḑḍ]/iu";
+		$map1[]="/[eěêĕęèéëȩẹ]/iu";
 		$map1[]="/[fḟ]/iu";
 		$map1[]="/[gǧĝġǵģ]/iu";
-		$map1[]="/[hȟĥḣḧḩ]/iu";
-		$map1[]="/[iĩǐîĭįìıíï]/iu";
+		$map1[]="/[hȟĥḣḧḩḥ]/iu";
+		$map1[]="/[iĩǐîĭįìıíïīị]/iu";
 		$map1[]="/[jǰĵ]/iu";
 		$map1[]="/[kǩḱķ]/iu";
 		$map1[]="/[lľĺļ]/iu";
 		$map1[]="/[mṁḿ]/iu";
-		$map1[]="/[nñňǹṅńņ]/iu";
+		$map1[]="/[nñňǹṅńņṇ]/iu";
 		$map1[]="/[oõǒôŏǫòȯóőö]/iu";
 		$map1[]="/[pṗṕþ]/iu";
-		$map1[]="/[rřṙŕŗ]/iu";
-		$map1[]="/[sšŝṡśş]/iu";
-		$map1[]="/[tťṫẗţ]/iu";
-		$map1[]="/[uũǔûŭůųùúűü]/iu";
+		$map1[]="/[rřṙŕŗṛ]/iu";
+		$map1[]="/[sšŝṡśşṣ]/iu";
+		$map1[]="/[tťṫẗţṭ]/iu";
+		$map1[]="/[uũǔûŭůųùúűüū]/iu";
 		$map1[]="/[vṽ]/iu";
 		$map1[]="/[wŵẘẁẇẃẅ]/iu";
 		$map1[]="/[xẋ]/iu";
@@ -115,26 +115,26 @@ class SiteSearchPresenter extends BasePresenter {
 		$map1[]="/[zžẑżź]/iu";
 		
 		// Slozeni regexpu
-		$map2[]="[aãǎâăåąàȧáä]";
+		$map2[]="[aãǎâăåąàȧáäā]";
 		$map2[]="[bḃ]";
 		$map2[]="[cčĉċćç]";
-		$map2[]="[dďḋḑ]";
-		$map2[]="[eěêĕęèéëȩ]";
+		$map2[]="[dďḋḑḍ]";
+		$map2[]="[eěêĕęèéëȩẹ]";
 		$map2[]="[fḟ]";
 		$map2[]="[gǧĝġǵģ]";
-		$map2[]="[hȟĥḣḧḩ]";
-		$map2[]="[iĩǐîĭįìıíï]";
+		$map2[]="[hȟĥḣḧḩḥ]";
+		$map2[]="[iĩǐîĭįìıíïīị]";
 		$map2[]="[jǰĵ]";
 		$map2[]="[kǩḱķ]";
 		$map2[]="[lľĺļ]";
 		$map2[]="[mṁḿ]";
-		$map2[]="[nñňǹṅńņ]";
+		$map2[]="[nñňǹṅńņṇ]";
 		$map2[]="[oõǒôŏǫòȯóőö]";
 		$map2[]="[pṗṕþ]";
-		$map2[]="[rřṙŕŗ]";
-		$map2[]="[sšŝṡśş]";
-		$map2[]="[tťṫẗţ]";
-		$map2[]="[uũǔûŭůųùúűü]";
+		$map2[]="[rřṙŕŗṛ]";
+		$map2[]="[sšŝṡśşṣ]";
+		$map2[]="[tťṫẗţṭ]";
+		$map2[]="[uũǔûŭůųùúűüū]";
 		$map2[]="[vṽ]";
 		$map2[]="[wŵẘẁẇẃẅ]";
 		$map2[]="[xẋ]";
