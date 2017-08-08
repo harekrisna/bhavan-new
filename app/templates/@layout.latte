@@ -84,13 +84,19 @@
                         <li><a n:class="link, $presenter->isLinkCurrent('Actuality:*') ? current" href="{link Actuality:list}">Akce</a></li>
                         <li><a n:class="link, $presenter->isLinkCurrent('About:*') ? current" href="{link About:about}">O nás</a></li>
                         <li class="dropdown">
-                            <a data-toggle="dropdown" n:class="link, dropdown-toggle, $presenter->isLinkCurrent('Teaching:*') ? current" href="{link Teaching:category, 1}" aria-expanded="true">Učení</a>
+                            <a data-toggle="dropdown" n:class="link, dropdown-toggle, $presenter->isLinkCurrent('Teaching:*') ? current" href="{link Teaching:category, 1}">Učení<b class="caret"></b></a>
                             <ul n:class="dropdown-menu" n:inner-foreach="$article_categories AS $article_category">
                                 <li><a n:href="Teaching:category, $article_category->id" class="link{ifCurrent Teaching:category, $article_category->id} current{/ifCurrent}">{$article_category->title}</a></li>
                             </ul>
                         </li>
                         <li><a n:class="link, $presenter->isLinkCurrent('Galery:*') ? current" href="{link Galery:galeries}">Foto</a></li>
-                        <li><a n:class="link, $presenter->isLinkCurrent('Audio:*') || $presenter->isLinkCurrent('Music:*') ? current" href="{link Audio:interprets}">Audio</a></li>
+                        <li class="dropdown">
+                            <a data-toggle="dropdown" n:class="link, dropdown-toggle, $presenter->isLinkCurrent('Audio:*') || $presenter->isLinkCurrent('Music:*') ? current" href="{link Audio:interprets}">Audio<b class="caret"></b></a>
+                            <ul n:class="dropdown-menu">
+                                <li><a n:href="Audio:interprets" n:class="link, $presenter->isLinkCurrent('Audio:interprets') ? current">Přednášky</a></li>
+                                <li><a n:href="Music:interprets" n:class="link, $presenter->isLinkCurrent('Music:interprets') ? current">Hudba</a></li>
+                            </ul>
+                        </li>
                         <li><a n:class="link, $presenter->isLinkCurrent('Contact:*') ? current" href="{link Contact:contact}">Kontakt</a></li>
                         <li><a n:class="link, $presenter->isLinkCurrent('Links:*') ? current" href="{link Links:default}">Odkazy</a></li>
                     </ul>

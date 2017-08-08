@@ -251,6 +251,14 @@ h2 {
     padding-bottom: 6px !important;
   }
 }
+.navbar-nav > li a .caret {
+  margin-left: 8px;
+}
+@media screen and (min-width: 768px) {
+  .navbar-nav > li a .caret {
+    display: none;
+  }
+}
 @media screen and (min-width: 768px) {
   .navbar-nav > li:first-child a {
     padding-left: 0px !important;
@@ -262,7 +270,7 @@ h2 {
     padding-bottom: 10px;
   }
   .navbar-nav .dropdown-menu li a {
-    padding: 3px 20px 3px 20px !important;
+    padding: 3px 15px 3px 15px !important;
   }
 }
 .divider {
@@ -1012,6 +1020,11 @@ footer .contact-info .link-mail {
 .collection-nav.right-nav {
   margin-right: 0;
   float: right;
+}
+@media (max-width: 767px) {
+  .collection-nav.right-nav {
+    display: block;
+  }
 }
 .collection-nav.right-nav .link {
   text-transform: none;
