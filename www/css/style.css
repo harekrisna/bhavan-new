@@ -423,6 +423,9 @@ nav.breadcrumb-nav .sep-arrow {
   float: right;
   margin-bottom: 50px;
 }
+.contact-map img {
+  box-shadow: none !important;
+}
 @media screen and (max-width: 991px) {
   .contact-map {
     float: none;
