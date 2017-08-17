@@ -125,3 +125,49 @@ $(function(){
 		$('#bottom_label_next').removeClass('hover');
 	});
 });
+
+function myPaginator(pages_container, prev_button, next_button) {
+    var visible_page = $(pages_container).find('.link-current').parent().parent();
+    $(visible_page).show();
+
+    if($(visible_page).is(':first-child')) {
+        $(prev_button).addClass('link-disabled');
+    }
+
+    if($(visible_page).is(':last-child')) {
+        $(next_button).addClass('link-disabled');
+    }
+
+    $(prev_button).on('click', function(event) {
+        var visible_page = $(pages_container).find(' > *:visible');
+        if($(visible_page).prev().length) {
+            $(visible_page).hide();
+            $(visible_page).prev().fadeIn();
+
+            if($(visible_page).prev().prev().length == 0) {
+                $(this).addClass('link-disabled');
+            }
+
+            $(next_button).removeClass('link-disabled');
+        }
+        event.preventDefault();
+        return false;
+    });
+
+    $(next_button).on('click', function(event) {
+        var visible_page = $(pages_container).find(' > *:visible');
+        if($(visible_page).next().length) {
+            $(visible_page).hide();
+            $(visible_page).next().fadeIn();
+
+            if($(visible_page).next().next().length == 0) {
+                $(this).addClass('link-disabled');
+            }
+
+            $(prev_button).removeClass('link-disabled');
+        }
+
+        event.preventDefault();
+        return false;
+    });
+}

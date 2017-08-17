@@ -12,36 +12,38 @@
 		margin-bottom: 25px !important;
 	}
 
-	a {
-		color: #EB8C3A;
-		transition: 0.3s; 
-		
-		&:hover {
-			color: #12323D;
+	.article-text {
+		a {
+			color: #EB8C3A;
 			transition: 0.3s; 
-		}	
-	}
-	
-	hr {
-		border-top: 1px #000 solid;
+			
+			&:hover {
+				color: #12323D;
+				transition: 0.3s; 
+			}	
+		}
+		
+		hr {
+			border-top: 1px #000 solid;
+		}
+
+		h3 {
+			margin: 15px 0;
+		}
+
+		p {
+		    text-align: justify;
+		    margin-bottom: 20px;
+		}
+	    
+		img {
+			width: 30%; 
+			margin: 5px 0 10px 15px;
+			float: right;
+			box-shadow: 10px 9px 22px -10px rgba(0,0,0,0.75);
+		}
 	}
 
-	h3 {
-		margin: 15px 0;
-	}
-
-	p {
-	    text-align: justify;
-	    margin-bottom: 20px;
-	}
-    
-	img {
-		width: 30%; 
-		margin: 5px 0 10px 15px;
-		float: right;
-		box-shadow: 10px 9px 22px -10px rgba(0,0,0,0.75);
-	}    
-	
 	.article-title {
 		clear: both;
 		margin-left: 0;
@@ -68,37 +70,68 @@
 
 	.article-category-links {
 		width: 32%;
-		min-height: 500px;
 		background-color: #FFF6D8;
 		box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.3);
+		padding-bottom: 5px;
 		float: right;
 
 		.article-category-links-list {
-			list-style: none;
+			display: none;
 		}
 
 		.article-category-links-title {
-			font-size: 20px;
-			padding: 10px 0 10px 20px;
+			font-size: 21px;
+			color: @webTextColorHover;
+			padding: 20px 0 15px 20px;
+
+			.acl-title-delimiter {
+				width: 40px;
+				text-align: center;
+			    display: inline-block;
+			}
 		}
 
 		.article-category-links-item {
-			padding-bottom: 10px;
-			clear: both;
+			padding: 0 0 5px 5px;
+			clear: both;			
 
 			.article-category-links-item-link {
-				display: inline-block;
-				min-width: 200px;
-				height: 50px;
-			}
-
-			.article-category-links-item-image {
-				width: 50px;
-				height: 50px;
-				background-size: 50px 50px;
+				font-size: 17px;
+				max-width: 95%;
+				white-space: nowrap;
+				overflow: hidden;
+				text-overflow: ellipsis;
+				display: list-item;
 				float: left;
 			}
+		}
 
+		.acl-next-prev {
+			font-size: 17px;
+			margin-bottom: 10px;
+
+			.acl-np-prev, .acl-np-next {
+				color: @webTextColor;
+				transition: 0.3s; 
+
+				&:hover {
+					color: @webTextColorHover;
+					transition: 0.3s; 
+				}
+				
+				&:focus {
+					transition: 0.3s; 
+				}
+			}
+
+			.acl-np-prev {
+				margin-left: 20px;
+			}
+
+			.acl-np-next {
+				margin-right: 20px;
+				float: right;
+			}
 		}
 
 		.tws-down({display: none;});
