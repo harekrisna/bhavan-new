@@ -58,7 +58,7 @@
         {if $iterator->first}<ul class="article-category-links-list">{/if}
             <li class="article-category-links-item">
                 {ifCurrent 'article', $category_article->id}
-                <span class="article-category-links-item-link link-current">{$category_article->title}</span>
+                <div class="article-category-links-item-link link-current">{$category_article->title}</div>
                 {else}
                 <a class="link article-category-links-item-link" n:href="article, $category_article->id">{$category_article->title}</a>
                 {/ifCurrent}
@@ -105,7 +105,6 @@
 {/block}
 {block scripts}
 <script>
-
 myPaginator('#acl_pages', '#acl_np_prev', '#acl_np_next');
 </script>
 

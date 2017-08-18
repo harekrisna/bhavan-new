@@ -1379,7 +1379,6 @@ footer .contact-info .link-mail {
 }
 .article-detail .article-category-links .article-category-links-item {
   padding: 0 0 5px 5px;
-  clear: both;
 }
 .article-detail .article-category-links .article-category-links-item .article-category-links-item-link {
   font-size: 17px;
@@ -1387,8 +1386,9 @@ footer .contact-info .link-mail {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  display: list-item;
-  float: left;
+  display: inline-block;
+  vertical-align: bottom;
+  line-height: 26px;
 }
 .article-detail .article-category-links .acl-next-prev {
   font-size: 17px;
