@@ -42,7 +42,9 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter {
 		$host = $httpRequest->getUrl()->getHost();
 		if($host == "www.prabhupadbhavan.cz" || $host == "prabhupadbhavan.cz") {
             $this->context->getService("stats_access")
-                          ->insert(['hostname' => $host, 'ip' => $_SERVER['REMOTE_ADDR']]);
+                          ->insert(['hostname' => $host, 
+                          			'ip' => $_SERVER['REMOTE_ADDR'],
+                          			'user_agent' => $_SERVER['HTTP_USER_AGENT']]);
 
 			$this->redirectUrl("http://www.bhavan.cz");
 		}
