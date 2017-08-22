@@ -102,7 +102,7 @@ class MusicPresenter extends BasePresenter	{
 		if($group_by == "alphabetical") {
 			$groups = [];
 			$records = $this->music->findBy(['music_interpret_id' => $interpret_id])
-									->order('title');
+								   ->order('title');
 
 			foreach ($records as $record) {
 				$first_letter = substr($record->title, 0, 2); // UTF8 literal
@@ -132,8 +132,18 @@ class MusicPresenter extends BasePresenter	{
 														->order('time_created DESC');													
 			
 			$records = $this->music->findBy(['music_interpret_id' => $interpret_id])
-									->where(new SqlLiteral("`time_created` < CURDATE() - INTERVAL 60 DAY"))
-									->order('time_created DESC');
+								   ->where(new SqlLiteral("`time_created` < CURDATE() - INTERVAL 60 DAY"))
+								   ->order('time_created DESC');
+		}
+
+		if($group_by == "album") {
+			$groups->group('music_album_id');
+
+			foreach($groups as $group) {	
+				$records[$group->music_album_id] = $this->music->findBy(['music_interpret_id' => $interpret_id, 
+											  				 			 'music_album_id' => $group->music_album_id])
+											  	   			   ->order('music_year DESC, music_month DESC, music_day DESC'); 
+			}
 		}
 		
 		$interpret = $this->musicInterpret->get($interpret_id);
@@ -245,8 +255,8 @@ class MusicPresenter extends BasePresenter	{
 
 		$groups = $this->music->findBy(['music_genre_id' => $genre_id]);
 		
-		$albums = $this->music->findBy(['music_genre_id' => $genre_id])
-						   	  ->select("COUNT('*') AS count, music_album_id")
+		$albums = $this->music->findAll()
+							  ->select("COUNT('*') AS count, music_album_id")
 							  ->group('music_album_id');
 		
 		$albums_count = [];								   
@@ -300,6 +310,16 @@ class MusicPresenter extends BasePresenter	{
 				else {
 					$groups[$first_letter][] = $record;
 				}
+			}
+		}
+
+		if($group_by == "album") {
+			$groups->group('music_album_id');
+
+			foreach($groups as $group) {	
+				$records[$group->music_album_id] = $this->music->findBy(['music_genre_id' => $genre_id, 
+											  				 			 'music_album_id' => $group->music_album_id])
+											  	   			   ->order('music_year DESC, music_month DESC, music_day DESC'); 
 			}
 		}
 

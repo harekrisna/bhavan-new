@@ -11,6 +11,7 @@
 	<a n:href="genre, $genre->id, 'music_interpret_id'" class="link {ifCurrent Music:genre, $genre->id, 'music_interpret_id'} current{/ifCurrent}">Autorů</a>
 	{*<a n:href="genre, $genre->id, 'music_year'" class="link {ifCurrent Music:genre, $genre->id, 'music_year'} current{/ifCurrent}">Roků</a>*}
 	<a n:href="genre, $genre->id, 'alphabetical'" class="link{ifCurrent Music:genre, $genre->id, 'alphabetical'} current{/ifCurrent}">Abecedně</a>
+	<a n:href="genre, $genre->id, 'album'" class="link{ifCurrent Music:genre, $genre->id, 'album'} current{/ifCurrent}">Alba</a>
 </nav>
 {if $group_by == 'music_interpret_id'}
 	{foreach $groups as $group}
@@ -65,6 +66,31 @@
 		{/foreach}
 	</section>
 	{/foreach}
+{/if}
+
+{if $group_by == 'album'}
+	{foreach $groups as $group}
+	{continueIf !$group->music_album_id}
+	<section class="lectures-group">
+		<div class="group-header">
+			<h2 class="group-header-title text-only">{$group->music_album->title}</h2>
+		</div>
+		{foreach $records[$group->music_album_id] as $record}
+			{include player-bar.latte, record => $record}
+		{/foreach}
+	</section>
+	{/foreach}
+
+	{ifset $records[""]}
+	<section class="lectures-group">
+		<div class="group-header">
+			<h2 class="group-header-title text-only">Nezařazené</h2>
+		</div>
+		{foreach $records[""] as $record}
+			{include player-bar.latte, record => $record}
+		{/foreach}
+	</section>
+	{/ifset}
 {/if}
 
 {/block}

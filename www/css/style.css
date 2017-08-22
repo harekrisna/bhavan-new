@@ -1497,6 +1497,10 @@ footer .contact-info .link-mail {
   position: relative;
   top: -50px;
 }
+.lectures-group .group-header .group-header-title.text-only {
+  margin-left: 0 !important;
+  top: -20px;
+}
 .lectures-group .group-header .group-header-label {
   width: 75px;
   height: 75px;
