@@ -4,7 +4,6 @@
 	<link rel="stylesheet" media="screen" href="{$basePath}/css/audio-player.css">
 {/block}
 {block audio}
-{var $displayed_albums = []}
 <h1 n:inner-block="title">{$genre->title}</h1>
 <nav class="audio_nav">
 	<span>Seskupit podle:</span>
@@ -20,15 +19,8 @@
 				<div class="group-header-label" style="background-image: url('/images/music_interpret_avatars/{$group->music_interpret->image}')"></div>
 				<h2 class="group-header-title">{$group->music_interpret->title}</h2>
 			</div>
-
 			{foreach $records[$group->id] as $record} 
-				{if $record->music_album_id}
-					{continueIf in_array($record->music_album_id, $displayed_albums)}
-					{include album-link.latte, record => $record, album_count => $albums_count[$record->music_album_id]}
-					{var $displayed_albums[] = $record->music_album_id}
-				{else}
-					{include player-bar.latte, record => $record}
-				{/if}
+				{include player-bar.latte, record => $record}
 			{/foreach}
 		</section>
 	{/foreach}
@@ -42,30 +34,18 @@
 				<h2 class="group-header-title">{if $group->music_year}Skladby z roku {$group->music_year}{else}Neznámý rok{/if}</h2>
 			</div>
 			{foreach $records[$group->id] as $record} 
-				{if $record->music_album_id}
-					{continueIf in_array($record->music_album_id, $displayed_albums)}
-					{include album-link.latte, record => $record, album_count => $albums_count[$record->music_album_id]}
-					{var $displayed_albums[] = $record->music_album_id}
-				{else}
-					{include player-bar.latte, record => $record}
-				{/if}
+				{include player-bar.latte, record => $record}
 			{/foreach}
 		</section>
 	{/foreach}
 {/if}
 
 {if $group_by == 'alphabetical'}
-	{foreach $groups as $group_letter => $group}
-	<section class="lectures-group">
-		<div class="group-header">
-			<div n:class="group-header-label, label-text">{$group_letter}</div>
-			<h2 class="group-header-title">{$group_letter}</h2>
-		</div>
-		{foreach $group as $record}
+	<section class="lectures-group group-continual">
+		{foreach $records as $record}
 			{include player-bar.latte, record => $record}
 		{/foreach}
 	</section>
-	{/foreach}
 {/if}
 
 {if $group_by == 'album'}

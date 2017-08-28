@@ -138,7 +138,11 @@ final class TeachingPresenter extends BasePresenter {
 	    $data->addText('url', 'URL článku:', 40)
       	     ->setRequired('Zadejte prosím URL článku.');
 		
-		$form->addUpload('preview_image', 'Obrázek:')
+		$form->addUpload('preview_image', 'Obrázek v přehledu:')
+			 ->addCondition($form::FILLED)
+				 ->addRule($form::IMAGE, 'Obrázek musí být JPEG, PNG nebo GIF');
+
+		$form->addUpload('article_image', 'Obrázek v článku:')
 			 ->addCondition($form::FILLED)
 				 ->addRule($form::IMAGE, 'Obrázek musí být JPEG, PNG nebo GIF');
 
@@ -165,6 +169,7 @@ final class TeachingPresenter extends BasePresenter {
         $form = $button->form;
         $values = $form->getValues();
         $preview_image = $values->preview_image;
+        $article_image = $values->article_image;
         $data = $values['data'];
 
 		if($data['article_id'] != NULL) {
@@ -187,6 +192,15 @@ final class TeachingPresenter extends BasePresenter {
 				
 				$this->model->update($new_row->id, ['preview_image' => $new_file]);
 	        }
+	        
+	        if($article_image->isOK()) {
+				$new_file = $new_row->id."_".$article_image->getSanitizedName();
+				$image = $article_image->toImage();
+				$image->resize(450, 560, Image::EXACT);
+				$image->save(ARTICLES_IMG_FOLDER."/".$new_file);
+				
+				$this->model->update($new_row->id, ['article_image' => $new_file]);
+	        }
 
 			$this->flashMessage('Článek přidán.', 'success');
             $this->redirect('list');
@@ -203,6 +217,7 @@ final class TeachingPresenter extends BasePresenter {
         $form = $button->form;
         $values = $form->getValues();
         $preview_image = $values->preview_image;
+        $article_image = $values->article_image;
 
         $data = $values->data;
 
@@ -222,6 +237,17 @@ final class TeachingPresenter extends BasePresenter {
 			@unlink(ARTICLES_IMG_FOLDER."/previews/".$this->record->preview_image);
 			
 			$this->model->update($this->record->id, ['preview_image' => $new_file]);
+        }
+        
+        if($article_image->isOk()) {            
+			$new_file = $this->record->id."_".$article_image->getSanitizedName();
+
+	        $image = $article_image->toImage();
+			$image->resize(450, 560, Image::EXACT);
+			$image->save(ARTICLES_IMG_FOLDER."/".$new_file);
+			@unlink(ARTICLES_IMG_FOLDER."/".$this->record->article_image);
+			
+			$this->model->update($this->record->id, ['article_image' => $new_file]);
         }
 		
 		if($update !== false) {

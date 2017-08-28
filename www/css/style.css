@@ -358,6 +358,7 @@ nav.breadcrumb-nav .sep-arrow {
 .link-hover-label.label-text {
   font-size: 15px;
   padding: 10px 15px;
+  top: 3px;
 }
 .link-hover-label.label-picture {
   font-size: 15px;
@@ -742,6 +743,10 @@ footer .contact-info .link-mail {
     background-size: 24px;
   }
 }
+.match-count-info {
+  font-size: 14px;
+  font-style: italic;
+}
 .list-title {
   margin: 0;
 }
@@ -808,7 +813,7 @@ footer .contact-info .link-mail {
 }
 .list .list-box.list-box-highlighted {
   height: 120px;
-  background-color: #FFF6D8;
+  background-color: rgba(255, 246, 216, 0.55);
   box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.3);
   padding-top: 5px;
   margin-top: 5px !important;
@@ -1060,9 +1065,9 @@ footer .contact-info .link-mail {
 .collection-nav-clearfix {
   height: 30px;
 }
-@media screen and (max-width: 599px) {
+@media (max-width: 320px) {
   .collection-nav-clearfix {
-    display: none !important;
+    height: 0;
   }
 }
 .collection-breadcrumb-nav {
@@ -1325,11 +1330,14 @@ footer .contact-info .link-mail {
   text-align: justify;
   margin-bottom: 20px;
 }
-.article-detail .article-text img {
+.article-detail .article-text .article-image {
   width: 30%;
   margin: 5px 0 10px 15px;
   float: right;
-  box-shadow: 10px 9px 22px -10px rgba(0, 0, 0, 0.75);
+  box-shadow: 10px 9px 22px -10px rgba(0, 0, 0, 0.55);
+}
+.article-detail .article-text .article-image.main-image {
+  margin-top: 0;
 }
 .article-detail .article-title {
   margin-left: 0;
@@ -1359,7 +1367,7 @@ footer .contact-info .link-mail {
 }
 .article-detail .article-category-links {
   width: 32%;
-  background-color: #FFF6D8;
+  background-color: rgba(255, 246, 216, 0.55);
   box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.3);
   padding-bottom: 5px;
   float: right;
@@ -1432,26 +1440,36 @@ footer .contact-info .link-mail {
   padding: 0 10px;
 }
 .article-navigation .links-container .link-backlink {
+  position: relative;
   float: left;
-  width: 40px;
-  height: 38px;
+  width: 35px;
+  height: 33px;
   margin-right: 20px;
   padding-top: 12px;
 }
-.article-navigation .links-container .link-backlink .icon-line {
-  width: 23px;
-  height: 2px;
-  border-radius: 1px;
-  background: #12323d;
-  margin: 0 auto;
+.article-navigation .links-container .link-backlink:hover .backlink-icon-out {
+  opacity: 0;
+}
+.article-navigation .links-container .link-backlink:hover .backlink-icon-hover {
+  opacity: 100;
+}
+.article-navigation .links-container .link-backlink .backlink-icon {
+  width: inherit;
+  height: inherit;
+  position: absolute;
+  top: 0;
+  left: 0;
+  background: url("../images/layout/open-book.png") no-repeat center center / 35px 33px;
   transition: 0.3s;
 }
-.article-navigation .links-container .link-backlink .icon-line:not(:first-child) {
-  margin-top: 4px;
+.article-navigation .links-container .link-backlink .backlink-icon-out {
+  opacity: 100;
+  z-index: 5;
 }
-.article-navigation .links-container .link-backlink:hover .icon-line {
-  background: #eb8c3a !important;
-  transition: 0.3s;
+.article-navigation .links-container .link-backlink .backlink-icon-hover {
+  background-image: url("../images/layout/open-book-hover.png");
+  z-index: 10;
+  opacity: 0;
 }
 .article-navigation .links-container .link-prev {
   margin-top: 7px;
@@ -1481,6 +1499,9 @@ footer .contact-info .link-mail {
 .lectures-group:first-of-type {
   margin-top: 36px;
 }
+.lectures-group.group-continual {
+  margin-top: 20px;
+}
 .lectures-group .group-header {
   width: 100%;
   margin: 20px 0 -20px 0;
@@ -1500,6 +1521,12 @@ footer .contact-info .link-mail {
 .lectures-group .group-header .group-header-title.text-only {
   margin-left: 0 !important;
   top: -20px;
+}
+.lectures-group .group-header .group-header-title.adjust-mob-large {
+  top: -70px;
+}
+.lectures-group .group-header .group-header-title.adjust-mob-small {
+  top: -77px;
 }
 .lectures-group .group-header .group-header-label {
   width: 75px;

@@ -120,26 +120,8 @@ class AudioPresenter extends BasePresenter	{
 		}
 
 		if($group_by == "alphabetical") {
-			$groups = [];
 			$lectures = $this->audio->findBy(['audio_year' => $year])
 									->order('title');
-
-			foreach ($lectures as $lecture) {
-				$first_letter = substr($lecture->title, 0, 2); // UTF8 literal
-				if(strlen(utf8_decode($first_letter)) == 2) {
-					$first_letter = substr($first_letter, 0, 1);
-				}
-
-				if(intval($first_letter)) {
-					$groups['1-9'][] = $lecture;
-				}
-				elseif($first_letter == "Ś") {
-					$groups["Š"][] = $lecture;
-				}
-				else {
-					$groups[$first_letter][] = $lecture;
-				}
-			}
 		}
 		
 		$this->template->backlinks = [$this->link('years') => "Roky"];
@@ -410,26 +392,10 @@ class AudioPresenter extends BasePresenter	{
 		}		
 		
 		if($group_by == "alphabetical") {
-			$groups = [];
+
 			$lectures = $this->audio->findBy(['audio_interpret_id' => $interpret_id])
 									->order('title');
 
-			foreach ($lectures as $lecture) {
-				$first_letter = substr($lecture->title, 0, 2); // UTF8 literal
-				if(strlen(utf8_decode($first_letter)) == 2) {
-					$first_letter = substr($first_letter, 0, 1);
-				}
-
-				if(intval($first_letter)) {
-					$groups['1-9'][] = $lecture;
-				}
-				elseif($first_letter == "Ś") {
-					$groups["Š"][] = $lecture;
-				}
-				else {
-					$groups[$first_letter][] = $lecture;
-				}
-			}
 		}
 
 		$interpret = $this->interpret->get($interpret_id);

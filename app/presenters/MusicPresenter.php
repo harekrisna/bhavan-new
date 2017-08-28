@@ -95,31 +95,13 @@ class MusicPresenter extends BasePresenter	{
 			foreach($groups as $group) {	
 				$records[$group->id] = $this->music->findBy(['music_interpret_id' => $interpret_id, 
 											  				 'music_genre_id' => $group->music_genre_id])
-											  	   ->order('music_year DESC, music_month DESC, music_day DESC'); 
+											  	   ->order('title'); 
 			}
 		}
 		
 		if($group_by == "alphabetical") {
-			$groups = [];
 			$records = $this->music->findBy(['music_interpret_id' => $interpret_id])
 								   ->order('title');
-
-			foreach ($records as $record) {
-				$first_letter = substr($record->title, 0, 2); // UTF8 literal
-				if(strlen(utf8_decode($first_letter)) == 2) {
-					$first_letter = substr($first_letter, 0, 1);
-				}
-
-				if(intval($first_letter)) {
-					$groups['1-9'][] = $record;
-				}
-				elseif($first_letter == "Ś") {
-					$groups["Š"][] = $record;
-				}
-				else {
-					$groups[$first_letter][] = $record;
-				}
-			}
 		}
 		
 		if($group_by == "time_created") {
@@ -142,7 +124,7 @@ class MusicPresenter extends BasePresenter	{
 			foreach($groups as $group) {	
 				$records[$group->music_album_id] = $this->music->findBy(['music_interpret_id' => $interpret_id, 
 											  				 			 'music_album_id' => $group->music_album_id])
-											  	   			   ->order('music_year DESC, music_month DESC, music_day DESC'); 
+											  	   			   ->order('title'); 
 			}
 		}
 		
@@ -159,7 +141,7 @@ class MusicPresenter extends BasePresenter	{
 		$detect = new Mobile_Detect;
    		$this->template->isMobile = $detect->isMobile();
 	}
-
+/*
 	public function renderYears()	{
 		$this->template->years = $this->music->findAll()
 											 ->select('music_year AS year, COUNT(*) AS count')
@@ -242,7 +224,7 @@ class MusicPresenter extends BasePresenter	{
 		$detect = new Mobile_Detect;
    		$this->template->isMobile = $detect->isMobile();
 	}
-
+*/
 	public function renderGenres()	{
 		$this->template->genres = $this->musicGenre->findAll()
 											  ->order('position');
@@ -252,20 +234,7 @@ class MusicPresenter extends BasePresenter	{
 
 	public function renderGenre($genre_id, $group_by = "music_interpret_id") {
 		$genre = $this->musicGenre->get($genre_id);
-
 		$groups = $this->music->findBy(['music_genre_id' => $genre_id]);
-		
-		$albums = $this->music->findAll()
-							  ->select("COUNT('*') AS count, music_album_id")
-							  ->group('music_album_id');
-		
-		$albums_count = [];								   
-		foreach($albums as $album) {
-			$albums_count[$album->music_album_id] = $album->count;
-		}
-
-		$this->template->albums_count = $albums_count;	
-		
 		$records = [];							  
 		
 		if($group_by == 'music_year') {
@@ -280,37 +249,19 @@ class MusicPresenter extends BasePresenter	{
 		}
 
 		if($group_by == 'music_interpret_id') {
-			$groups->order('music_year DESC')
+			$groups->order('interpret.position')
 				   ->group('music_interpret_id');
 										  
 			foreach($groups as $group) {
 				$records[$group->id] = $this->music->findBy(['music_genre_id' => $genre_id,
 															 'music_interpret_id' => $group->music_interpret_id])
-												   ->order('music_year DESC, music_month DESC, music_day DESC');
+												   ->order('title');
 			}
 		}
 
 		if($group_by == "alphabetical") {
-			$groups = [];
 			$records = $this->music->findBy(['music_genre_id' => $genre_id])
 								   ->order('title');
-
-			foreach ($records as $record) {
-				$first_letter = substr($record->title, 0, 2); // UTF8 literal
-				if(strlen(utf8_decode($first_letter)) == 2) {
-					$first_letter = substr($first_letter, 0, 1);
-				}
-
-				if(intval($first_letter)) {
-					$groups['1-9'][] = $record;
-				}
-				elseif($first_letter == "Ś") {
-					$groups["Š"][] = $record;
-				}
-				else {
-					$groups[$first_letter][] = $record;
-				}
-			}
 		}
 
 		if($group_by == "album") {
@@ -319,7 +270,7 @@ class MusicPresenter extends BasePresenter	{
 			foreach($groups as $group) {	
 				$records[$group->music_album_id] = $this->music->findBy(['music_genre_id' => $genre_id, 
 											  				 			 'music_album_id' => $group->music_album_id])
-											  	   			   ->order('music_year DESC, music_month DESC, music_day DESC'); 
+											  	   			   ->order('title'); 
 			}
 		}
 

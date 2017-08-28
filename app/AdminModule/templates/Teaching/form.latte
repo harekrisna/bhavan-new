@@ -35,6 +35,19 @@
 			<td>{input preview_image}</td>
 		{/if}
 		</tr>
+		<tr>
+			<th class="picture">{label article_image /}</th>
+		{if $presenter->getAction() == "edit"}
+			<td>{$record->article_image}</td></tr>
+			<tr><th></th><td><img src="{$basePath}/{=ARTICLES_IMG_FOLDER}/{$record->article_image}" style="width: 225px; height: 280px;"></td></tr>
+		</tr>
+		<tr>
+	        <th></th><td>{input article_image}</td>
+		{else}
+			<td>{input article_image}</td>
+		{/if}
+		</tr>
+
 		<tr><th>{label data-preview_text /}</th><td>{input data-preview_text, class => "textarea"}</td></tr>
 		<tr><th>{label data-text /}</th><td>{input data-text}</td></tr>
 		{*<tr><th>{label data-main /}</th><td>{input data-main}</td></tr>*}

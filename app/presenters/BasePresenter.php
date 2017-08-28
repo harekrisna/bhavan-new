@@ -75,6 +75,7 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter {
   	public function beforeRender() {
 		$this->template->addFilter('dynamicDate', $this->context->getService("filters")->dynamicDate);
 		$this->template->addFilter('verseReadable', $this->context->getService("filters")->verseReadable);
+		$this->template->addFilter('czInflection', $this->context->getService("filters")->czInflection);
 		
 		$this->template->actualities = $this->actuality->findAll()
 													   ->where('show_from IS NULL OR show_from < NOW()')

@@ -78,17 +78,44 @@ $(function(){
 		}
 	}
 
+	function ScaleAudioGroupHeaderTitle() {
+		var container = $('.group-header');
+		
+		container.each(function(index) {
+			var text = $(this).find('.group-header-title');
+			var height = $(text).height();
+			
+			if(height <= 25) {
+				$(text).removeClass("adjust-mob-small");
+				$(text).removeClass("adjust-mob-large");
+			}
+			else if(height > 25 && height <= 50) {
+				$(text).removeClass("adjust-mob-small");
+				$(text).addClass("adjust-mob-large");
+			}
+			else if(height > 50) {
+				$(text).removeClass("adjust-mob-large");
+				$(text).addClass("adjust-mob-small");
+			}
+		});
+			
+	}
+
 	ScaleListTitle();
     CollectionBreadcrumbNavigationFit();
     CollectionNextPrevNavigationFit();
+    ScaleAudioGroupHeaderTitle();
     
     $(window).bind("load", ScaleListTitle);
+    $(window).bind("load", ScaleAudioGroupHeaderTitle);
     $(window).bind("load", CollectionNextPrevNavigationFit);
     $(window).bind("load", CollectionBreadcrumbNavigationFit);
     $(window).bind("resize", ScaleListTitle);
+    $(window).bind("resize", ScaleAudioGroupHeaderTitle);    
     $(window).bind("resize", CollectionNextPrevNavigationFit);
     $(window).bind("resize", CollectionBreadcrumbNavigationFit);
     $(window).bind("orientationchange", ScaleListTitle);
+    $(window).bind("orientationchange", ScaleAudioGroupHeaderTitle);    
     $(window).bind("orientationchange", CollectionNextPrevNavigationFit);
     $(window).bind("orientationchange", CollectionBreadcrumbNavigationFit);
 	

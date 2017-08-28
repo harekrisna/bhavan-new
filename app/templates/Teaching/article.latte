@@ -21,7 +21,12 @@
 <article class="article-detail in-content clearfix">
 	<h1 class="article-title">{$article->title}</h1>
     <div class="article-container">
-    	<div class="article-text">{$article->text|noescape}</div>
+    	<div class="article-text">
+	    	{if $article->article_image != ""}
+	    	<img src="{$basePath}/{=ARTICLES_IMG_FOLDER}/{$article->article_image}" class="article-image main-image" />
+	    	{/if}
+	    	{$article->text|noescape}
+	    </div>
         {if $child_articles->count()}
         {switch $article->list_style}
             {case box}
@@ -81,10 +86,9 @@
 <div class="article-navigation">
     <div class="links-container">
         <a n:href="category, $article->category->id" id="bottom_link_back" class="link link-backlink">
-			<div class="icon-line"></div>
-			<div class="icon-line"></div>
-			<div class="icon-line"></div>
-		</a>        
+	        <div class="backlink-icon backlink-icon-out"></div>
+   	        <div class="backlink-icon backlink-icon-hover"></div>
+		</a>
 		{if $previous_article}
             <a n:href="article, $previous_article->id" id="bottom_link_prev" class="link nav-link link-prev">&laquo; předchozí</a>
         {else}

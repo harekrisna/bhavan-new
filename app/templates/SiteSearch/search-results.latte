@@ -6,10 +6,10 @@
 {block content}
 <h1>Vyhledávání</h1>
 <div>Dotaz: {$search_text}</div>
-<h2>Články {count($articles)} výsledků: </h2>
+<h2>Učení {count($articles)} výsledků: </h2>
 {foreach $articles as $article}
 <div>
-	<h3><a class="link" n:href="Teaching:article, $article['id']">{$article['title']}</a></h3>
+	<h3><a class="link" n:href="Teaching:article, $article['id']">{$article['title']}</a> <span class="match-count-info">({$article['match_count']} {$article['match_count'], 'výskyt', 'výskyty', 'výskytů'|czInflection})</span></h3>
 	<p>{!$article['text']}</p>
 </div>
 {/foreach}

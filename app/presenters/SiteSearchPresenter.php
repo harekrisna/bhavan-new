@@ -32,10 +32,11 @@ class SiteSearchPresenter extends BasePresenter {
 
         foreach ($search_articles as $article) {
         	$text = strip_tags($article->text);
-			$text = $this->highlight($query, $text);
-
+        	$match_count = 0;
+			$text = $this->highlight($query, $text, $match_count);
+			
 			$first_match_pos = mb_strpos($text, "<".$this->highlight_tag.">");
-			if($first_match_pos == false) // může se stát, že řetězec byl vyhledán databází v tagu, ale po odstranění tagů tam již není, takže to přeskočíme
+			if($first_match_pos === false) // může se stát, že řetězec byl vyhledán databází v tagu, ale po odstranění tagů tam již není, takže to přeskočíme
 				continue;
 
 			$first_match_pos_end = mb_strpos($text, "</".$this->highlight_tag.">") + strlen("</".$this->highlight_tag.">");
@@ -67,7 +68,8 @@ class SiteSearchPresenter extends BasePresenter {
 			
         	$articles[] = ['id' => $article->id,
         				   'title' => $article->title,
-        				   'text' => $text];
+        				   'text' => $text,
+        				   'match_count' => $match_count];
         }
 
         $this->template->articles = $articles;
@@ -86,7 +88,7 @@ class SiteSearchPresenter extends BasePresenter {
 
 
 	
-    private function highlight($needle, $haystack) {
+    private function highlight($needle, $haystack, &$match_count) {
 		// Priprava na slozeni regexpu (obsazeni temer vsech moznych akcentu)
 		$map1[]="/[aãǎâăåąàȧáäā]/iu";
 		$map1[]="/[bḃ]/iu";
@@ -143,10 +145,10 @@ class SiteSearchPresenter extends BasePresenter {
 		
 		// Nahrazeni hledaneho vyrazu regexpem
 		// "pocitac" se bude hledat jako: [pṗṕþ][oõǒôŏǫòȯóőö][cčĉċćç][iĩǐîĭįìıíï][tťṫẗţ][aãǎâăåąàȧáä][cčĉċćç]
-		$needle = preg_replace($map1,$map2,$needle);
+		$needle = preg_replace($map1, $map2, $needle);
 
 		// Finalni nahrazeni hledaneho vyrazu v textu
-		$haystack = preg_replace("/${needle}/iu","<".$this->highlight_tag.">\$0</".$this->highlight_tag.">",$haystack);
+		$haystack = preg_replace("/${needle}/iu", "<".$this->highlight_tag.">\$0</".$this->highlight_tag.">", $haystack, -1, $match_count);
 		
 		return $haystack;
 	} 

@@ -171,17 +171,11 @@
 {/if}
 
 {if $group_by == 'alphabetical'}
-	{foreach $groups as $group_letter => $group}
-	<section class="lectures-group">
-		<div class="group-header">
-			<div n:class="group-header-label, label-text">{$group_letter}</div>
-			<h2 class="group-header-title">{$group_letter}</h2>
-		</div>
-		{foreach $group as $lecture}
+	<section class="lectures-group group-continual">
+		{foreach $lectures as $lecture}
 			{include player-bar.latte, lecture => $lecture}
 		{/foreach}
 	</section>
-	{/foreach}
 {/if}
 {/block}
 {block scripts}
