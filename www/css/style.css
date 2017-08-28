@@ -1369,26 +1369,36 @@ footer .contact-info .link-mail {
   width: 32%;
   background-color: rgba(255, 246, 216, 0.55);
   box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.3);
-  padding-bottom: 5px;
+  padding: 0 10px 5px 10px;
   float: right;
-}
-.article-detail .article-category-links .article-category-links-list {
-  display: none;
 }
 .article-detail .article-category-links .article-category-links-title {
   font-size: 21px;
   color: #eb8c3a;
-  padding: 20px 0 15px 20px;
+  padding: 20px 0 15px 10px;
 }
 .article-detail .article-category-links .article-category-links-title .acl-title-delimiter {
   width: 40px;
   text-align: center;
   display: inline-block;
 }
-.article-detail .article-category-links .article-category-links-item {
+.article-detail .article-category-links #article_category_links_slideshow {
+  width: 100%;
+  height: 320px;
+  visibility: hidden;
+}
+.article-detail .article-category-links #article_category_links_slideshow div[u=slides],
+.article-detail .article-category-links #article_category_links_slideshow img[u=image] {
+  width: 100%;
+  height: 320px;
+}
+.article-detail .article-category-links .article-category-links-list {
+  padding-left: 30px;
+}
+.article-detail .article-category-links .article-category-links-list .article-category-links-item {
   padding: 0 0 5px 5px;
 }
-.article-detail .article-category-links .article-category-links-item .article-category-links-item-link {
+.article-detail .article-category-links .article-category-links-list .article-category-links-item .article-category-links-item-link {
   font-size: 17px;
   max-width: 95%;
   white-space: nowrap;
@@ -1405,6 +1415,8 @@ footer .contact-info .link-mail {
 .article-detail .article-category-links .acl-next-prev .acl-np-prev,
 .article-detail .article-category-links .acl-next-prev .acl-np-next {
   color: #12323d;
+  background-color: transparent;
+  border: 0;
   transition: 0.3s;
 }
 .article-detail .article-category-links .acl-next-prev .acl-np-prev:hover,
@@ -1417,10 +1429,10 @@ footer .contact-info .link-mail {
   transition: 0.3s;
 }
 .article-detail .article-category-links .acl-next-prev .acl-np-prev {
-  margin-left: 20px;
+  margin-left: 5px;
 }
 .article-detail .article-category-links .acl-next-prev .acl-np-next {
-  margin-right: 20px;
+  margin-right: 5px;
   float: right;
 }
 @media screen and (max-width: 991px) {

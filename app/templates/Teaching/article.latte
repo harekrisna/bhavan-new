@@ -58,28 +58,51 @@
     </div>
     <div class="article-category-links">
         <div class="article-category-links-title">Obsah<span class="acl-title-delimiter">-</span>{$article->category->title}</div>
-        <div id="acl_pages">
-        {foreach $category_articles as $category_article}
-        {if $iterator->first}<ul class="article-category-links-list">{/if}
-            <li class="article-category-links-item">
-                {ifCurrent 'article', $category_article->id}
-                <div class="article-category-links-item-link link-current">{$category_article->title}</div>
-                {else}
-                <a class="link article-category-links-item-link" n:href="article, $category_article->id">{$category_article->title}</a>
-                {/ifCurrent}
-            </li>
-            {if $iterator->counter % 10 == 0}
-            </ul> 
-            <ul class="article-category-links-list">
-            {/if}
-            {if $iterator->last}</ul>{/if}
-        {/foreach}
+        {if $category_articles->count() > 10}
+        <div id="article_category_links_slideshow" class="slideshow">
+            <div u="slides">
+            {var $pageIterator = 0}
+            {var $currentPage = 0}
+            {foreach $category_articles as $category_article}
+            {if $iterator->first}<div><ul class="article-category-links-list">{/if}
+                <li class="article-category-links-item">
+                    {ifCurrent 'article', $category_article->id}
+                    <div class="article-category-links-item-link link-current">{$category_article->title}</div>
+                    {var $currentPage = $pageIterator}
+                    {else}
+                    <a class="link article-category-links-item-link" n:href="article, $category_article->id">{$category_article->title}</a>
+                    {/ifCurrent}
+                </li>
+                {if $iterator->counter % 10 == 0}
+                </ul></div>
+                <div><ul class="article-category-links-list">
+                {var $pageIterator = $pageIterator + 1}
+                {/if}
+                {if $iterator->last}</ul></div>{/if}
+            {/foreach}
+            {dump $currentPage}
+            </div>
         </div>
         <div n:if="count($category_articles) > 10" class="acl-next-prev">
-            <a id="acl_np_prev" class="acl-np-prev" href="#">&laquo; předchozí</a>
-            <a id="acl_np_next" class="acl-np-next" href="#">další &raquo;</a>
+            <button id="acl_np_prev" class="acl-np-prev">&laquo; předchozí</button>
+            <button id="acl_np_next" class="acl-np-next"">další &raquo;</button>
         </div>
-        
+        {else}
+        <div>
+            <ul class="article-category-links-list">
+            {foreach $category_articles as $category_article}
+                <li class="article-category-links-item">
+                    {ifCurrent 'article', $category_article->id}
+                    <div class="article-category-links-item-link link-current">{$category_article->title}</div>
+                    {else}
+                    <a class="link article-category-links-item-link" n:href="article, $category_article->id">{$category_article->title}</a>
+                    {/ifCurrent}
+                </li>
+            {/foreach}
+            </ul>
+            </div>
+        </div>
+        {/if}
     </div>
 </article>
 
@@ -108,9 +131,64 @@
 </div>
 {/block}
 {block scripts}
+{if $category_articles->count() > 10}
 <script>
-myPaginator('#acl_pages', '#acl_np_prev', '#acl_np_next');
-</script>
+//myPaginator('#acl_pages', '#acl_np_prev', '#acl_np_next');
 
+var slideshow;
+var slideshow_init = false;
+
+jQuery(document).ready(function ($) {
+    var options = {
+        $Loop: 0,
+        $ArrowKeyNavigation: 0,
+    };
+
+    slideshow = new $JssorSlider$("article_category_links_slideshow", options);
+    slideshow.$On($JssorSlider$.$EVT_PARK, function(position, fromPosition) {
+        var slides_count = slideshow.$SlidesCount();
+        var prev_button = $('#acl_np_prev');
+        var next_button = $('#acl_np_next');
+
+        (position == 0) ? prev_button.addClass('link-disabled') : prev_button.removeClass('link-disabled');
+        (position == slides_count - 1) ? next_button.addClass('link-disabled') : next_button.removeClass('link-disabled');
+
+        if(!slideshow_init) {
+            {var $pageIterator = 0}
+            {var $currentPage = 0}
+            {foreach $category_articles as $category_article}
+                {ifCurrent 'article', $category_article->id}
+                    {var $currentPage = $pageIterator}
+                {/ifCurrent}
+                {if $iterator->counter % 10 == 0}
+                    {var $pageIterator = $pageIterator + 1}
+                {/if}
+            {/foreach}
+            
+            slideshow.$GoTo({$currentPage});
+            
+            if({$currentPage} > 0) {
+                prev_button.removeClass('link-disabled');
+            }
+
+            if({$currentPage} + 1 == slides_count) {
+                next_button.addClass('link-disabled')
+            }
+
+            slideshow_init = true;
+        }
+    });   
+});
+
+$('#acl_np_prev').on('click', function() {
+    slideshow.$Prev();
+});
+
+$('#acl_np_next').on('click', function() {
+    slideshow.$Next();
+});
+
+</script>
+{/if}
 {/block}
 
