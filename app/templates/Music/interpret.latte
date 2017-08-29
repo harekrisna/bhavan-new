@@ -41,13 +41,7 @@
 			<h2 class="group-header-title">Skladby přidané za posledních 30 dnů</h2>
 		</div>
 		{foreach $last_30_days as $record}
-			{if $record->music_album_id}
-				{continueIf in_array($record->music_album_id, $displayed_albums)}
-				{include album-link.latte, record => $record, album_count => $albums_count[$record->music_album_id]}
-				{var $displayed_albums[] = $record->music_album_id}
-			{else}
-				{include player-bar.latte, record => $record}
-			{/if}
+			{include player-bar.latte, record => $record}
 		{/foreach}
 	</section>
 	<section n:if="$last_60_days->count()" class="lectures-group">
@@ -56,13 +50,7 @@
 			<h2 class="group-header-title">Skladby přidané za posledních 60 dnů</h2>
 		</div>
 		{foreach $last_60_days as $record} 
-			{if $record->music_album_id}
-				{continueIf in_array($record->music_album_id, $displayed_albums)}
-				{include album-link.latte, record => $record, album_count => $albums_count[$record->music_album_id]}
-				{var $displayed_albums[] = $record->music_album_id}
-			{else}
-				{include player-bar.latte, record => $record}
-			{/if}
+			{include player-bar.latte, record => $record}
 		{/foreach}
 	</section>
 	{if $records}
@@ -72,13 +60,7 @@
 			<h2 class="group-header-title">Starší skladby</h2>
 		</div>
 		{foreach $records as $record} 
-			{if $record->music_album_id}
-				{continueIf in_array($record->music_album_id, $displayed_albums)}
-				{include album-link.latte, record => $record, album_count => $albums_count[$record->music_album_id]}
-				{var $displayed_albums[] = $record->music_album_id}
-			{else}
-				{include player-bar.latte, record => $record}
-			{/if}
+			{include player-bar.latte, record => $record}
 		{/foreach}
 	</section>
 	{/if}

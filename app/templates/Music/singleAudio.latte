@@ -44,6 +44,7 @@
 	{foreach $categories as $category}
 	<a class="link" href="{$category['link']}" class="link-reverse">{$category['text']}</a>{sep}, {/sep}
 	{/foreach}
+	{if $record->music_album_id} a v albu: <a class="link" n:href="album, $record->music_album_id" class="link-reverse">{$record->music_album->title}</a>{/if}
 </div>
 {/block}
 {block scripts}

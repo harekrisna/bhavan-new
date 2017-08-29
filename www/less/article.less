@@ -40,9 +40,9 @@
 			width: 30%; 
 			margin: 5px 0 10px 15px;
 			float: right;
-			box-shadow: 10px 9px 22px -10px rgba(0,0,0,0.55);			
+			box-shadow: 10px 9px 22px -10px rgba(0,0,0,0.55);
 			
-			&.main-image {
+			&:first-child {
 				margin-top: 0;
 			}
 		}
@@ -70,6 +70,28 @@
 		float: left;
 
 		.ts-up({width: 66%});
+	}
+
+	.article-main-image-desktop {
+		width: 32%;
+		float: right;
+
+		img {
+			width: 100%;
+			box-shadow: 10px 9px 22px -10px rgba(0,0,0,0.55);
+		}
+
+		.tws-down({
+			display: none;
+		});
+	}
+
+	.article-main-image-mobile {
+		display: none;
+
+		.tws-down({
+			display: block;
+		});
 	}
 
 	.article-category-links {
