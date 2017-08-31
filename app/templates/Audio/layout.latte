@@ -1,8 +1,8 @@
 {layout ../@layout.latte}
 {block content}
-<h1 class="collection-title">Přednášky</h1>
+<h1 class="collection-title">Audio</h1>
 <nav class="collection-breadcrumb-nav" id="breadcrumb_nav" n:ifset="$backlinks">
-    {foreach $backlinks as $backlink => $backtitle}
+    {foreach $backlinks as $backtitle => $backlink}
     <span>&raquo;</span>
     <a class="link" href="{$backlink}">{$backtitle}</a>
     {/foreach}

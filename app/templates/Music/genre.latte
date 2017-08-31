@@ -7,10 +7,10 @@
 <h1 n:inner-block="title">{$genre->title}</h1>
 <nav class="audio_nav">
 	<span>Seskupit podle:</span>
+	<a n:href="genre, $genre->id, 'album'" class="link{ifCurrent Music:genre, $genre->id, 'album'} current{/ifCurrent}">Alba</a>
+		<a n:href="genre, $genre->id, 'alphabetical'" class="link{ifCurrent Music:genre, $genre->id, 'alphabetical'} current{/ifCurrent}">Abecedně</a>
 	<a n:href="genre, $genre->id, 'music_interpret_id'" class="link {ifCurrent Music:genre, $genre->id, 'music_interpret_id'} current{/ifCurrent}">Autorů</a>
 	{*<a n:href="genre, $genre->id, 'music_year'" class="link {ifCurrent Music:genre, $genre->id, 'music_year'} current{/ifCurrent}">Roků</a>*}
-	<a n:href="genre, $genre->id, 'alphabetical'" class="link{ifCurrent Music:genre, $genre->id, 'alphabetical'} current{/ifCurrent}">Abecedně</a>
-	<a n:href="genre, $genre->id, 'album'" class="link{ifCurrent Music:genre, $genre->id, 'album'} current{/ifCurrent}">Alba</a>
 </nav>
 {if $group_by == 'music_interpret_id'}
 	{foreach $groups as $group}

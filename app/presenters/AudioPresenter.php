@@ -48,8 +48,10 @@ class AudioPresenter extends BasePresenter	{
 												->where(new SqlLiteral("`time_created` < CURDATE() - INTERVAL 60 DAY"))
 												->order('time_created DESC')
 												->limit(20);
-												
-		$this->session->backlinks = [$this->link('latest') => "Nejnovější"];
+
+		$this->template->backlinks = ["Přednášky" => $this->link('interprets')];
+		$this->session->backlinks = ["Přednášky" => $this->link('interprets'),
+									 "Nejnovější" => $this->link('latest')];
 		$this->session->main_group = "latest";
 	}
 	
@@ -57,6 +59,7 @@ class AudioPresenter extends BasePresenter	{
 		$this->template->interprets = $this->interpret->getAll()
 													  ->order('sort_order ASC');
 
+		$this->template->backlinks = ["Přednášky" => $this->link('interprets')];
 		$this->session->main_group = "interprets";													  
     }
 	
@@ -66,6 +69,7 @@ class AudioPresenter extends BasePresenter	{
 											 ->group('audio_year')
 											 ->order('audio_year DESC');
 
+		$this->template->backlinks = ["Přednášky" => $this->link('interprets')];											 	
 		$this->session->main_group = "years";
 	}
 	
@@ -124,13 +128,16 @@ class AudioPresenter extends BasePresenter	{
 									->order('title');
 		}
 		
-		$this->template->backlinks = [$this->link('years') => "Roky"];
 		$this->template->groups = $groups;
 		$this->template->lectures = $lectures;
 		$this->template->year = $year;
 		$this->template->group_by = $group_by;
-		$this->session->backlinks = [$this->link('years') => "Roky",
-								     $this->link('year', $year, $group_by) => "Rok ".$year];
+		$this->template->backlinks = ["Přednášky" => $this->link('interprets'),
+									  "Roky" => $this->link('years')];
+
+		$this->session->backlinks = ["Přednášky" => $this->link('interprets'),
+									 "Roky" => $this->link('years'),
+								     "Rok ".$year => $this->link('year', $year, $group_by)];
 		
 		$detect = new Mobile_Detect;
    		$this->template->isMobile = $detect->isMobile();
@@ -161,6 +168,7 @@ class AudioPresenter extends BasePresenter	{
 												   ->where('book_id IS NULL AND seminar = ? AND sankirtan = ?', array(0, 0))
 												   ->count();
 
+		$this->template->backlinks = ["Přednášky" => $this->link('interprets')];
 		$this->session->main_group = "themes";
 	}
 	
@@ -196,17 +204,18 @@ class AudioPresenter extends BasePresenter	{
 		$this->template->groups = $groups;
 		$this->template->lectures = $lectures;
 		$book = $this->book->get($book_id);
-		$backlinks = [$this->link('themes') => "Témata"];
+		$backlinks = ["Přednášky" => $this->link('interprets'),
+					  "Témata" => $this->link('themes')];
 		
 		if(strpos($book->abbreviation, "ŚB") === 0) {
-			$backlinks[$this->link('sb')] = "Śrīmad-Bhāgavatam";
+			$backlinks["Śrīmad-Bhāgavatam"] = $this->link('sb');
 		}
 		elseif(strpos($book->abbreviation, "CC") === 0) {
-			$backlinks[$this->link('cc')] = "Śrī Caitanya-caritāmṛta";
+			$backlinks["Śrī Caitanya-caritāmṛta"] = $this->link('cc');
 		}
 		
 		$this->template->backlinks = $backlinks;
-		$backlinks[$this->link('book', $book_id, $group_by)] = str_replace(["Śrīmad-Bhāgavatam ", "Śrī Caitanya-caritāmṛta "], ["", ""], $book->title);
+		$backlinks[str_replace(["Śrīmad-Bhāgavatam ", "Śrī Caitanya-caritāmṛta "], ["", ""], $book->title)] = $this->link('book', $book_id, $group_by);
 		$this->session->backlinks = $backlinks;
 		$this->template->book = $book;
 		$this->template->group_by = $group_by;
@@ -255,9 +264,11 @@ class AudioPresenter extends BasePresenter	{
 												->order('audio_year DESC, audio_month DESC, audio_day DESC');
 		}
 		
-		$this->template->backlinks = [$this->link('themes') => "Témata"];
-		$this->session->backlinks = [$this->link('themes') => "Témata",
-								     $this->link('byType', $type, $group_by) => $title];
+		$this->template->backlinks = ["Přednášky" => $this->link('interprets'),
+									  "Témata" => $this->link('themes')];
+		$this->session->backlinks = ["Přednášky" => $this->link('interprets'),
+									 "Témata" => $this->link('themes'),
+								     $title => $this->link('byType', $type, $group_by)];
 		
 		$this->template->title = $title;									 
 		$this->template->groups = $groups;
@@ -296,10 +307,11 @@ class AudioPresenter extends BasePresenter	{
 												->order('audio_year DESC, audio_month DESC, audio_day DESC');
 		}
 		
-		$backlinks = [$this->link('themes') => "Témata"];
+		$backlinks = ["Přednášky" => $this->link('interprets'),
+					  "Témata" => $this->link('themes')];
 		
 		$this->template->backlinks = $backlinks;		
-		$backlinks[$this->link('unclasified', $group_by)] = "Nezařazené";
+		$backlinks["Nezařazené"] = $this->link('unclasified', $group_by);
 		$this->session->backlinks = $backlinks;
 		$this->template->groups = $groups;
 		$this->template->lectures = $lectures;
@@ -313,7 +325,8 @@ class AudioPresenter extends BasePresenter	{
 		$this->template->books = $this->book->findAll()
 											->where("book.abbreviation LIKE 'SB%'");
 											
-		$this->template->backlinks = [$this->link('themes') => "Témata"];											
+		$this->template->backlinks = ["Přednášky" => $this->link('interprets'),
+									  "Témata" => $this->link('themes')];
 	}
 	
 
@@ -321,7 +334,8 @@ class AudioPresenter extends BasePresenter	{
 		$this->template->books = $this->book->findAll()	
 											->where("book.abbreviation LIKE 'CC%'");
 											
-		$this->template->backlinks = [$this->link('themes') => "Témata"];
+		$this->template->backlinks = ["Přednášky" => $this->link('interprets'),
+									  "Témata" => $this->link('themes')];
 	}	
 		
 	public function renderInterpret($interpret_id, $group_by = "audio_year") {
@@ -399,9 +413,12 @@ class AudioPresenter extends BasePresenter	{
 		}
 
 		$interpret = $this->interpret->get($interpret_id);
-		$this->template->backlinks = [$this->link('interprets') => "Autoři"];
-		$this->session->backlinks = [$this->link('interprets') => "Autoři",
-								     $this->link('interpret', $interpret_id, $group_by) => $interpret->title];
+		$this->template->backlinks = ["Přednášky" => $this->link('interprets'),
+									  "Autoři" => $this->link('interprets')];
+
+		$this->session->backlinks = ["Přednášky" => $this->link('interprets'),
+									 "Autoři" => $this->link('interprets'),
+								     $interpret->title => $this->link('interpret', $interpret_id, $group_by)];
 									     
 		$this->template->groups = $groups;
 		$this->template->lectures = $lectures;
@@ -451,8 +468,9 @@ class AudioPresenter extends BasePresenter	{
 		$this->template->backlinks = $this->session->backlinks;
 
 		if($this->session->backlinks == []) {
-			$this->template->backlinks = [$this->link('interprets') => "Autoři",
-							     		  $this->link('interpret', $audio_mp3->interpret_id) => $audio_mp3->interpret->title];
+			$this->template->backlinks = ["Přednášky" => $this->link('interprets'),
+										  "Autoři" => $this->link('interprets'),
+							     		  $audio_mp3->interpret->title => $this->link('interpret', $audio_mp3->interpret_id)];
 		}
 
 		$this->template->main_group = $this->session->main_group;

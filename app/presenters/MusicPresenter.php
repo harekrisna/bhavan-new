@@ -33,7 +33,7 @@ class MusicPresenter extends BasePresenter	{
 		});										   
 	}	
 	
-	public function renderLatest() {
+	public function renderLatest() {		
 		$this->template->last_30_days = $this->music->findAll()
 													->where(new SqlLiteral("`time_created` BETWEEN (CURDATE() - INTERVAL 30 DAY) AND (CURDATE() + 1)"))
 													->order('time_created DESC');
@@ -47,7 +47,10 @@ class MusicPresenter extends BasePresenter	{
 											   ->order('time_created DESC')
 											   ->limit(20);
 												
-		$this->session->backlinks = [$this->link('latest') => "Nejnovější"];
+		$this->template->backlinks = ["Hudba" => $this->link('interprets')];
+		$this->session->backlinks = ["Hudba" => $this->link('interprets'),
+									 "Nejnovější" => $this->link('latest')];
+
 		$this->session->main_group = "latest";
 		$detect = new Mobile_Detect;
 		$this->template->isMobile = $detect->isMobile();
@@ -58,10 +61,11 @@ class MusicPresenter extends BasePresenter	{
 		$this->template->interprets = $this->musicInterpret->findAll()
 														   ->order('position ASC');
 
+		$this->template->backlinks = ["Hudba" => $this->link('interprets')];
 		$this->session->main_group = "interprets";													  
     }
     
-	public function renderInterpret($interpret_id, $group_by = "music_genre_id") {
+	public function renderInterpret($interpret_id, $group_by = "album") {
 		$groups = $this->music->findBy(['music_interpret_id' => $interpret_id]);
   		
   		$albums = $this->music->findBy(['music_interpret_id' => $interpret_id])
@@ -129,9 +133,11 @@ class MusicPresenter extends BasePresenter	{
 		}
 		
 		$interpret = $this->musicInterpret->get($interpret_id);
-		$this->template->backlinks = [$this->link('interprets') => "Autoři"];
-		$this->session->backlinks = [$this->link('interprets') => "Autoři",
-								     $this->link('interpret', $interpret_id, $group_by) => $interpret->title];
+		$this->template->backlinks = ["Hudba" => $this->link('interprets'), "Autoři" => $this->link('interprets')];
+
+		$this->session->backlinks = ["Hudba" => $this->link('interprets'),
+									 "Autoři" => $this->link('interprets'),
+								     $interpret->title => $this->link('interpret', $interpret_id, $group_by)];
 									     
 		$this->template->groups = $groups;
 		$this->template->records = $records;
@@ -228,7 +234,8 @@ class MusicPresenter extends BasePresenter	{
 	public function renderGenres()	{
 		$this->template->genres = $this->musicGenre->findAll()
 											  ->order('position');
-
+		
+		$this->template->backlinks = ["Hudba" => $this->link('interprets')];
 		$this->session->main_group = "genres";
 	}	
 
@@ -274,9 +281,12 @@ class MusicPresenter extends BasePresenter	{
 			}
 		}
 
-		$this->template->backlinks = [$this->link('genres') => "Žánr"];
-		$this->session->backlinks = [$this->link('genres') => "Žánr",
-								     $this->link('genre', $genre_id, $group_by) => $genre->title];
+		$this->template->backlinks = ["Hudba" => $this->link('interprets'),
+									  "Žánr" => $this->link('genres')];
+
+		$this->session->backlinks = ["Hudba" => $this->link('interprets'),
+									 "Žánr" => $this->link('genres'),
+								     $genre->title => $this->link('genre', $genre_id, $group_by)];
 		
 		$this->template->genre = $genre;
 		$this->template->groups = $groups;
@@ -304,8 +314,8 @@ class MusicPresenter extends BasePresenter	{
 		$this->template->backlinks = $this->session->backlinks;
 
 		if($this->session->backlinks == []) {
-			$this->template->backlinks = [$this->link('interprets') => "Autoři",
-							     		  $this->link('interpret', $audio_mp3->interpret_id) => $audio_mp3->interpret->title];
+			$this->template->backlinks = ["Autoři" => $this->link('interprets'),
+							     		  $audio_mp3->interpret->title => $this->link('interpret', $audio_mp3->interpret_id)];
 		}
 
 		$this->template->main_group = $this->session->main_group;
@@ -326,9 +336,17 @@ class MusicPresenter extends BasePresenter	{
 		if (!$records)
             throw new Nette\Application\BadRequestException;
 			
-		$this->template->album = $this->musicAlbum->get($album_id);
+		$album = $this->musicAlbum->get($album_id);			
+		$this->template->album = $album;
 		$this->template->records = $records;
-		$this->template->backlinks = $this->session->backlinks;
+
+		$first_record = $records->fetch();
+
+		$this->template->backlinks = ["Hudba" => $this->link('interprets'),
+									  "Autoři" => $this->link('interprets'),
+									  $first_record->music_interpret->title => $this->link('interpret', $first_record->music_interpret_id),
+									  $album->title => $this->link('album', $album_id)];
+									  
 		$this->template->main_group = $this->session->main_group;
 		$this->template->main_audio_type = "music";
 		
