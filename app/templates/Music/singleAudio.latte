@@ -15,7 +15,7 @@
 	<div class="audio-info">
 		<div class="place-time">{$record->place} {$record->music_year, $record->music_month, $record->music_day|dynamicDate}</div>
 		<div class="verse-autor">
-			<a class="link" n:href="interpret, $record->music_interpret->id, 'time_created'" title="{$record->music_interpret->title}">{$record->music_interpret->title|replace:['HG ', 'HH '], ['']}</a>
+			<a class="link" n:href="interpret, $record->music_interpret->id, 'time_created'" title="{$record->music_interpret->title}">{$record->music_interpret->abbreviation}</a>
 		</div>
 	</div>
 	
@@ -44,7 +44,6 @@
 	{foreach $categories as $category}
 	<a class="link" href="{$category['link']}" class="link-reverse">{$category['text']}</a>{sep}, {/sep}
 	{/foreach}
-	{if $record->music_album_id} a v albu: <a class="link" n:href="album, $record->music_album_id" class="link-reverse">{$record->music_album->title}</a>{/if}
 </div>
 {/block}
 {block scripts}
@@ -91,8 +90,6 @@
 					on_play(audio);
 				}
 			});
-			
-			$('.player-bar-container').show();
 		});
 
 		function on_play(audio) {

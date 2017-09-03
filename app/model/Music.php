@@ -2,7 +2,7 @@
 
 namespace App\Model;
 use Nette;
-use Tracy\Debugger;
+use Nette\Diagnostics\Debugger; 
 
 class Music extends Table   {
 	protected $tableName = 'music'; 
@@ -10,7 +10,6 @@ class Music extends Table   {
 	public function insert($data) {
 		if(isset($data['music_month']) && $data['music_month'] == "") {	$data['music_month'] = NULL; }
 		if(isset($data['music_day']) && $data['music_day'] == "") {	$data['music_day'] = NULL; }
-		if(isset($data['music_year']) && $data['music_year'] == "") {	$data['music_year'] = NULL; }
 		
 		return parent::insert($data);
 	}
@@ -18,13 +17,7 @@ class Music extends Table   {
 	public function update($id, $data) {
 		if(isset($data['music_month']) && $data['music_month'] == "") {	$data['music_month'] = NULL; }
 		if(isset($data['music_day']) && $data['music_day'] == "") {	$data['music_day'] = NULL; }
-		if(isset($data['music_year']) && $data['music_year'] == "") {	$data['music_year'] = NULL; }
 				
 		return parent::update($id, $data);
 	}	
-
-	public function searchRecords($pattern) {
-		return $this->findAll()
-					->where("title LIKE ?", "%".$pattern."%");
-	}
 }

@@ -29,10 +29,5 @@ class Article extends Table   {
 	        else
 	            throw $e;
 	    }
-	}
-
-	public function searchArticles($pattern) {
-		return $this->findAll()
-					->where("text LIKE ? OR title LIKE ?", "%".$pattern."%", "%".$pattern."%");
-	}
+	}	
 }

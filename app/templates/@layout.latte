@@ -9,7 +9,7 @@
 	
 	<title>{ifset title}{include title} | {/ifset}Prabhupád Bhavan</title>
     <!-- Bootstrap Core CSS -->
-    <link href="{$basePath}/css/bootstrap.min.css" rel="stylesheet">
+    <link href="{$basePath}/css/bootstrap.css" rel="stylesheet">
 
     <!-- Custom CSS -->
 	<link rel="stylesheet" href="{$basePath}/css/style.css?v=2.3">
@@ -71,34 +71,14 @@
     					    </div>
     				    </div>
     		        </nav>
-    		        <div class="site-search">
-						<form action="{plink SiteSearch:search}" autocomplete="on">
-							<input id="search_text" name="q" type="text" class="site-search-input" placeholder="Co hledáš, jako co?">
-                            <div id="search_text_border" class="site-search-input-border"></div>
-							<input id="search_sumbit" class="site-search-submit" type="submit">
-						</form>
-					</div>
                     <a href="https://www.facebook.com/pages/Prabhup%C3%A1d-Bhavan/160940383943087" target="_blank" class="facebook-link">f</a>
                     <ul class="nav navbar-nav">
                         <li><a n:class="link, $presenter->isLinkCurrent('Homepage:*') ? current" href="{link Homepage:default}">Domů</a></li>
                         <li><a n:class="link, $presenter->isLinkCurrent('Actuality:*') ? current" href="{link Actuality:list}">Akce</a></li>
                         <li><a n:class="link, $presenter->isLinkCurrent('About:*') ? current" href="{link About:about}">O nás</a></li>
-                        <li class="hide-lms-down"><a n:class="link, $presenter->isLinkCurrent('Teaching:*') ? current" href="{link Teaching:category, 1}">Učení</a></li>
-                        <li class="hide-lms-up dropdown">
-                            <a data-toggle="dropdown" n:class="link, dropdown-toggle, $presenter->isLinkCurrent('Teaching:*') ? current" href="{link Teaching:category, 1}">Učení<b class="caret"></b></a>
-                            <ul n:class="dropdown-menu" n:inner-foreach="$article_categories AS $article_category">
-                                <li><a n:href="Teaching:category, $article_category->id" class="link{ifCurrent Teaching:category, $article_category->id} current{/ifCurrent}">{$article_category->title}</a></li>
-                            </ul>
-                        </li>
+                        <li><a n:class="link, $presenter->isLinkCurrent('Teaching:*') ? current" href="{link Teaching:category, 1}">Učení</a></li>
                         <li><a n:class="link, $presenter->isLinkCurrent('Galery:*') ? current" href="{link Galery:galeries}">Foto</a></li>
-                        <li class="hide-lms-down"><a n:class="link, $presenter->isLinkCurrent('Audio:*') || $presenter->isLinkCurrent('Music:*') ? current" href="{link Audio:interprets}">Audio</a></li>
-                        <li class="hide-lms-up dropdown">
-                            <a data-toggle="dropdown" n:class="link, dropdown-toggle, $presenter->isLinkCurrent('Audio:*') || $presenter->isLinkCurrent('Music:*') ? current" href="{link Audio:interprets}">Audio<b class="caret"></b></a>
-                            <ul n:class="dropdown-menu">
-                                <li><a n:href="Audio:interprets" n:class="link, $presenter->isLinkCurrent('Audio:interprets') ? current">Přednášky</a></li>
-                                <li><a n:href="Music:interprets" n:class="link, $presenter->isLinkCurrent('Music:interprets') ? current">Hudba</a></li>
-                            </ul>
-                        </li>
+                        <li><a n:class="link, $presenter->isLinkCurrent('Audio:*') || $presenter->isLinkCurrent('Music:*') ? current" href="{link Audio:interprets}">Audio</a></li>
                         <li><a n:class="link, $presenter->isLinkCurrent('Contact:*') ? current" href="{link Contact:contact}">Kontakt</a></li>
                         <li><a n:class="link, $presenter->isLinkCurrent('Links:*') ? current" href="{link Links:default}">Odkazy</a></li>
                     </ul>
@@ -175,31 +155,6 @@
             };
 
             var actuality_slider = new $JssorSlider$("actuality_slider", options);
-            
-            $('#search_sumbit').on("click",function(event) {
-                var search_text = $('#search_text');
-                var search_text_border = $('#search_text_border');
-
-                if($(search_text).hasClass('focus')) {
-                    if(search_text.val() == "") {
-                        $(search_text).removeClass('focus').focusout();
-                        $(search_text_border).removeClass('focus');
-                        event.preventDefault();
-                    }
-                }
-                else {
-                    $(search_text).addClass('focus').focus();
-                    $(search_text_border).addClass('focus');
-                    event.preventDefault();
-                }
-
-                if(search_text.val().length == 1) {
-                    alert("Pro vyhledávání zadejte prosím alespoň 2 znaky.");
-                    $(search_text).focus();
-                    event.preventDefault();
-                }
-            });
-            
         });
 
     </script>

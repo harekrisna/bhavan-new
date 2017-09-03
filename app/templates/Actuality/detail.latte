@@ -11,7 +11,7 @@
     {if $next}
         <a id="top_link_next" class="link link-next" n:href="detail, $next->id">následující &raquo;</a>
     {else}
-        <div class="link link-disabled link-next">následující &raquo;</div>
+        <span class="link-disabled">následující &raquo;</span>
     {/if}
 </nav>
 <div class="next-prev-nav-labels-container nav-top">
@@ -24,14 +24,7 @@
 </div>
 <article class="article-detail">
 	<h1 class="article-title">{$actuality->title}</h1>
-    <div class="article-container">
-        <div class="article-text">
-            <img n:if="$actuality->article_image" class="article-image article-main-image-mobile" src="{*$basePath*}/images/actuality/{$actuality->article_image}" />
-            {!$actuality->description}
-        </div>
-    </div>
-    <div class="article-main-image-desktop">
-        <img src="{*$basePath*}/images/actuality/{$actuality->article_image}" />
-    </div>
+	<img n:if="$actuality->article_image" class="article-image" src="{$basePath}/images/actuality/{$actuality->article_image}" />
+	{!$actuality->description}
 </article>
 {/block}

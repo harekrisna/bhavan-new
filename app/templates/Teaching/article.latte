@@ -5,113 +5,30 @@
     {if $previous_article}
         <a id="top_link_prev" class="link" n:href="article, $previous_article->id">&laquo; předchozí</a>
     {else}
-        <div class="link link-disabled">&laquo; předchozí</div>
+        <span class="link-disabled">&laquo; předchozí</span>
     {/if}
     <span class="nav-delimiter">&#124;</span>
     {if $next_article}
         <a id="top_link_next" class="link link-next" n:href="article, $next_article->id">následující &raquo;</a>
     {else}
-        <div class="link link-disabled link-next">následující &raquo;</div>
+        <span class="link-disabled">následující &raquo;</span>
     {/if}
 </nav>
 <div class="next-prev-nav-labels-container nav-top">
 	<div n:if="$previous_article" id="top_label_prev" n:class="link-hover-label, $previous_article->preview_image ? label-picture : label-text"><img n:if="$previous_article->preview_image" class="image-picture" src="/{=ARTICLES_IMG_FOLDER}/previews/{$previous_article->preview_image}" />{$previous_article->title}</div>
 	<div n:if="$next_article" id="top_label_next" n:class="link-hover-label, label-prev, $next_article->preview_image ? label-picture : label-text"><img n:if="$next_article->preview_image" class="image-picture" src="/{=ARTICLES_IMG_FOLDER}/previews/{$next_article->preview_image}" />{$next_article->title}</div>
 </div>
-<article class="article-detail in-content clearfix">
+<article class="article-detail">
 	<h1 class="article-title">{$article->title}</h1>
-    <div class="article-container">
-    	<div class="article-text">
-	    	{if $article->article_image != ""}
-	    	<img src="{$basePath}/{=ARTICLES_IMG_FOLDER}/{$article->article_image}" class="article-image main-image" />
-	    	{/if}
-	    	{$article->text|noescape}
-	    </div>
-        {if $child_articles->count()}
-        {switch $article->list_style}
-            {case box}
-                <div class="row list">
-                    <div n:foreach="$child_articles as $child_article" class="col-md-6">
-                        <div n:class="list-box">
-                            <a class="list-box-title sms-down" n:href="article, $child_article->id">{$child_article->title}</a>
-                            <div class="list-box-image" style="background-image: url('{$basePath}/{=ARTICLES_IMG_FOLDER}/previews/{$child_article->preview_image}');"></div>
-                            <a class="list-box-title sms-up" n:href="article, $child_article->id">{$child_article->title}</a>
-                            <p class="list-box-text">{$child_article->preview_text}</p>
-                        </div>
-                    </div>
-                </div>
-            {case line-link}
-                <div class="row list-simple">
-                    <ul n:inner-foreach="$child_articles as $article">
-                        <li class="list-simple-item link"><a class="link list-simple-link" n:href="article, $article->id">{$article->title}</a></li>
-                    </ul>
-                </div>
-            {case line-collapse}
-                <div class="row list-simple">
-                    <ul n:inner-foreach="$child_articles as $article">
-                        <li class="list-simple-item link">{$article->title}</li>
-                        <li class="list-simple-text text-hidden">{!$article->text}</li>
-                    </ul>
-                </div>
-        {/switch}
-        {/if}
-    </div>
-    <div class="article-category-links">
-        <div class="article-category-links-title">Obsah<span class="acl-title-delimiter">-</span>{$article->category->title}</div>
-        {if $category_articles->count() > 10}
-        <div id="article_category_links_slideshow" class="slideshow">
-            <div u="slides">
-            {var $pageIterator = 0}
-            {var $currentPage = 0}
-            {foreach $category_articles as $category_article}
-            {if $iterator->first}<div><ul class="article-category-links-list">{/if}
-                <li class="article-category-links-item">
-                    {ifCurrent 'article', $category_article->id}
-                    <div class="article-category-links-item-link link-current">{$category_article->title}</div>
-                    {var $currentPage = $pageIterator}
-                    {else}
-                    <a class="link article-category-links-item-link" n:href="article, $category_article->id">{$category_article->title}</a>
-                    {/ifCurrent}
-                </li>
-                {if $iterator->counter % 10 == 0}
-                </ul></div>
-                <div><ul class="article-category-links-list">
-                {var $pageIterator = $pageIterator + 1}
-                {/if}
-                {if $iterator->last}</ul></div>{/if}
-            {/foreach}
-            {dump $currentPage}
-            </div>
-        </div>
-        <div n:if="count($category_articles) > 10" class="acl-next-prev">
-            <button id="acl_np_prev" class="acl-np-prev">&laquo; předchozí</button>
-            <button id="acl_np_next" class="acl-np-next"">další &raquo;</button>
-        </div>
-        {else}
-        <div>
-            <ul class="article-category-links-list">
-            {foreach $category_articles as $category_article}
-                <li class="article-category-links-item">
-                    {ifCurrent 'article', $category_article->id}
-                    <div class="article-category-links-item-link link-current">{$category_article->title}</div>
-                    {else}
-                    <a class="link article-category-links-item-link" n:href="article, $category_article->id">{$category_article->title}</a>
-                    {/ifCurrent}
-                </li>
-            {/foreach}
-            </ul>
-            </div>
-        </div>
-        {/if}
-    </div>
+	<div class="article-text">{$article->text|noescape}</div>
 </article>
-
 <div class="article-navigation">
     <div class="links-container">
         <a n:href="category, $article->category->id" id="bottom_link_back" class="link link-backlink">
-	        <div class="backlink-icon backlink-icon-out"></div>
-   	        <div class="backlink-icon backlink-icon-hover"></div>
-		</a>
+			<div class="icon-line"></div>
+			<div class="icon-line"></div>
+			<div class="icon-line"></div>
+		</a>        
 		{if $previous_article}
             <a n:href="article, $previous_article->id" id="bottom_link_prev" class="link nav-link link-prev">&laquo; předchozí</a>
         {else}
@@ -130,65 +47,3 @@
     </div>
 </div>
 {/block}
-{block scripts}
-{if $category_articles->count() > 10}
-<script>
-//myPaginator('#acl_pages', '#acl_np_prev', '#acl_np_next');
-
-var slideshow;
-var slideshow_init = false;
-
-jQuery(document).ready(function ($) {
-    var options = {
-        $Loop: 0,
-        $ArrowKeyNavigation: 0,
-    };
-
-    slideshow = new $JssorSlider$("article_category_links_slideshow", options);
-    slideshow.$On($JssorSlider$.$EVT_PARK, function(position, fromPosition) {
-        var slides_count = slideshow.$SlidesCount();
-        var prev_button = $('#acl_np_prev');
-        var next_button = $('#acl_np_next');
-
-        (position == 0) ? prev_button.addClass('link-disabled') : prev_button.removeClass('link-disabled');
-        (position == slides_count - 1) ? next_button.addClass('link-disabled') : next_button.removeClass('link-disabled');
-
-        if(!slideshow_init) {
-            {var $pageIterator = 0}
-            {var $currentPage = 0}
-            {foreach $category_articles as $category_article}
-                {ifCurrent 'article', $category_article->id}
-                    {var $currentPage = $pageIterator}
-                {/ifCurrent}
-                {if $iterator->counter % 10 == 0}
-                    {var $pageIterator = $pageIterator + 1}
-                {/if}
-            {/foreach}
-            
-            slideshow.$GoTo({$currentPage});
-            
-            if({$currentPage} > 0) {
-                prev_button.removeClass('link-disabled');
-            }
-
-            if({$currentPage} + 1 == slides_count) {
-                next_button.addClass('link-disabled')
-            }
-
-            slideshow_init = true;
-        }
-    });   
-});
-
-$('#acl_np_prev').on('click', function() {
-    slideshow.$Prev();
-});
-
-$('#acl_np_next').on('click', function() {
-    slideshow.$Next();
-});
-
-</script>
-{/if}
-{/block}
-

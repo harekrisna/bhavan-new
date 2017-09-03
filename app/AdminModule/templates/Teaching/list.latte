@@ -17,7 +17,7 @@
 		        <span class="sort-helper">{$article->created|date: 'Y'}x{$article->created|date: 'm'}x{$article->created|date: 'd'}x{$article->created|date: 'H:i:s'}</span>{$article->created|date: 'j.n.Y H:i:s'}
 		    </td>
 			<td><a n:href="edit, $article->id">{$article->title}</a></td>
-			<td class="center">{$article->position}  {$article->category->title}</td>
+			<td class="center">{$article->category->title}</td>
             <td>
 	        {if $article->position > 1}
 	            <a class="button up" n:href="updatePosition, $article->id, $article->position - 1"></a>

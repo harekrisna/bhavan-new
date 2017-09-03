@@ -2,7 +2,7 @@
 {block content}
 <h1 class="collection-title">Audio</h1>
 <nav class="collection-breadcrumb-nav" id="breadcrumb_nav" n:ifset="$backlinks">
-    {foreach $backlinks as $backtitle => $backlink}
+    {foreach $backlinks as $backlink => $backtitle}
     <span>&raquo;</span>
     <a class="link" href="{$backlink}">{$backtitle}</a>
     {/foreach}

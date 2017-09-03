@@ -8,18 +8,16 @@
 <h1 class="scale-text"><span>{$interpret->title}</span></h1>
 <nav class="audio_nav">
 	<span>Seskupit podle:</span>
-	<a class="link{ifCurrent Music:interpret, $interpret->id, 'album'} current{/ifCurrent}" n:href="interpret, $interpret->id, 'album'">Alba</a>
-	<a class="link{ifCurrent Music:interpret, $interpret->id, 'alphabetical'} current{/ifCurrent}" n:href="interpret, $interpret->id, 'alphabetical'">Abecedně</a>
+	<a class="link{ifCurrent Music:interpret, $interpret->id, 'music_genre_id'} current{/ifCurrent}" n:href="interpret, $interpret->id, 'music_genre_id'">Žánrů</a>
+	<a class="link{ifCurrent Music:interpret, $interpret->id, 'music_year'} current{/ifCurrent}" n:href="interpret, $interpret->id, 'music_year'">Roků</a>
 	<a class="link{ifCurrent Music:interpret, $interpret->id, 'time_created'} current{/ifCurrent}" n:href="interpret, $interpret->id, 'time_created'">Nejnovější</a>
-	<a class="link{ifCurrent Music:interpret, $interpret->id, 'music_genre_id'} current{/ifCurrent}" n:href="interpret, $interpret->id, 'music_genre_id'">Žánr</a>
-	{*<a class="link{ifCurrent Music:interpret, $interpret->id, 'music_year'} current{/ifCurrent}" n:href="interpret, $interpret->id, 'music_year'">Roků</a>*}
 </nav>
 {if $group_by == 'music_year'}
 	{foreach $groups as $group}
 	<section class="lectures-group">
 		<div class="group-header">
-			<div n:class="group-header-label, label-text, !$group->music_year ? 'unknown-label' : 'year-label', $group->music_year < 2000 ? 'alt-color'">{$group->music_year ?: "?"}</div>
-			<h2 class="group-header-title">{if $group->music_year}Skladby z roku {$group->music_year}{else}Neznámý rok{/if}</h2>
+			<div n:class="group-header-label, label-text, year-label, $group->music_year < 2000 ? 'alt-color'">{$group->music_year}</div>
+			<h2 class="group-header-title">Skladby z roku {$group->music_year}</h2>
 		</div>
 		{foreach $records[$group->id] as $record}
 			{if $record->music_album_id}
@@ -41,7 +39,13 @@
 			<h2 class="group-header-title">Skladby přidané za posledních 30 dnů</h2>
 		</div>
 		{foreach $last_30_days as $record}
-			{include player-bar.latte, record => $record}
+			{if $record->music_album_id}
+				{continueIf in_array($record->music_album_id, $displayed_albums)}
+				{include album-link.latte, record => $record, album_count => $albums_count[$record->music_album_id]}
+				{var $displayed_albums[] = $record->music_album_id}
+			{else}
+				{include player-bar.latte, record => $record}
+			{/if}
 		{/foreach}
 	</section>
 	<section n:if="$last_60_days->count()" class="lectures-group">
@@ -50,7 +54,13 @@
 			<h2 class="group-header-title">Skladby přidané za posledních 60 dnů</h2>
 		</div>
 		{foreach $last_60_days as $record} 
-			{include player-bar.latte, record => $record}
+			{if $record->music_album_id}
+				{continueIf in_array($record->music_album_id, $displayed_albums)}
+				{include album-link.latte, record => $record, album_count => $albums_count[$record->music_album_id]}
+				{var $displayed_albums[] = $record->music_album_id}
+			{else}
+				{include player-bar.latte, record => $record}
+			{/if}
 		{/foreach}
 	</section>
 	{if $records}
@@ -60,7 +70,13 @@
 			<h2 class="group-header-title">Starší skladby</h2>
 		</div>
 		{foreach $records as $record} 
-			{include player-bar.latte, record => $record}
+			{if $record->music_album_id}
+				{continueIf in_array($record->music_album_id, $displayed_albums)}
+				{include album-link.latte, record => $record, album_count => $albums_count[$record->music_album_id]}
+				{var $displayed_albums[] = $record->music_album_id}
+			{else}
+				{include player-bar.latte, record => $record}
+			{/if}
 		{/foreach}
 	</section>
 	{/if}
@@ -79,43 +95,16 @@
 		{/if}
 		</div>
 		{foreach $records[$group->id] as $record}
-			{include player-bar.latte, record => $record}
+			{if $record->music_album_id}
+				{continueIf in_array($record->music_album_id, $displayed_albums)}
+				{include album-link.latte, record => $record, album_count => $albums_count[$record->music_album_id]}
+				{var $displayed_albums[] = $record->music_album_id}
+			{else}
+				{include player-bar.latte, record => $record}
+			{/if}
 		{/foreach}
 	</section>
 	{/foreach}
-{/if}
-
-{if $group_by == 'alphabetical'}
-	<section class="lectures-group group-continual">
-		{foreach $records as $record}
-			{include player-bar.latte, record => $record}
-		{/foreach}
-	</section>
-{/if}
-
-{if $group_by == 'album'}
-	{foreach $groups as $group}
-	{continueIf !$group->music_album_id}
-	<section class="lectures-group">
-		<div class="group-header">
-			<h2 class="group-header-title text-only">{$group->music_album->title}</h2>
-		</div>
-		{foreach $records[$group->music_album_id] as $record}
-			{include player-bar.latte, record => $record}
-		{/foreach}
-	</section>
-	{/foreach}
-
-	{ifset $records[""]}
-	<section class="lectures-group">
-		<div class="group-header">
-			<h2 class="group-header-title text-only">Nezařazené</h2>
-		</div>
-		{foreach $records[""] as $record}
-			{include player-bar.latte, record => $record}
-		{/foreach}
-	</section>
-	{/ifset}
 {/if}
 
 {/block}

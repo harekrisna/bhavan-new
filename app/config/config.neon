@@ -7,7 +7,6 @@ parameters:
 
 application:
 	errorPresenter: Error
-	catchExceptions: true
 	mapping:
 		*: App\*Module\Presenters\*Presenter
 
@@ -43,6 +42,4 @@ services:
 	music_downloadcount: App\Model\MusicDownloadcount	
 	book: App\Model\Book
 	page: App\Model\Page
-	stats_access: App\Model\StatsAccess
-	stats_search: App\Model\StatsSearch
 	router: App\RouterFactory::createRouter

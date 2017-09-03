@@ -1,7 +1,6 @@
 {extends layout.latte}
 {block title}{$category->title} | Učení{/block}
 {block teaching_content}
-<h2 class="category-title">{$category->title}</h2>
 <div class="row list">
 	<div n:foreach="$articles as $article" class="col-md-6">
 		<div n:class="list-box, $iterator->first ? list-box-highlighted">

@@ -9,10 +9,6 @@ CKEDITOR.editorConfig = function( config ) {
 	// config.uiColor = '#AADC6E';
 	config.height = 400;
 	config.allowedContent = true;
-	config.entities = false;
-	config.entities_greek = false;
-	config.entities_latin = false;
-	config.htmlEncodeOutput = false;
 	
 	config.filebrowserBrowseUrl = '../../js/kcfinder/browse.php?opener=ckeditor&type=files';
 	config.filebrowserImageBrowseUrl = '../../js/kcfinder/browse.php?opener=ckeditor&type=images';

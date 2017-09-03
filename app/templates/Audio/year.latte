@@ -10,120 +10,92 @@
 	<span>Seskupit podle:</span>
 	<a n:href="year, $year, 'audio_interpret_id'" class="link{ifCurrent Audio:year, $year, 'audio_interpret_id'} current{/ifCurrent}">Autorů</a>
 	<a n:href="year, $year, 'book_id'" class="link{ifCurrent Audio:year, $year, 'book_id'} current{/ifCurrent}">Témat</a>
-	<a n:href="year, $year, 'alphabetical'" class="link{ifCurrent Audio:year, $year, 'alphabetical'} current{/ifCurrent}">Abecedně</a>
 </nav>
 {if $group_by == 'book_id'}
-	<section n:if="count($sankirtan)" class="lectures-group">
-		<div class="group-header">
-			<div class="group-header-label" style="background-image: url('{$basePath}/images/books/sankirtan.jpg')"></div>
-			<h2 class="group-header-title">Sankírtanové lekce</h2>
-		</div>
-		{foreach $sankirtan as $lecture}
-			{if $lecture->audio_collection_id}
-				{continueIf in_array($lecture->audio_collection_id, $displayed_collections)}
-				{include collection-link.latte, lecture => $lecture, show_interpret_link => true, collection_count => $collections_count[$lecture->audio_collection_id]}
-				{var $displayed_collections[] = $lecture->audio_collection_id}
-			{else}
-				{include player-bar.latte, show_interpret_link => true, lecture => $lecture}
-			{/if}
-		{/foreach}
-	</section>
-
-	<section n:if="count($varnasrama)" class="lectures-group">
-		<div class="group-header">
-			<div class="group-header-label" style="background-image: url('{$basePath}/images/books/varnasrama.jpg')"></div>
-			<h2 class="group-header-title">Varnášrama a farmy</h2>
-		</div>
-		{foreach $varnasrama as $lecture}
-			{if $lecture->audio_collection_id}
-				{continueIf in_array($lecture->audio_collection_id, $displayed_collections)}
-				{include collection-link.latte, lecture => $lecture, show_interpret_link => true, collection_count => $collections_count[$lecture->audio_collection_id]}
-				{var $displayed_collections[] = $lecture->audio_collection_id}
-			{else}
-				{include player-bar.latte, show_interpret_link => true, lecture => $lecture}
-			{/if}
-		{/foreach}
-	</section>
-
-	<section n:if="count($seminars)" class="lectures-group">
-		<div class="group-header">
-			<div class="group-header-label" style="background-image: url('{$basePath}/images/books/seminars.jpg')"></div>
-			<h2 class="group-header-title">Semináře</h2>
-		</div>
-		{foreach $seminars as $lecture}
-			{if $lecture->audio_collection_id}
-				{continueIf in_array($lecture->audio_collection_id, $displayed_collections)}
-				{include collection-link.latte, lecture => $lecture, show_interpret_link => true, collection_count => $collections_count[$lecture->audio_collection_id]}
-				{var $displayed_collections[] = $lecture->audio_collection_id}
-			{else}
-				{include player-bar.latte, show_interpret_link => true, lecture => $lecture}
-			{/if}
-		{/foreach}
-	</section>
-
-	{foreach $groups as $group}
-	{continueIf $group->book_id == ""} {* přeskočit nezařazené knihy *}
-	<section class="lectures-group">
-		<div class="group-header">
-			<div class="group-header-label" style="background-image: url('{$basePath}/images/books/{$group->book_id}.jpg')"></div>
-			<h2 class="group-header-title">{$group->book->title}</h2>
-		</div>
-		{foreach $lectures[$group->id] as $lecture}
-			{if $lecture->audio_collection_id}
-				{continueIf in_array($lecture->audio_collection_id, $displayed_collections)}
-				{include collection-link.latte, lecture => $lecture, show_interpret_link => true, collection_count => $collections_count[$lecture->audio_collection_id]}
-				{var $displayed_collections[] = $lecture->audio_collection_id}
-			{else}
-				{include player-bar.latte, show_interpret_link => true, lecture => $lecture}
-			{/if}
-		{/foreach}
-	</section>
+<section n:if="count($sankirtan)" class="lectures-group">
+	<div class="group-header">
+		<div class="group-header-label" style="background-image: url('{$basePath}/images/books/sankirtan.jpg')"></div>
+		<h2 class="group-header-title">Sankírtanové lekce</h2>
+	</div>
+	{foreach $sankirtan as $lecture}
+		{if $lecture->audio_collection_id}
+			{continueIf in_array($lecture->audio_collection_id, $displayed_collections)}
+			{include collection-link.latte, lecture => $lecture, show_interpret_abbr => true, collection_count => $collections_count[$lecture->audio_collection_id]}
+			{var $displayed_collections[] = $lecture->audio_collection_id}
+		{else}
+			{include player-bar.latte, show_interpret_abbr => true, lecture => $lecture}
+		{/if}
 	{/foreach}
+</section>
 
-	<section n:if="count($unclasified)" class="lectures-group">
-		<div class="group-header">
-			<div class="group-header-label" style="background-image: url('{$basePath}/images/books/unclasified.jpg')"></div>
-			<h2 class="group-header-title">Nezařazené</h2>
-		</div>
-		{foreach $unclasified as $lecture}
-			{if $lecture->audio_collection_id}
-				{continueIf in_array($lecture->audio_collection_id, $displayed_collections)}
-				{include collection-link.latte, lecture => $lecture, show_interpret_link => true, collection_count => $collections_count[$lecture->audio_collection_id]}
-				{var $displayed_collections[] = $lecture->audio_collection_id}
-			{else}
-				{include player-bar.latte, show_interpret_link => true, lecture => $lecture}
-			{/if}
-		{/foreach}
-	</section>
+<section n:if="count($varnasrama)" class="lectures-group">
+	<div class="group-header">
+		<div class="group-header-label" style="background-image: url('{$basePath}/images/books/varnasrama.jpg')"></div>
+		<h2 class="group-header-title">Varnášrama a farmy</h2>
+	</div>
+	{foreach $varnasrama as $lecture}
+		{if $lecture->audio_collection_id}
+			{continueIf in_array($lecture->audio_collection_id, $displayed_collections)}
+			{include collection-link.latte, lecture => $lecture, show_interpret_abbr => true, collection_count => $collections_count[$lecture->audio_collection_id]}
+			{var $displayed_collections[] = $lecture->audio_collection_id}
+		{else}
+			{include player-bar.latte, show_interpret_abbr => true, lecture => $lecture}
+		{/if}
+	{/foreach}
+</section>
+
+<section n:if="count($seminars)" class="lectures-group">
+	<div class="group-header">
+		<div class="group-header-label" style="background-image: url('{$basePath}/images/books/seminars.jpg')"></div>
+		<h2 class="group-header-title">Semináře</h2>
+	</div>
+	{foreach $seminars as $lecture}
+		{if $lecture->audio_collection_id}
+			{continueIf in_array($lecture->audio_collection_id, $displayed_collections)}
+			{include collection-link.latte, lecture => $lecture, show_interpret_abbr => true, collection_count => $collections_count[$lecture->audio_collection_id]}
+			{var $displayed_collections[] = $lecture->audio_collection_id}
+		{else}
+			{include player-bar.latte, show_interpret_abbr => true, lecture => $lecture}
+		{/if}
+	{/foreach}
+</section>
 {/if}
 
-{if $group_by == 'audio_interpret_id'}
-	{foreach $groups as $group}
-		{continueIf $group_by == 'book_id' && $group->book_id == ""} {* přeskočit nezařazené knihy *}
-		<section class="lectures-group">
-			<div class="group-header">
-				<div class="group-header-label" style="background-image: url('{$basePath}/images/interpret_avatars/{$group->audio_interpret->image}')"></div>
-				<h2 class="group-header-title">{$group->audio_interpret->title}</h2>
-			</div>
-			{foreach $lectures[$group->id] as $lecture}
-				{if $lecture->audio_collection_id}
-					{continueIf in_array($lecture->audio_collection_id, $displayed_collections)}
-					{include collection-link.latte, lecture => $lecture, show_interpret_link => ($group_by == 'book_id') ? true, collection_count => $collections_count[$lecture->audio_collection_id]}
-					{var $displayed_collections[] = $lecture->audio_collection_id}
-				{else}
-					{include player-bar.latte, show_interpret_link => ($group_by == 'book_id') ? true, lecture => $lecture}
-				{/if}
-			{/foreach}
-		</section>
+{foreach $groups as $group}
+{continueIf $group_by == 'book_id' && $group->book_id == ""} {* přeskočit nezařazené knihy *}
+<section class="lectures-group">
+	<div class="group-header">
+		<div class="group-header-label" style="background-image: url('{$basePath}/images/interpret_avatars/{$group->audio_interpret->image}')"></div>
+		<h2 class="group-header-title">{$group->audio_interpret->title}</h2>
+	</div>
+	{foreach $lectures[$group->id] as $lecture}
+		{if $lecture->audio_collection_id}
+			{continueIf in_array($lecture->audio_collection_id, $displayed_collections)}
+			{include collection-link.latte, lecture => $lecture, show_interpret_abbr => ($group_by == 'book_id') ? true, collection_count => $collections_count[$lecture->audio_collection_id]}
+			{var $displayed_collections[] = $lecture->audio_collection_id}
+		{else}
+			{include player-bar.latte, show_interpret_abbr => ($group_by == 'book_id') ? true, lecture => $lecture}
+		{/if}
 	{/foreach}
-{/if}
+</section>
+{/foreach}
 
-{if $group_by == 'alphabetical'}
-	<section class="lectures-group group-continual">
-		{foreach $lectures as $lecture}
-			{include player-bar.latte, lecture => $lecture}
-		{/foreach}
-	</section>
+{if $group_by == 'book_id'}
+<section n:if="count($unclasified)" class="lectures-group">
+	<div class="group-header">
+		<div class="group-header-label" style="background-image: url('{$basePath}/images/books/unclasified.jpg')"></div>
+		<h2 class="group-header-title">Nezařazené</h2>
+	</div>
+	{foreach $unclasified as $lecture}
+		{if $lecture->audio_collection_id}
+			{continueIf in_array($lecture->audio_collection_id, $displayed_collections)}
+			{include collection-link.latte, lecture => $lecture, show_interpret_abbr => true, collection_count => $collections_count[$lecture->audio_collection_id]}
+			{var $displayed_collections[] = $lecture->audio_collection_id}
+		{else}
+			{include player-bar.latte, show_interpret_abbr => true, lecture => $lecture}
+		{/if}
+	{/foreach}
+</section>
 {/if}
 
 {/block}

@@ -8,39 +8,10 @@
 	}
 }
 
-.category-title {
-	margin: 15px 0px 15px 0px;
-
-	.large-mobile-screen-up({
-		display: none;
-	});
-}
-
 .collection-nav {
 	margin-top: 10px;
 	margin-right: 15px;
 	float: left;
-
-	.mobile-screen({
-		display: none;
-	});
-
-	&.right-nav {
-		margin-right: 0;
-		float: right;
-		
-		.mobile-screen({
-			display: block;
-		});
-
-		.link {
-			text-transform: none;
-		}
-	}
-
-	&.nav-taller {
-		margin-bottom: 12px;
-	}
 
 	.link {
 		text-transform: uppercase;
@@ -66,13 +37,22 @@
 		margin-right: 10px;
 		margin-left: 0;
 	}
+
+	&.right-nav {
+		margin-right: 0;
+		float: right;
+
+		.link {
+			text-transform: none;
+		}
+	}
 }
 
 .collection-nav-clearfix {
 	height: 30px;
 
-	.ultra-small-screen({
-		height: 0;
+	.small-mobile-screen-down({
+		display: none !important;
 	});
 }
 

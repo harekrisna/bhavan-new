@@ -23,7 +23,7 @@
             <h2><a class="link" n:href="Actuality:list">Akce:</a></h2>
             <div id="events_slider_lg_container">
                 {define events_slider_lg}
-                <div id="events_slider_lg" class="slideshow news-slideshow">
+                <div id="events_slider_lg" n:class="slideshow, news-slideshow">
                     <div u="slides">
                         <div>
                             <a class="new-link" n:href="Actuality:sunday">
@@ -64,7 +64,7 @@
             <h2><a class="link" n:href="Galery:galeries">Foto:</a></h2>
             <div id="photos_slider_lg_container">
                 {define photos_slider_lg}
-                <div id="photos_slider_lg" class="slideshow news-slideshow">
+                <div id="photos_slider_lg" n:class="slideshow, news-slideshow">
                     <div u="slides">
                         <div>
                         {foreach $photo_news as $new}
@@ -92,7 +92,7 @@
             <h2><a class="link" n:href="Audio:latest">Audio:</a></h2>
             <div id="audio_slider_lg_container">
                 {define audio_slider_lg}
-                <div id="audio_slider_lg" class="slideshow news-slideshow">
+                <div id="audio_slider_lg" n:class="slideshow, news-slideshow">
     		    	<div u="slides">
     		        	<div>
     	        		{foreach $audio_news as $new}
@@ -123,7 +123,7 @@
             <h2><a class="link" n:href="Actuality:list">Akce:</a></h2>
             <div id="events_slider_sm_container">
                 {define events_slider_sm}
-                <div id="events_slider_sm" class="slideshow news-slideshow">
+                <div id="events_slider_sm" n:class="slideshow, news-slideshow">
                     <div u="slides">
                         <div>
                             <a class="new-link" n:href="Actuality:sunday">
@@ -164,7 +164,7 @@
             <h2><a class="link" n:href="Galery:galeries">Foto:</a></h2>
             <div id="photos_slider_sm_container">
                 {define photos_slider_sm}
-                <div id="photos_slider_sm" class="slideshow news-slideshow">
+                <div id="photos_slider_sm" n:class="slideshow, news-slideshow">
                     <div u="slides">
                         <div>
                         {foreach $photo_news as $new}
@@ -198,7 +198,7 @@
             <h2><a class="link" n:href="Audio:latest">Audio:</a></h2>
             <div id="audio_slider_sm_container">
                 {define audio_slider_sm}
-                <div id="audio_slider_sm" class="slideshow news-slideshow">
+                <div id="audio_slider_sm" n:class="slideshow, news-slideshow">
                     <div u="slides">
                         <div>
                         {foreach $audio_news as $new}
@@ -272,7 +272,7 @@
             <h2><a class="link" n:href="Galery:galeries">Foto:</a></h2>
             <div id="photos_slider_xs_container">
                 {define photos_slider_xs}
-                <div id="photos_slider_xs" class="slideshow news-slideshow">
+                <div id="photos_slider_xs" n:class="slideshow, news-slideshow">
                     <div u="slides">
                         <div>
                         {foreach $photo_news as $new}
@@ -306,7 +306,7 @@
             <h2><a class="link" n:href="Audio:latest">Audio:</a></h2>
             <div id="audio_slider_xs_container">
                 {define audio_slider_xs}
-                <div id="audio_slider_xs" class="slideshow news-slideshow">
+                <div id="audio_slider_xs" n:class="slideshow, news-slideshow">
                     <div u="slides">
                         <div>
                         {foreach $audio_news as $new}
@@ -345,9 +345,7 @@
 		var events_slider_lg; var photos_slider_lg; var audio_slider_lg;
         var events_slider_sm; var photos_slider_sm; var audio_slider_sm;
         var events_slider_xs; var photos_slider_xs; var audio_slider_xs;
-        var events_slider_position = 0; var photos_slider_position = 0; var audio_slider_position = 0;
-
-
+        		
         function nextSlide(slider) {
             if(slider == "events_slider") {
                 events_slider_lg.$Next();
@@ -385,6 +383,7 @@
         }
 
 	    jQuery(document).ready(function ($) {
+
             var options = { 
                 $AutoPlay: true,   
                 $ArrowKeyNavigation: true,
@@ -466,10 +465,8 @@
             audio_slider_sm = initNewsSlider('audio_slider_sm', news_section_sm_width - 10, 80);
             audio_slider_xs = initNewsSlider('audio_slider_xs', browser_width - 10, 265);
 
-			function initNewsSlider(element_id, width, height) {
-                var slider_type = element_id.substr(0, element_id.indexOf('_'));
-                var width_type = element_id.split('_').pop().trim();
 
+			function initNewsSlider(element_id, width, height) {
 				var options = {
 		            $SlideWidth: width, 
 		            $SlideHeight: height,
@@ -493,30 +490,17 @@
                 var slider_main = $(container).children();
 		        var slider_id = slider_main.attr('id');
 		        var slider = new $JssorSlider$(slider_id, options);
-                
-                // nastavení stránky slajdu
-                if(slider_type == 'events') {
-                    slider.$GoTo(events_slider_position);
-                }
-
-                if(slider_type == 'photos') {
-                    slider.$GoTo(photos_slider_position);
-                }
-
-                if(slider_type == 'audio') {
-                    slider.$GoTo(audio_slider_position);
-                }
 
                 // správné nastavení šířky slideru pro ie
-                if(width_type == 'lg') {
+                if(element_id == 'events_slider_lg' || element_id == 'photos_slider_lg' || element_id == 'audio_slider_lg') {
                     var slider_css_width = width - 20;
                 }
                 
-                if(width_type == 'sm') {
+                if(element_id == 'events_slider_sm' || element_id == 'photos_slider_sm' || element_id == 'audio_slider_sm') {
                     var slider_css_width = width - 10;
                 }
 
-                if(width_type == 'xs') {
+                if(element_id == 'events_slider_xs' || element_id == 'photos_slider_xs' || element_id == 'audio_slider_xs') {
                     var slider_css_width = width - 30;   
                 }
                 
@@ -528,20 +512,7 @@
 					var slider_container = $('#' + slider_id).parent();
 					var prev_button = slider_container.find('button.prev');
 					var next_button = slider_container.find('button.next');
-
-                    // uložení stránky slajdu
-                    if(slider_type == 'events') {
-                        events_slider_position = slider.$CurrentIndex();
-                    }
-
-                    if(slider_type == 'photos') {
-                        photos_slider_position = slider.$CurrentIndex();
-                    }
 					
-                    if(slider_type == 'audio') {
-                        audio_slider_position = slider.$CurrentIndex();
-                    }
-
 					position == 0 ?	prev_button.fadeOut() :	prev_button.fadeIn();
 					position == slides_count - 1 ? next_button.fadeOut() : next_button.fadeIn();
 				});

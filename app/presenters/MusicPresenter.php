@@ -33,7 +33,7 @@ class MusicPresenter extends BasePresenter	{
 		});										   
 	}	
 	
-	public function renderLatest() {		
+	public function renderLatest() {
 		$this->template->last_30_days = $this->music->findAll()
 													->where(new SqlLiteral("`time_created` BETWEEN (CURDATE() - INTERVAL 30 DAY) AND (CURDATE() + 1)"))
 													->order('time_created DESC');
@@ -47,10 +47,7 @@ class MusicPresenter extends BasePresenter	{
 											   ->order('time_created DESC')
 											   ->limit(20);
 												
-		$this->template->backlinks = ["Hudba" => $this->link('interprets')];
-		$this->session->backlinks = ["Hudba" => $this->link('interprets'),
-									 "Nejnovější" => $this->link('latest')];
-
+		$this->session->backlinks = [$this->link('latest') => "Nejnovější"];
 		$this->session->main_group = "latest";
 		$detect = new Mobile_Detect;
 		$this->template->isMobile = $detect->isMobile();
@@ -61,11 +58,10 @@ class MusicPresenter extends BasePresenter	{
 		$this->template->interprets = $this->musicInterpret->findAll()
 														   ->order('position ASC');
 
-		$this->template->backlinks = ["Hudba" => $this->link('interprets')];
 		$this->session->main_group = "interprets";													  
     }
     
-	public function renderInterpret($interpret_id, $group_by = "album") {
+	public function renderInterpret($interpret_id, $group_by = "music_year") {
 		$groups = $this->music->findBy(['music_interpret_id' => $interpret_id]);
   		
   		$albums = $this->music->findBy(['music_interpret_id' => $interpret_id])
@@ -78,37 +74,19 @@ class MusicPresenter extends BasePresenter	{
 		}
 		
 		$this->template->albums_count = $albums_count;
-		
-		$records = [];
-
+								   
 		if($group_by == "music_year") {
+			$group_by_column = "music_year";
 			$groups->order('music_year DESC')
-				   ->group('music_year');
-
-			foreach($groups as $group) {	
-				$records[$group->id] = $this->music->findBy(['music_interpret_id' => $interpret_id, 
-											  				 'music_year' => $group->music_year])
-											  	   ->order('music_year DESC, music_month DESC, music_day DESC'); 
-			}				   
+				   ->group($group_by_column);
 		}			
-		
-		if($group_by == "music_genre_id") {
+		elseif($group_by == "music_genre_id") {
+			$group_by_column = "music_genre_id";
 			$groups->order('music_genre_id DESC')
-				   ->group('music_genre_id');
-			
-			foreach($groups as $group) {	
-				$records[$group->id] = $this->music->findBy(['music_interpret_id' => $interpret_id, 
-											  				 'music_genre_id' => $group->music_genre_id])
-											  	   ->order('title'); 
-			}
-		}
+				   ->group($group_by_column);
+		}				
 		
-		if($group_by == "alphabetical") {
-			$records = $this->music->findBy(['music_interpret_id' => $interpret_id])
-								   ->order('title');
-		}
-		
-		if($group_by == "time_created") {
+		if($group_by == 'time_created') {
 			$this->template->last_30_days = $this->music->findBy(['music_interpret_id' => $interpret_id])
 														->where(new SqlLiteral("`time_created` BETWEEN CURDATE() - INTERVAL 30 DAY AND (CURDATE() + 1)"))
 														->order('time_created DESC');
@@ -118,26 +96,22 @@ class MusicPresenter extends BasePresenter	{
 														->order('time_created DESC');													
 			
 			$records = $this->music->findBy(['music_interpret_id' => $interpret_id])
-								   ->where(new SqlLiteral("`time_created` < CURDATE() - INTERVAL 60 DAY"))
-								   ->order('time_created DESC');
-		}
-
-		if($group_by == "album") {
-			$groups->group('music_album_id');
-
+									->where(new SqlLiteral("`time_created` < CURDATE() - INTERVAL 60 DAY"))
+									->order('time_created DESC');
+		}	
+		else {
+			$records = [];
 			foreach($groups as $group) {	
-				$records[$group->music_album_id] = $this->music->findBy(['music_interpret_id' => $interpret_id, 
-											  				 			 'music_album_id' => $group->music_album_id])
-											  	   			   ->order('title'); 
+				$records[$group->id] = $this->music->findBy(['music_interpret_id' => $interpret_id, 
+											  				 $group_by_column => $group->$group_by_column])
+											  	   ->order('music_year DESC, music_month DESC, music_day DESC'); 
 			}
 		}
 		
 		$interpret = $this->musicInterpret->get($interpret_id);
-		$this->template->backlinks = ["Hudba" => $this->link('interprets'), "Autoři" => $this->link('interprets')];
-
-		$this->session->backlinks = ["Hudba" => $this->link('interprets'),
-									 "Autoři" => $this->link('interprets'),
-								     $interpret->title => $this->link('interpret', $interpret_id, $group_by)];
+		$this->template->backlinks = [$this->link('interprets') => "Autoři"];
+		$this->session->backlinks = [$this->link('interprets') => "Autoři",
+								     $this->link('interpret', $interpret_id, $group_by) => $interpret->title];
 									     
 		$this->template->groups = $groups;
 		$this->template->records = $records;
@@ -147,7 +121,7 @@ class MusicPresenter extends BasePresenter	{
 		$detect = new Mobile_Detect;
    		$this->template->isMobile = $detect->isMobile();
 	}
-/*
+
 	public function renderYears()	{
 		$this->template->years = $this->music->findAll()
 											 ->select('music_year AS year, COUNT(*) AS count')
@@ -172,53 +146,25 @@ class MusicPresenter extends BasePresenter	{
 		
 		$this->template->albums_count = $albums_count;
 
-		$records = [];
-
 		if($group_by == "music_interpret_id") {
+			$group_by_column = "music_interpret_id";
 			$groups->order('music_year DESC')
-				   ->group('music_interpret_id');
-
-			foreach($groups as $group) {
-				$records[$group->id] = $this->music->findBy(['music_year' => $year, 
-															 'music_interpret_id' => $group->music_interpret_id
-															]);
-			}
+				   ->group($group_by_column);
 		}			
-		
-		if($group_by == "music_genre_id") {
+		elseif($group_by == "music_genre_id") {
+			$group_by_column = "music_genre_id";
 			$groups->order('music_genre_id DESC')
-				   ->group('music_genre_id');
-
-			foreach($groups as $group) {
-				$records[$group->id] = $this->music->findBy(['music_year' => $year, 
-															 'music_genre_id' => $group->music_genre_id
-															]);
-			}				   
+				   ->group($group_by_column);
 		}
 
-		if($group_by == "alphabetical") {
-			$groups = [];
-			$records = $this->music->findBy(['music_year' => $year])
-									->order('title');
-
-			foreach ($records as $record) {
-				$first_letter = substr($record->title, 0, 2); // UTF8 literal
-				if(strlen(utf8_decode($first_letter)) == 2) {
-					$first_letter = substr($first_letter, 0, 1);
-				}
-
-				if(intval($first_letter)) {
-					$groups['1-9'][] = $record;
-				}
-				elseif($first_letter == "Ś") {
-					$groups["Š"][] = $record;
-				}
-				else {
-					$groups[$first_letter][] = $record;
-				}
-			}
+		$records = [];
+									  
+		foreach($groups as $group) {
+			$records[$group->id] = $this->music->findBy(['music_year' => $year, 
+														  $group_by => $group->$group_by
+														]);
 		}
-
+		
 		$this->template->backlinks = [$this->link('years') => "Roky"];
 		$this->template->groups = $groups;
 		$this->template->records = $records;
@@ -230,63 +176,45 @@ class MusicPresenter extends BasePresenter	{
 		$detect = new Mobile_Detect;
    		$this->template->isMobile = $detect->isMobile();
 	}
-*/
+
 	public function renderGenres()	{
 		$this->template->genres = $this->musicGenre->findAll()
 											  ->order('position');
-		
-		$this->template->backlinks = ["Hudba" => $this->link('interprets')];
+
 		$this->session->main_group = "genres";
 	}	
 
-	public function renderGenre($genre_id, $group_by = "music_interpret_id") {
+	public function renderGenre($genre_id, $group_by = "music_year") {
 		$genre = $this->musicGenre->get($genre_id);
-		$groups = $this->music->findBy(['music_genre_id' => $genre_id]);
-		$records = [];							  
+
+		$groups = $this->music->findBy(['music_genre_id' => $genre_id])
+							  ->group($group_by);
 		
-		if($group_by == 'music_year') {
-			$groups->order('music_year DESC')
-				   ->group('music_year');
-										  
-			foreach($groups as $group) {
-				$records[$group->id] = $this->music->findBy(['music_genre_id' => $genre_id,
-															 'music_year' => $group->music_year])
-												   ->order('music_year DESC, music_month DESC, music_day DESC');
-			}
+		$albums = $this->music->findBy(['music_genre_id' => $genre_id])
+						   	  ->select("COUNT('*') AS count, music_album_id")
+							  ->group('music_album_id');
+		
+		$albums_count = [];								   
+		foreach($albums as $album) {
+			$albums_count[$album->music_album_id] = $album->count;
 		}
 
-		if($group_by == 'music_interpret_id') {
-			$groups->order('interpret.position')
-				   ->group('music_interpret_id');
-										  
-			foreach($groups as $group) {
-				$records[$group->id] = $this->music->findBy(['music_genre_id' => $genre_id,
-															 'music_interpret_id' => $group->music_interpret_id])
-												   ->order('title');
-			}
+		$this->template->albums_count = $albums_count;	
+							  
+		if($group_by == 'music_year')
+			$groups->order('music_year DESC');							  
+							  
+		$records = [];
+									  
+		foreach($groups as $group) {
+			$records[$group->id] = $this->music->findBy(['music_genre_id' => $genre_id,
+														 $group_by => $group->$group_by])
+											   ->order('music_year DESC, music_month DESC, music_day DESC');
 		}
-
-		if($group_by == "alphabetical") {
-			$records = $this->music->findBy(['music_genre_id' => $genre_id])
-								   ->order('title');
-		}
-
-		if($group_by == "album") {
-			$groups->group('music_album_id');
-
-			foreach($groups as $group) {	
-				$records[$group->music_album_id] = $this->music->findBy(['music_genre_id' => $genre_id, 
-											  				 			 'music_album_id' => $group->music_album_id])
-											  	   			   ->order('title'); 
-			}
-		}
-
-		$this->template->backlinks = ["Hudba" => $this->link('interprets'),
-									  "Žánr" => $this->link('genres')];
-
-		$this->session->backlinks = ["Hudba" => $this->link('interprets'),
-									 "Žánr" => $this->link('genres'),
-								     $genre->title => $this->link('genre', $genre_id, $group_by)];
+		
+		$this->template->backlinks = [$this->link('genres') => "Žánr"];
+		$this->session->backlinks = [$this->link('genres') => "Žánr",
+								     $this->link('genre', $genre_id, $group_by) => $genre->title];
 		
 		$this->template->genre = $genre;
 		$this->template->groups = $groups;
@@ -312,18 +240,7 @@ class MusicPresenter extends BasePresenter	{
 		$this->template->record = $audio_mp3;
 		$this->template->categories = $categories;
 		$this->template->backlinks = $this->session->backlinks;
-
-		if($this->session->backlinks == []) {
-			$this->template->backlinks = ["Autoři" => $this->link('interprets'),
-							     		  $audio_mp3->interpret->title => $this->link('interpret', $audio_mp3->interpret_id)];
-		}
-
 		$this->template->main_group = $this->session->main_group;
-
-		if($this->session->main_group == "") {
-			$this->template->main_group = "interprets";
-		}
-
 		$this->template->main_audio_type = "music";
 		
 		$detect = new Mobile_Detect;
@@ -336,17 +253,9 @@ class MusicPresenter extends BasePresenter	{
 		if (!$records)
             throw new Nette\Application\BadRequestException;
 			
-		$album = $this->musicAlbum->get($album_id);			
-		$this->template->album = $album;
+		$this->template->album = $this->musicAlbum->get($album_id);
 		$this->template->records = $records;
-
-		$first_record = $records->fetch();
-
-		$this->template->backlinks = ["Hudba" => $this->link('interprets'),
-									  "Autoři" => $this->link('interprets'),
-									  $first_record->music_interpret->title => $this->link('interpret', $first_record->music_interpret_id),
-									  $album->title => $this->link('album', $album_id)];
-									  
+		$this->template->backlinks = $this->session->backlinks;
 		$this->template->main_group = $this->session->main_group;
 		$this->template->main_audio_type = "music";
 		

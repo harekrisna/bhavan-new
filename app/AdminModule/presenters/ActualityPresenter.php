@@ -175,7 +175,6 @@ final class ActualityPresenter extends BasePresenter {
         	if($values['article_image']->isOK()) {
 				$article_file_name = $new_row->id."_".$values['article_image']->name;
 				$image = $values['article_image']->toImage();
-				$image->resize(730, null);
 				$image->save("images/actuality/".$article_file_name);
 				$this->actuality->update($new_row->id, array("article_image" => $article_file_name));
 	        }
@@ -228,7 +227,6 @@ final class ActualityPresenter extends BasePresenter {
 					
 				$file_name = $this->actuality_record->id."_".$values['article_image']->name;
 				$image = $values['article_image']->toImage();
-				$image->resize(730, null);
 				$image->save("images/actuality/".$file_name);
 				$this->actuality->update($this->actuality_record->id, array("article_image" => $file_name));
 	        }

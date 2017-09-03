@@ -1746,6 +1746,7 @@ Object.assign(_player2.default.prototype, {
 				if (!_constants.IS_IOS && !_constants.IS_ANDROID && t.timefloat) {
 					t.timefloat.style.left = pos + 'px';
 					t.timefloatcurrent.innerHTML = (0, _time.secondsToTimeCode)(t.newTime, player.options.alwaysShowHours, player.options.showTimecodeFrameCount, player.options.framesPerSecond, player.options.secondsDecimalLength);
+					t.timefloat.style.display = 'block';
 				}
 			}
 		},
