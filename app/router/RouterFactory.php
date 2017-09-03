@@ -26,8 +26,9 @@ class RouterFactory
     	));	
     	
 		$router[] = new Route('', 'Homepage:default');
+		$router[] = new Route('hledat', 'SiteSearch:search');
 
-		$router[] = new Route('aktuality/programy-pro-verejnost', 'Actuality:sunday');		
+		$router[] = new Route('aktuality/programy-pro-verejnost', 'Actuality:sunday');
 		$router[] = new Route('aktuality/<actuality_id>', array(
 			'presenter' => 'Actuality',
 			'action' => 'detail',
@@ -174,7 +175,9 @@ class RouterFactory
 		));
 		*/
 		/* routs for section audio end */
-						
+		
+		$router[] = new Route('o-nas', 'About:about');
+
 		$router[] = new Route('<presenter>[/<action>][/<id>]', array(
 			'presenter' => array(
 				Route::FILTER_TABLE => array(

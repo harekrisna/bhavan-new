@@ -48,4 +48,14 @@ class Filters extends Nette\Object {
 
 	    return $string;
 	}
+	
+	public function czInflection($count, $nominative, $genitive, $plural_genitive) {
+		if($count == 1)
+			return $nominative;
+		elseif($count >= 2 && $count <= 4)
+			return $genitive;
+		else 
+			return $plural_genitive;
+	}	
+	
 }

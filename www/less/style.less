@@ -6,6 +6,7 @@
 @import "collection.less";
 @import "audio.less";
 
+
 /**********************
        CONSTANTS
 ***********************/
@@ -127,6 +128,12 @@
 	});
 }
 
+.hide-lms-up {
+    .large-mobile-screen-up({
+        display: none !important;
+    });
+}
+
 .visible-ts  {
     .tablet-screen({
         display: block;
@@ -145,9 +152,10 @@ a:hover, a:focus{
 .link {
 	color: @webTextColor;
 	transition: 0.3s; 
+    cursor: pointer;
 
 	&.current {
-		color: @webTextColorHover;
+		color: @webTextColorHover !important;
 	}	
 
 	&:hover {
@@ -165,7 +173,7 @@ a:hover, a:focus{
     transition: 0.3s; 
 
     &.current {
-        color: @webTextColor;
+        color: @webTextColor !important;
     }   
 
     &:hover {
@@ -196,8 +204,13 @@ a:hover, a:focus{
     }
 }
 
+.link-current {
+    color: @webTextColorHover;
+}
+
 .link-disabled {
-    color: #BBBBBB;
+    color: #BBBBBB !important;
+    cursor: not-allowed;
 
     &:hover {
         color: #BBBBBB !important;

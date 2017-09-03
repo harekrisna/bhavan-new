@@ -4,6 +4,7 @@ namespace App\Presenters;
 
 use Nette,
 	App\Model;
+use Nette\Application\UI\Form;
 use Tracy\Debugger;
 /**
  * Base presenter for all application presenters.
@@ -29,6 +30,7 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter {
     protected $musicDownloadcount;
     protected $book;
     protected $page;
+    protected $statsSearch;
     
     protected $httpRequest;
 	    
@@ -39,6 +41,11 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter {
 		$this->httpRequest = $httpRequest;
 		$host = $httpRequest->getUrl()->getHost();
 		if($host == "www.prabhupadbhavan.cz" || $host == "prabhupadbhavan.cz") {
+            $this->context->getService("stats_access")
+                          ->insert(['hostname' => $host, 
+                          			'ip' => $_SERVER['REMOTE_ADDR'],
+                          			'user_agent' => $_SERVER['HTTP_USER_AGENT']]);
+
 			$this->redirectUrl("http://www.bhavan.cz");
 		}
 		
@@ -62,17 +69,41 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter {
         $this->musicDownloadcount = $this->context->getService("music_downloadcount");
         $this->book = $this->context->getService("book");
         $this->page = $this->context->getService("page");
+        $this->statsSearch = $this->context->getService("stats_search");
 	}
   
   	public function beforeRender() {
 		$this->template->addFilter('dynamicDate', $this->context->getService("filters")->dynamicDate);
 		$this->template->addFilter('verseReadable', $this->context->getService("filters")->verseReadable);
+		$this->template->addFilter('czInflection', $this->context->getService("filters")->czInflection);
 		
 		$this->template->actualities = $this->actuality->findAll()
 													   ->where('show_from IS NULL OR show_from < NOW()')
 													   ->where('show_to IS NULL OR show_to > NOW()')
 													   ->order('date_from ASC, id ASC');
-													   
+
+        $this->template->article_categories = $this->articleCategory->findAll()
+                                                                    ->order('position');
+                                                                    
 		$this->template->back = "";													   
 	}
+
+    protected function createComponentSearchForm(){
+        $form = new Form();
+
+        $form->addText('search_text', 'Hledat');
+        $form->addSubmit('search', 'Hledat');
+        $form->setMethod('GET');
+
+        $form->onSuccess[] = array($this, 'search');
+        return $form;
+    }
+
+    public function search(Form $form, $values) {  
+        $this->setView('../Search/search-results'); 
+        $search_text = trim($values->search_text);
+
+        $this->template->search_articles = $this->search->searchArticles($search_text);
+        $this->template->search_text = $values->search_text;
+    }    
 }
