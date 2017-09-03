@@ -29,10 +29,10 @@
 	{foreach $lectures[$group->id] as $lecture} 
 		{if $lecture->audio_collection_id}
 			{continueIf in_array($lecture->audio_collection_id, $displayed_collections)}
-			{include collection-link.latte, lecture => $lecture, show_interpret_abbr => ($group_by != 'audio_interpret_id') ? true, collection_count => $collections_count[$lecture->audio_collection_id]}
+			{include collection-link.latte, lecture => $lecture, show_interpret_link => ($group_by != 'audio_interpret_id') ? true, collection_count => $collections_count[$lecture->audio_collection_id]}
 			{var $displayed_collections[] = $lecture->audio_collection_id}
 		{else}
-			{include player-bar.latte, lecture => $lecture, show_interpret_abbr => ($group_by != 'audio_interpret_id') ? true}
+			{include player-bar.latte, lecture => $lecture, show_interpret_link => ($group_by != 'audio_interpret_id') ? true}
 		{/if}
 	{/foreach}
 </section>

@@ -4,13 +4,14 @@
 	<link rel="stylesheet" media="screen" href="{$basePath}/css/audio-player.css">
 {/block}
 {block audio}
+{include navigation}
 <section n:if="$last_30_days->count()" class="lectures-group">
 	<div class="group-header">
 		<div class="group-header-label label-text">30</div>
 		<h2 class="group-header-title">Přednášky přidané za posledních 30 dnů</h2>
 	</div>
 	{foreach $last_30_days as $lecture} 
-		{include player-bar.latte, lecture => $lecture, show_interpret_abbr => true}
+		{include player-bar.latte, lecture => $lecture, show_interpret_link => true}
 	{/foreach}
 </section>
 <section n:if="$last_60_days->count()" class="lectures-group">
@@ -19,7 +20,7 @@
 		<h2 class="group-header-title">Přednášky přidané za posledních 60 dnů</h2>
 	</div>
 {foreach $last_60_days as $lecture} 
-	{include player-bar.latte, lecture => $lecture, show_interpret_abbr => true}
+	{include player-bar.latte, lecture => $lecture, show_interpret_link => true}
 {/foreach}
 </section>
 <section class="lectures-group">
@@ -28,7 +29,7 @@
 		<h2 class="group-header-title">Starší přednášky</h2>
 	</div>
 {foreach $lectures as $lecture} 
-	{include player-bar.latte, lecture => $lecture, show_interpret_abbr => true}
+	{include player-bar.latte, lecture => $lecture, show_interpret_link => true}
 {/foreach}
 </section>
 {/block}

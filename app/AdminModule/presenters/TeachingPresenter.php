@@ -47,6 +47,23 @@ final class TeachingPresenter extends BasePresenter {
 													->max('position');
 	}
 	
+	public function actionAdd() {
+		$article_categories = $this->articleCategory->findAll()
+									   				->order('position');
+
+		$article_pairs = [];
+		foreach($article_categories as $category) {
+			$articles = $this->article->findBy(['category_id' => $category->id])
+									  ->order('position');
+			
+			foreach($articles as $article) {
+				$article_pairs[$category->title][$article->id] = $article->title;
+			}									  
+		}
+
+		$this['articleForm']['data']['article_id']->setItems($article_pairs);
+	}
+
 	public function renderAdd() {
 		$this->setView("form");    			
 		$this->template->form_title = "Nový článek:";
@@ -63,7 +80,22 @@ final class TeachingPresenter extends BasePresenter {
 
 		if (!$this->record)
             throw new Nette\Application\BadRequestException;
-            
+        
+		$article_categories = $this->articleCategory->findAll()
+									   				->order('position');
+
+		$article_pairs = [];
+		foreach($article_categories as $category) {
+			$articles = $this->article->findBy(['category_id' => $category->id])
+									  ->order('position');
+			
+			foreach($articles as $article) {
+				$article_pairs[$category->title][$article->id] = $article->title;
+			}									  
+		}
+
+		unset($article_pairs[$this->record->category->title][$this->record->id]);
+		$this['articleForm']['data']['article_id']->setItems($article_pairs);
 		$this["articleForm"]['data']->setDefaults($this->record);
 	}
 
@@ -106,11 +138,19 @@ final class TeachingPresenter extends BasePresenter {
 	    $data->addText('url', 'URL článku:', 40)
       	     ->setRequired('Zadejte prosím URL článku.');
 		
-		$form->addUpload('preview_image', 'Obrázek:')
+		$form->addUpload('preview_image', 'Obrázek v přehledu:')
 			 ->addCondition($form::FILLED)
 				 ->addRule($form::IMAGE, 'Obrázek musí být JPEG, PNG nebo GIF');
 
-	    $data->addSelect('category_id', 'Kategorie:', $this->articleCategory->findAll()->fetchPairs('id', 'title'));
+		$form->addUpload('article_image', 'Obrázek v článku:')
+			 ->addCondition($form::FILLED)
+				 ->addRule($form::IMAGE, 'Obrázek musí být JPEG, PNG nebo GIF');
+
+	    $data->addSelect('article_id', 'Rodič:')
+	    	 ->setPrompt("- žádný -");
+
+		$data->addSelect('category_id', 'Kategorie:', $this->articleCategory->findAll()->fetchPairs('id', 'title'));
+		$data->addSelect('list_style', 'Styl seznamu:', ['box' => "Boxy", 'line-link' => "Řádky - odkazy", 'line-collapse' => "Řádky - rozbalovací"]);
 	    										   
 	    $data->addTextArea('text', 'Text:', 40);
 	    $data->addTextArea('preview_text', 'Text v přehledu:', 40);
@@ -129,12 +169,17 @@ final class TeachingPresenter extends BasePresenter {
         $form = $button->form;
         $values = $form->getValues();
         $preview_image = $values->preview_image;
+        $article_image = $values->article_image;
         $data = $values['data'];
-        $max_position = $this->model->findBy(['category_id' => $data['category_id']])
+
+		if($data['article_id'] != NULL) {
+			$data['category_id'] = $this->article->get($data['article_id'])->category_id;
+		}
+
+		$max_position = $this->model->findBy(['category_id' => $data['category_id']])
         							->max('position');
-
+	
 		$data['position'] = $max_position + 1;
-
 		$new_row = $this->article->insert($data);
 		
 		if($new_row) {
@@ -146,6 +191,15 @@ final class TeachingPresenter extends BasePresenter {
 				$image->save(ARTICLES_IMG_FOLDER."/previews/".$new_file);
 				
 				$this->model->update($new_row->id, ['preview_image' => $new_file]);
+	        }
+	        
+	        if($article_image->isOK()) {
+				$new_file = $new_row->id."_".$article_image->getSanitizedName();
+				$image = $article_image->toImage();
+				$image->resize(450, 560, Image::EXACT);
+				$image->save(ARTICLES_IMG_FOLDER."/".$new_file);
+				
+				$this->model->update($new_row->id, ['article_image' => $new_file]);
 	        }
 
 			$this->flashMessage('Článek přidán.', 'success');
@@ -163,9 +217,16 @@ final class TeachingPresenter extends BasePresenter {
         $form = $button->form;
         $values = $form->getValues();
         $preview_image = $values->preview_image;
-        
+        $article_image = $values->article_image;
+
+        $data = $values->data;
+
+   		if($data['article_id'] != NULL) {
+			$data['category_id'] = $this->article->get($data['article_id'])->category_id;
+		}
+
         $update = $this->article->update($this->record->id, 
-									   	 $values->data);
+									   	 $data);
 
         if($preview_image->isOk()) {            
 			$new_file = $this->record->id."_".$preview_image->getSanitizedName();
@@ -176,6 +237,17 @@ final class TeachingPresenter extends BasePresenter {
 			@unlink(ARTICLES_IMG_FOLDER."/previews/".$this->record->preview_image);
 			
 			$this->model->update($this->record->id, ['preview_image' => $new_file]);
+        }
+        
+        if($article_image->isOk()) {            
+			$new_file = $this->record->id."_".$article_image->getSanitizedName();
+
+	        $image = $article_image->toImage();
+			$image->resize(450, 560, Image::EXACT);
+			$image->save(ARTICLES_IMG_FOLDER."/".$new_file);
+			@unlink(ARTICLES_IMG_FOLDER."/".$this->record->article_image);
+			
+			$this->model->update($this->record->id, ['article_image' => $new_file]);
         }
 		
 		if($update !== false) {

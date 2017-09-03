@@ -1,11 +1,12 @@
 {extends layout.latte}
 {block audio}
+{include navigation}
 <div class="row list">
 	<div class="col-md-6" n:foreach="$genres as $genre">
 		<div class="list-box">
-			<a class="list-box-title sms-down" n:href="genre, $genre->id, 'music_year'">{$genre->title}</a>
+			<a class="list-box-title sms-down" n:href="genre, $genre->id">{$genre->title}</a>
 			<div class="list-box-image" style="background-image: url('{$basePath}/images/music_genres/{$genre->image_file}');"></div>
-			<a class="list-box-title sms-up" n:href="genre, $genre->id, 'music_year'">{$genre->title}</a>
+			<a class="list-box-title sms-up" n:href="genre, $genre->id">{$genre->title}</a>
 			<p class="list-box-text"></p>
 			<span class="list-box-note">{$genre->related('music')->count()|czPlural}</span>
 	    </div>

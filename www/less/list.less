@@ -15,6 +15,7 @@
 .list {
 	margin-bottom: 100px;
 	margin-left: 10px;
+	padding-right: 15px;
 
 	.extra-small-screen({
 		margin-left: -5px;
@@ -76,7 +77,7 @@
 
 		&.list-box-highlighted {
 			height: 120px;
-			background-color: #FFF6D8;
+			background-color: rgba(255, 246, 216, 0.55);
 			box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.3);
 			padding-top: 5px;
     		margin-top: 5px !important;
@@ -87,7 +88,11 @@
 
 			.small-mobile-screen-down({
 				height: 148px;
-			})
+			});
+
+			.extra-small-screen({
+				margin-right: -15px;
+			});
 		}
 
 		&:hover {
@@ -135,6 +140,12 @@
 
 				&.alt-color {
 					background-color: #796956;
+				}
+
+				&.unknown-label {
+					font-size: 35px;
+					padding-top: 22px;
+					background-color: #BBBBBB;
 				}
 			}
 
@@ -223,6 +234,15 @@
 .list-simple {
 	margin-bottom: 50px;
 	margin-left: 10px;
+	padding-right: 15px;
+
+	ul {
+		padding-left: 25px;
+
+		.large-mobile-screen-down({
+			padding-left: 10px;
+		})
+	}
 
 	.list-simple-title {
 		margin: 5px 0 15px 0;
@@ -231,21 +251,31 @@
 
 	.list-simple-item {
 		font-size: 20px;
-		color: @webTextColor;
 		max-width: 600px;
-		transition: 0.3s;
-
-		&:hover {
-			color: @webTextColorHover;
-			transition: 0.3s;
-		}
+		font-family: 'Lora';
+		font-weight: bold;
 
 		.list-simple-link {
-			font-family: 'Lora';	
-			font-weight: bold;
 			padding-left: 25px;
     		margin-left: -25px;
     		display: block;
+		}
+
+		&.item-expanded {
+			color: @webTextColorHover;
+		}
+	}
+
+	.list-simple-text {
+		list-style: none;
+		margin-bottom: 25px;
+
+		.large-mobile-screen-down({
+			margin-left: -10px;
+		});
+
+		&.text-hidden {
+			display: none;
 		}
 	}
 }

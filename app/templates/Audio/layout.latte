@@ -2,13 +2,15 @@
 {block content}
 <h1 class="collection-title">Audio</h1>
 <nav class="collection-breadcrumb-nav" id="breadcrumb_nav" n:ifset="$backlinks">
-    {foreach $backlinks as $backlink => $backtitle}
+    {foreach $backlinks as $backtitle => $backlink}
     <span>&raquo;</span>
     <a class="link" href="{$backlink}">{$backtitle}</a>
     {/foreach}
 </nav>
-{dump $presenter->getRequest()}
 <div class="divider simple"></div>
+{include audio}
+{/block}
+{define navigation}
 <nav class="collection-nav">
 	<a n:class="link, $presenter->isLinkCurrent('Audio:*') || (isset($main_audio_type) && $main_audio_type == 'lecture') ? current" n:href="Audio:interprets">Přednášky</a>
 	<a n:class="link, $presenter->isLinkCurrent('Music:*') || (isset($main_audio_type) && $main_audio_type == 'music') ? current" n:href="Music:interprets">Hudba</a>
@@ -20,5 +22,4 @@
 	<a n:class="link, in_array($presenter->getAction(), ['themes', 'byType', 'book', 'sb', 'cc', 'unclasified']) || (isset($main_group) && $main_group == 'themes') ? current" n:href="themes">Témata</a>
 </nav>
 <div class="clearfix collection-nav-clearfix"></div>
-{include audio}
-{/block}
+{/define}

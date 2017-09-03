@@ -2,7 +2,7 @@
 {block content}
 {include breadcrumb_nav, backlinks => $backlinks}
 <nav class="next-prev-nav stand-alone" id="next_prev_nav">
-    <span class="link-disabled">&laquo; předchozí</span>
+    <div class="link link-disabled">&laquo; předchozí</div>
     <span class="nav-delimiter">&#124;</span>
     {if $next}
         <a id="top_link_next" class="link link-next" n:href="detail, $next->id">následující &raquo;</a>
@@ -16,6 +16,13 @@
 
 <article class="article-detail">
 	<h1 class="article-title">Programy pro veřejnost</h1>
-	<img class="article-image" src="{$basePath}/images/actuality/sf.jpg" />
-	{$text}
+    <div class="article-container">
+        <div class="article-text">
+            <img class="article-image article-main-image-mobile" src="{$basePath}/images/actuality/sf.jpg" />
+            {$text}
+        </div>
+    </div>
+    <div class="article-main-image-desktop">
+        <img src="{$basePath}/images/actuality/sf.jpg" />
+    </div>
 </article>

@@ -207,13 +207,12 @@ final class MusicPresenter extends BasePresenter {
 		$days = $days + $this->galery->generateNumberArray(1, 31);
 		$months['0'] = "";
 		$months = $months + $this->galery->generateNumberArray(1, 12);
-		$years = $this->galery->generateNumberArray(1960, 2020);
+		$years['0'] = "";
+		$years = $years + $this->galery->generateNumberArray(1960, 2020);
 			
 	    $form->addSelect('music_day', 'Den:', $days);
         $form->addSelect('music_month', 'Měsíc:', $months);
-	    $form->addSelect('music_year', 'Rok:', $years)
-		     ->setRequired('Zadejte alespoň rok.')
-			 ->setDefaultValue(date('Y'));
+	    $form->addSelect('music_year', 'Rok:', $years);
 
 	    $form->addSelect('mp3_file', 'Soubor:')
    	    	 ->setPrompt('- nevybrán -');
@@ -239,7 +238,6 @@ final class MusicPresenter extends BasePresenter {
         $form = $button->form;
         $values = $form->getValues();
 	    $mp3_file = "";
-	    
 		$interpret = $this->musicInterpret->get($values['music_interpret_id']);
 		
 	    foreach (Finder::findFiles('*.mp3')->in("mp3_music/for_release/") as $file_path => $file) {

@@ -40,28 +40,25 @@ final class NewsPresenter extends BasePresenter {
 		$news = $this->model->getAll()
 						  	->order('date_from DESC');
 		
-		$events = []; $photos = []; $audios = [];						  	
+		$events = $photos = $audios = [];						  	
 			
 		foreach($news as $new) {
 			$container = $new->news_type->type."s";
 			$row = $new->toArray();
 		
 			if($new->target != "" && strpos($new->target, "http://") === FALSE) {
-				$target = "http://www.bhavan.cz/".$new->target;
-				$row['target'] = $target;
-				//$row['target_http_code'] = $this->common->checkUrl($target);
-
+				$row['target'] = "http://www.bhavan.cz/".$new->target;
 			}
 			else {
 				$row['target'] = "";
 			}
+			
 			array_push($$container, $row);
 		}
 		
 		$this->template->events = $events;
 		$this->template->photos = $photos;	  
 		$this->template->audios = $audios;
-
 	}
 
 

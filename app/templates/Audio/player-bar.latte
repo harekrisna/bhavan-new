@@ -1,4 +1,4 @@
-{var $show_interpret_abbr = empty($show_interpret_abbr) ? false : $show_interpret_abbr}
+{var $show_interpret_link = empty($show_interpret_link) ? false : $show_interpret_link}
 {var $group_by = empty($group_by) ? "time_created" : $group_by}
 {var douwnloadcount = $lecture->related('audio_downloadcount')->sum(downloadcount)}
 {var playcount = $lecture->related('audio_playcount')->sum(playcount)}
@@ -6,9 +6,9 @@
 <div class="audio-player">
 	<div class="title-line">
 	{if isset($title_only_text) && $title_only_text == true}
-		<div n:class="title, $isMobile ? 'title-padding'" n:href="singleAudio, $lecture->id">{$lecture->title}</div>
+		<div n:class="title, $isMobile ? 'title-padding'" n:href="Audio:singleAudio, $lecture->id">{$lecture->title}</div>
 	{else}
-		<a n:class="title, $isMobile ? 'title-padding'" n:href="singleAudio, $lecture->id">{$lecture->title}</a>
+		<a n:class="title, $isMobile ? 'title-padding'" n:href="Audio:singleAudio, $lecture->id">{$lecture->title}</a>
 	{/if}
 		{if $isMobile}<a href="{$basePath}/mp3/{$lecture->audio_interpret->mp3_folder}/{$lecture->mp3_file}" class="link download-link" title="Staženo: {if $douwnloadcount}{$douwnloadcount}x{else}0x{/if}" download>Stáhnout</a>{/if}
 	</div>
@@ -16,26 +16,28 @@
 		<div class="place-time">{$lecture->place} {$lecture->audio_year, $lecture->audio_month, $lecture->audio_day|dynamicDate}</div>
 		<div class="verse-autor">
 			<span n:if="$lecture->book_id">{$lecture->book->abbreviation, $lecture->chapter, $lecture->verse|verseReadable}</span>
-			<a n:if="$show_interpret_abbr" class="link" n:href="interpret, $lecture->audio_interpret->id, $group_by" title="{$lecture->audio_interpret->title}">{$lecture->audio_interpret->abbreviation}</a>
+			<a n:if="$show_interpret_link" class="link" n:href="Audio:interpret, $lecture->audio_interpret->id, $group_by" title="{$lecture->audio_interpret->title}">{$lecture->audio_interpret->title|replace:['HG ', 'HH '], ['']}</a>
 		</div>
 	</div>
 	
 	{if $isMobile}
-	<audio class="mobile" width="100%" src="{$basePath}/mp3/{$lecture->audio_interpret->mp3_folder}/{$lecture->mp3_file}" type="audio/mp3" controls="controls" preload="none" data-id="{$lecture->id}" data-playcount="{if $playcount}{$playcount}{else}0{/if}" onplay="on_play(this)"></audio>
+	<audio class="mobile" width="100%" src="{$basePath}/mp3/{$lecture->audio_interpret->mp3_folder}/{$lecture->mp3_file}" type="audio/mp3" controls="controls" preload="none" data-id="{$lecture->id}" data-playcount="{if $playcount}{$playcount}{else}0{/if}" onplay="on_play(this, 'audio')"></audio>
 	{else}
-	<div class="player-bar-container">	
-		<audio class="desktop" width="100%" src="{$basePath}/mp3/{$lecture->audio_interpret->mp3_folder}/{$lecture->mp3_file}" type="audio/mp3" controls="controls" preload="none" data-id="{$lecture->id}" data-playcount="{if $playcount}{$playcount}{else}0{/if}"></audio>
-		<div class="hidder hidder-hide">
-			<div class="hidder-row">
-				<div class="hidder-cell transparent-part"></div>
-				<div class="hidder-cell download-part">
-					<div class="download-part-background">
-						<div class="mejs__button audio-download">
-							<a href="{$basePath}/mp3/{$lecture->audio_interpret->mp3_folder}/{$lecture->mp3_file}" class="download-button" title="Staženo: {if $douwnloadcount}{$douwnloadcount}x{else}0x{/if}" download></a>
+	<div class="player-bar-wrapper">
+		<div class="player-bar-container">	
+			<audio class="desktop" width="100%" src="{$basePath}/mp3/{$lecture->audio_interpret->mp3_folder}/{$lecture->mp3_file}" type="audio/mp3" controls="controls" preload="none" data-id="{$lecture->id}" data-presenter="audio" data-playcount="{if $playcount}{$playcount}{else}0{/if}"></audio>
+			<div class="hidder hidder-hide">
+				<div class="hidder-row">
+					<div class="hidder-cell transparent-part"></div>
+					<div class="hidder-cell download-part">
+						<div class="download-part-background">
+							<div class="mejs__button audio-download">
+								<a href="{$basePath}/mp3/{$lecture->audio_interpret->mp3_folder}/{$lecture->mp3_file}" class="download-button" title="Staženo: {if $douwnloadcount}{$douwnloadcount}x{else}0x{/if}" download></a>
+							</div>
 						</div>
 					</div>
+					<div class="hidder-cell hidder-part"></div>
 				</div>
-				<div class="hidder-cell hidder-part"></div>
 			</div>
 		</div>
 	</div>

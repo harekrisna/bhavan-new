@@ -197,7 +197,6 @@ nav#sub_actions {
 		&.sort { background-image: url('../../images/admin/sort-icon.png') }
 		&.interprets { background-image: url('../../images/admin/guru-icon.png') }
 		&.collections { background-image: url('../../images/admin/collection-icon.png') }
-    &.albums { background-image: url('../../images/admin/note-icon.png') }
     &.articles-icon { background-image: url('../../images/admin/articles-icon.png') }
 	
 		&:not(:last-child):after { 
@@ -394,7 +393,7 @@ table.list {
 	display: none;
 }
 
-.list td .button {
+.list td a.button {
     width: 16px;
     height: 16px;
     float: left;
@@ -411,14 +410,6 @@ table.list {
 
 .list td a.edit {
     background-image: url("../../images/admin/edit-button.png"); 
-}
-
-.list td a.up {
-    background-image: url("../../images/admin/arrow-up-icon.png"); 
-}
-
-.list td a.down {
-    background-image: url("../../images/admin/arrow-down-icon.png"); 
 }
 
 .list td a.photos {
