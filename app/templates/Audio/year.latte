@@ -5,13 +5,14 @@
 {/block}
 {block audio}
 {var $displayed_collections = []}
-<h1>Přednášky z roku {$year}</h1>
-<nav class="audio_nav">
-	<span>Seskupit podle:</span>
-	<a n:href="year, $year, 'audio_interpret_id'" class="link{ifCurrent Audio:year, $year, 'audio_interpret_id'} current{/ifCurrent}">Autorů</a>
-	<a n:href="year, $year, 'book_id'" class="link{ifCurrent Audio:year, $year, 'book_id'} current{/ifCurrent}">Témat</a>
-	<a n:href="year, $year, 'alphabetical'" class="link{ifCurrent Audio:year, $year, 'alphabetical'} current{/ifCurrent}">Abecedně</a>
-</nav>
+<div class="audio-section">
+	<h1>Přednášky z roku {$year}</h1>
+	<nav class="audio_nav">
+		<span>Seskupit podle:</span>
+		<a n:href="year, $year, 'audio_interpret_id'" class="link{ifCurrent Audio:year, $year, 'audio_interpret_id'} current{/ifCurrent}">Autorů</a>
+		<a n:href="year, $year, 'book_id'" class="link{ifCurrent Audio:year, $year, 'book_id'} current{/ifCurrent}">Témat</a>
+		<a n:href="year, $year, 'alphabetical'" class="link{ifCurrent Audio:year, $year, 'alphabetical'} current{/ifCurrent}">Abecedně</a>
+	</nav>
 {if $group_by == 'book_id'}
 	<section n:if="count($sankirtan)" class="lectures-group">
 		<div class="group-header">
@@ -125,7 +126,7 @@
 		{/foreach}
 	</section>
 {/if}
-
+</div>
 {/block}
 {block scripts}
 {include parent}

@@ -1000,12 +1000,10 @@ footer .contact-info .link-mail {
   display: none;
 }
 .collection-title {
+  height: inherit;
+  font-size: 18px;
   display: inline-block;
-  float: left;
-  margin-bottom: 12px;
-}
-.collection-title.mobile {
-  margin-bottom: 0;
+  margin: 0;
 }
 .category-title {
   margin: 15px 0px 15px 0px;
@@ -1072,8 +1070,8 @@ footer .contact-info .link-mail {
 }
 .collection-breadcrumb-nav {
   float: left;
-  margin-top: 15px;
   margin-left: 5px;
+  margin-bottom: 15px;
 }
 .collection-breadcrumb-nav.mobile {
   margin-top: 0;
@@ -1496,6 +1494,9 @@ footer .contact-info .link-mail {
 }
 .article-navigation .next-prev-nav-labels-container .label-next {
   right: 0;
+}
+.audio-section {
+  margin-top: 5px;
 }
 .audio_nav .link:not(:last-child):after {
   content: '|';

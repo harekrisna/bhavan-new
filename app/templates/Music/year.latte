@@ -5,14 +5,14 @@
 {/block}
 {block audio}
 {var $displayed_albums = []}
-<h1>Skladby z roku {$year}</h1>
-<nav class="audio_nav">
-	<span>Seskupit podle:</span>
-	<a n:href="year, $year, 'music_interpret_id'" class="link{ifCurrent Music:year, $year, 'music_interpret_id'} current{/ifCurrent}">Autorů</a>
-	<a n:href="year, $year, 'music_genre_id'" class="link{ifCurrent Music:year, $year, 'music_genre_id'} current{/ifCurrent}">Žánrů</a>
-	<a n:href="year, $year, 'alphabetical'" class="link{ifCurrent Music:year, $year, 'alphabetical'} current{/ifCurrent}">Abecedně</a>
-</nav>
-
+<div class="audio-section">
+	<h1>Skladby z roku {$year}</h1>
+	<nav class="audio_nav">
+		<span>Seskupit podle:</span>
+		<a n:href="year, $year, 'music_interpret_id'" class="link{ifCurrent Music:year, $year, 'music_interpret_id'} current{/ifCurrent}">Autorů</a>
+		<a n:href="year, $year, 'music_genre_id'" class="link{ifCurrent Music:year, $year, 'music_genre_id'} current{/ifCurrent}">Žánrů</a>
+		<a n:href="year, $year, 'alphabetical'" class="link{ifCurrent Music:year, $year, 'alphabetical'} current{/ifCurrent}">Abecedně</a>
+	</nav>
 {if $group_by == 'music_interpret_id'}
 	{foreach $groups as $group}
 	<section class="lectures-group">
@@ -71,7 +71,7 @@
 	</section>
 	{/foreach}
 {/if}
-
+</div>
 {/block}
 {block scripts}
 {include parent}

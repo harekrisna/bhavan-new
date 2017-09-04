@@ -5,14 +5,15 @@
 {/block}
 {block audio}
 {var $displayed_collections = []}
-<h1 class="scale-text"><span>{$interpret->title}</span></h1>
-<nav class="audio_nav">
-	<span>Seskupit podle:</span>
-	<a class="link{ifCurrent Audio:interpret, $interpret->id, 'book_id'} current{/ifCurrent}" n:href="interpret, $interpret->id, 'book_id'">Témat</a>
-	<a class="link{ifCurrent Audio:interpret, $interpret->id, 'audio_year'} current{/ifCurrent}" n:href="interpret, $interpret->id, 'audio_year'">Roků</a>
-	<a class="link{ifCurrent Audio:interpret, $interpret->id, 'time_created'} current{/ifCurrent}" n:href="interpret, $interpret->id, 'time_created'">Nejnovější</a>
-	<a class="link{ifCurrent Audio:interpret, $interpret->id, 'alphabetical'} current{/ifCurrent}" n:href="interpret, $interpret->id, 'alphabetical'">Abecedně</a>
-</nav>
+<div class="audio-section">
+	<h1 class="scale-text"><span>{$interpret->title}</span></h1>
+	<nav class="audio_nav">
+		<span>Seskupit podle:</span>
+		<a class="link{ifCurrent Audio:interpret, $interpret->id, 'book_id'} current{/ifCurrent}" n:href="interpret, $interpret->id, 'book_id'">Témat</a>
+		<a class="link{ifCurrent Audio:interpret, $interpret->id, 'audio_year'} current{/ifCurrent}" n:href="interpret, $interpret->id, 'audio_year'">Roků</a>
+		<a class="link{ifCurrent Audio:interpret, $interpret->id, 'time_created'} current{/ifCurrent}" n:href="interpret, $interpret->id, 'time_created'">Nejnovější</a>
+		<a class="link{ifCurrent Audio:interpret, $interpret->id, 'alphabetical'} current{/ifCurrent}" n:href="interpret, $interpret->id, 'alphabetical'">Abecedně</a>
+	</nav>
 {if $group_by == 'book_id'}
 	<section n:if="count($sankirtan)" class="lectures-group">
 		<div class="group-header">
@@ -177,6 +178,7 @@
 		{/foreach}
 	</section>
 {/if}
+</div>
 {/block}
 {block scripts}
 {include parent}

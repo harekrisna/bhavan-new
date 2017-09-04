@@ -1,18 +1,20 @@
 {extends layout.latte}
 {block audio}
-<h1 class="list-title scale-text"><span n:inner-block="title">Přednášky z Śrīmad-Bhāgavatamu</span></h1>
-<div class="row list">
-	{foreach $books as $sb}
-	{continueIf $sb->related('audio')->count() == 0}
-	<div class="col-md-6">
-		<div class="list-box">
-			<a class="list-box-title sms-down" n:href="book, $sb->id">{strtok($sb->title, ":")}</a>
-			<div class="list-box-image" style="background-image: url('{$basePath}/images/books/{$sb->id}.jpg');"></div>
-			<a class="list-box-title sms-up" n:href="book, $sb->id">{strtok($sb->title, ":")}</a>
-			<p class="list-box-text"></p>
-			<span class="list-box-note">{$sb->related('audio')->count()|czPlural}</span>
+<div class="audio-section">
+	<h1 class="list-title scale-text"><span n:inner-block="title">Přednášky z Śrīmad-Bhāgavatamu</span></h1>
+	<div class="row list">
+		{foreach $books as $sb}
+		{continueIf $sb->related('audio')->count() == 0}
+		<div class="col-md-6">
+			<div class="list-box">
+				<a class="list-box-title sms-down" n:href="book, $sb->id">{strtok($sb->title, ":")}</a>
+				<div class="list-box-image" style="background-image: url('{$basePath}/images/books/{$sb->id}.jpg');"></div>
+				<a class="list-box-title sms-up" n:href="book, $sb->id">{strtok($sb->title, ":")}</a>
+				<p class="list-box-text"></p>
+				<span class="list-box-note">{$sb->related('audio')->count()|czPlural}</span>
+			</div>
 		</div>
+		{/foreach}
 	</div>
-	{/foreach}
 </div>
 {/block}

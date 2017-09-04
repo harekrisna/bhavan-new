@@ -5,15 +5,16 @@
 {/block}
 {block audio}
 {var $displayed_albums = []}
-<h1 class="scale-text"><span>{$interpret->title}</span></h1>
-<nav class="audio_nav">
-	<span>Seskupit podle:</span>
-	<a class="link{ifCurrent Music:interpret, $interpret->id, 'album'} current{/ifCurrent}" n:href="interpret, $interpret->id, 'album'">Alba</a>
-	<a class="link{ifCurrent Music:interpret, $interpret->id, 'alphabetical'} current{/ifCurrent}" n:href="interpret, $interpret->id, 'alphabetical'">Abecedně</a>
-	<a class="link{ifCurrent Music:interpret, $interpret->id, 'time_created'} current{/ifCurrent}" n:href="interpret, $interpret->id, 'time_created'">Nejnovější</a>
-	<a class="link{ifCurrent Music:interpret, $interpret->id, 'music_genre_id'} current{/ifCurrent}" n:href="interpret, $interpret->id, 'music_genre_id'">Žánr</a>
-	{*<a class="link{ifCurrent Music:interpret, $interpret->id, 'music_year'} current{/ifCurrent}" n:href="interpret, $interpret->id, 'music_year'">Roků</a>*}
-</nav>
+<div class="audio-section">
+	<h1 class="scale-text"><span>{$interpret->title}</span></h1>
+	<nav class="audio_nav">
+		<span>Seskupit podle:</span>
+		<a class="link{ifCurrent Music:interpret, $interpret->id, 'album'} current{/ifCurrent}" n:href="interpret, $interpret->id, 'album'">Alba</a>
+		<a class="link{ifCurrent Music:interpret, $interpret->id, 'alphabetical'} current{/ifCurrent}" n:href="interpret, $interpret->id, 'alphabetical'">Abecedně</a>
+		<a class="link{ifCurrent Music:interpret, $interpret->id, 'time_created'} current{/ifCurrent}" n:href="interpret, $interpret->id, 'time_created'">Nejnovější</a>
+		<a class="link{ifCurrent Music:interpret, $interpret->id, 'music_genre_id'} current{/ifCurrent}" n:href="interpret, $interpret->id, 'music_genre_id'">Žánr</a>
+		{*<a class="link{ifCurrent Music:interpret, $interpret->id, 'music_year'} current{/ifCurrent}" n:href="interpret, $interpret->id, 'music_year'">Roků</a>*}
+	</nav>
 {if $group_by == 'music_year'}
 	{foreach $groups as $group}
 	<section class="lectures-group">
@@ -117,7 +118,7 @@
 	</section>
 	{/ifset}
 {/if}
-
+</div>
 {/block}
 {block scripts}
 {include parent}

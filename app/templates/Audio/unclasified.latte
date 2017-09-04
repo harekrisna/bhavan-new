@@ -5,37 +5,39 @@
 {/block}
 {block audio}
 {var $displayed_collections = []}
-<h1>Nezařazené</h1>
-<nav class="audio_nav">
-	<span>Seskupit podle:</span>
-	<a n:href="unclasified, 'audio_interpret_id'" class="link{ifCurrent Audio:unclasified, 'audio_interpret_id'} current{/ifCurrent}">Autorů</a>
-	<a n:href="unclasified, 'audio_year'" class="link{ifCurrent Audio:unclasified, 'audio_year'} current{/ifCurrent}">Roků</a>
-</nav>
+<div class="audio-section">
+	<h1>Nezařazené</h1>
+	<nav class="audio_nav">
+		<span>Seskupit podle:</span>
+		<a n:href="unclasified, 'audio_interpret_id'" class="link{ifCurrent Audio:unclasified, 'audio_interpret_id'} current{/ifCurrent}">Autorů</a>
+		<a n:href="unclasified, 'audio_year'" class="link{ifCurrent Audio:unclasified, 'audio_year'} current{/ifCurrent}">Roků</a>
+	</nav>
 {foreach $groups as $group}
-<section class="lectures-group">
-	{if $group_by == 'audio_interpret_id'}
-	<div class="group-header">
-		<div class="group-header-label" style="background-image: url('{$basePath}/images/interpret_avatars/{$group->audio_interpret->image}')"></div>
-		<h2 class="group-header-title">{$group->audio_interpret->title}</h2>
-	</div>
-	{/if}
-	{if $group_by == 'audio_year'}
-	<div class="group-header">
-		<div n:class="group-header-label, label-text, year-label, $group->audio_year < 2000 ? 'alt-color'">{$group->audio_year}</div>
-		<h2 class="group-header-title">Přednášky z roku {$group->audio_year}</h2>
-	</div>
-	{/if}
-	{foreach $lectures[$group->id] as $lecture} 
-		{if $lecture->audio_collection_id}
-			{continueIf in_array($lecture->audio_collection_id, $displayed_collections)}
-			{include collection-link.latte, lecture => $lecture, show_interpret_link => ($group_by == 'audio_year') ? true, collection_count => $collections_count[$lecture->audio_collection_id]}
-			{var $displayed_collections[] = $lecture->audio_collection_id}
-		{else}
-			{include player-bar.latte, lecture => $lecture, show_interpret_link => ($group_by == 'audio_year') ? true}
-		{/if}		
-	{/foreach}
-</section>
+	<section class="lectures-group">
+		{if $group_by == 'audio_interpret_id'}
+		<div class="group-header">
+			<div class="group-header-label" style="background-image: url('{$basePath}/images/interpret_avatars/{$group->audio_interpret->image}')"></div>
+			<h2 class="group-header-title">{$group->audio_interpret->title}</h2>
+		</div>
+		{/if}
+		{if $group_by == 'audio_year'}
+		<div class="group-header">
+			<div n:class="group-header-label, label-text, year-label, $group->audio_year < 2000 ? 'alt-color'">{$group->audio_year}</div>
+			<h2 class="group-header-title">Přednášky z roku {$group->audio_year}</h2>
+		</div>
+		{/if}
+		{foreach $lectures[$group->id] as $lecture} 
+			{if $lecture->audio_collection_id}
+				{continueIf in_array($lecture->audio_collection_id, $displayed_collections)}
+				{include collection-link.latte, lecture => $lecture, show_interpret_link => ($group_by == 'audio_year') ? true, collection_count => $collections_count[$lecture->audio_collection_id]}
+				{var $displayed_collections[] = $lecture->audio_collection_id}
+			{else}
+				{include player-bar.latte, lecture => $lecture, show_interpret_link => ($group_by == 'audio_year') ? true}
+			{/if}		
+		{/foreach}
+	</section>
 {/foreach}
+</div>
 {/block}
 {block scripts}
 {include parent}

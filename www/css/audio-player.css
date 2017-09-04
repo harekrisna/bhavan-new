@@ -6,7 +6,8 @@ audio.mobile {
   margin-bottom: 20px;
   clear: both;
 }
-.audio-player.small-margin {
+.audio-player.single-audio {
+  margin-top: 10px;
   margin-bottom: 5px;
 }
 .audio-player .title-line {

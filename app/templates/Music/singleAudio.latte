@@ -7,7 +7,7 @@
 {var playcount = $record->related('music_playcount')->sum(playcount)}
 {var douwnloadcount = $record->related('music_downloadcount')->sum(downloadcount)}
 
-<div class="audio-player small-margin">
+<div class="audio-player single-audio">
 	<div class="title-line">
 		<div n:class="title, $isMobile ? 'title-padding'" n:href="singleAudio, $record->id">{$record->title}</div>
 		{if $isMobile}<a href="{$basePath}/mp3_music/{$record->music_interpret->mp3_folder}/{$record->mp3_file}" class="link download-link" title="Staženo: {if $douwnloadcount}{$douwnloadcount}x{else}0x{/if}" download>Stáhnout</a>{/if}
