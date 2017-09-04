@@ -63,11 +63,14 @@ function on_play(audio, presenter = null) {
 	var audio_player = $(audio).closest('.audio-player');
 	var hidder = audio_player.find('.hidder');
 	var audio_id = $(audio).data('id');
-	
+		
+	$(audio_player).find('.mejs__controls').addClass('on-play');
+	$(audio_player).find('.download-part-background').addClass('on-play');
+
 	$('.audio-player .hidder').addClass("hidder-hide");
 
 	hidder.removeClass('hidder-hide');
-	var url = 'increase-mp3-playcount/' + audio_id;
+	var url = '../increase-mp3-playcount/' + audio_id;
 	
 	if(presenter != null)
 		url = presenter + "/" + url;
@@ -83,6 +86,9 @@ function on_pause(audio) {
 	var audio_player = $(audio).closest('.audio-player');
 	var hidder = audio_player.find('.hidder');
 	
+	$(audio_player).find('.mejs__controls').removeClass('on-play');
+	$(audio_player).find('.download-part-background').removeClass('on-play');
+
 	hidder.addClass("hidder-hide");
 }
 

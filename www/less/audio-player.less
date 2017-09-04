@@ -4,18 +4,36 @@ audio.mobile {
 
 .audio-player {
 	max-width: 720px;
+	height: 87px;
 	margin-bottom: 20px;
 	clear: both;
+	border-bottom: 1px rgba(235, 141, 58, 0.5) solid;
 
 	&.single-audio {
 		margin-top: 10px;
 		margin-bottom: 5px;
+
+		.mejs__controls {
+			background-color: #9F9483 !important;
+
+			.mejs__button.mejs__playpause-button > button {
+				background-image: url('mejs-controls-light.svg');
+			}
+		}
+
+		.download-part-background {
+			background-color: #9F9483;
+
+			.download-button {
+				background-image: url('mejs-download-light.svg') !important;
+			}
+		}
+
 	}
 	
 	.title-line {
 		width: inherit;
 		height: 25px;
-		border-bottom: 1px rgba(235, 141, 58, 0.5) solid;
 
 		.title {
 			font-family: 'Lora', serif;
@@ -31,6 +49,10 @@ audio.mobile {
 			&.title-padding {
 				padding-right: 66px;
 			}
+		}
+
+		.collection-title {
+			background: transparent url('../images/layout/collection-icon.png') no-repeat center right / 25px;
 		}
 		
 		.download-link {
@@ -114,8 +136,19 @@ audio.mobile {
 				.download-part-background {
 					width: 40px;
 					height: 30px;
-					background-color: #9F9483;
 					border-radius: 0 4px 4px 0;
+					transition: 0.3s;
+
+					&.on-play {
+						background-color: #9F9483;
+						transition: 0.3s;
+
+						.download-button {
+							background-image: url('mejs-download-light.svg') !important;
+							transition: 0.3s;
+						}
+
+					}
 					
 					.audio-download {
 						width: inherit;
@@ -160,12 +193,23 @@ audio.mobile {
 
 .mejs__controls {
 	height: 30px;
-	background-color: #9F9483 !important;
 	border-radius: 4px;
+	transition: background-image 0.3s;
+
+	&.on-play {
+		background-color: #9F9483 !important;
+		transition: background-image 0.3s;
+
+		.mejs__button.mejs__playpause-button > button {
+			background-image: url('mejs-controls-light.svg');
+			transition: background-image 0.3s;
+		}
+	}
 }
 
 .mejs__button > button {
 	margin-top: 6px;
+	transition: background 0.3s;
 }
 
 .mejs__play > button{

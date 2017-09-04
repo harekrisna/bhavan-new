@@ -20,6 +20,7 @@
 	<a n:class="link, $presenter->getPresenter()->name == 'Music' || (isset($main_audio_type) && $main_audio_type == 'music') ? current" n:href="Music:interprets">Hudba</a>
 </nav>
 <nav class="collection-nav right-nav">
+	<div class="float-left">Seřadit dle:</div>
 	<a n:class="link, in_array($presenter->getAction(), ['interprets', 'interpret']) || (isset($main_group) && $main_group == 'interprets')  ? current" n:href="interprets">Autoři</a>
 	<a n:class="link, $presenter->isLinkCurrent('Music:latest') || (isset($main_group) && $main_group == 'latest') ? current" n:href="latest">Nejnovější</a>
 	{*<a n:class="link, in_array($presenter->getAction(), ['years', 'year']) || (isset($main_group) && $main_group == 'years') ? current" n:href="years">Roky</a>*}

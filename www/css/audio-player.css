@@ -3,17 +3,30 @@ audio.mobile {
 }
 .audio-player {
   max-width: 720px;
+  height: 87px;
   margin-bottom: 20px;
   clear: both;
+  border-bottom: 1px rgba(235, 141, 58, 0.5) solid;
 }
 .audio-player.single-audio {
   margin-top: 10px;
   margin-bottom: 5px;
 }
+.audio-player.single-audio .mejs__controls {
+  background-color: #9F9483 !important;
+}
+.audio-player.single-audio .mejs__controls .mejs__button.mejs__playpause-button > button {
+  background-image: url('mejs-controls-light.svg');
+}
+.audio-player.single-audio .download-part-background {
+  background-color: #9F9483;
+}
+.audio-player.single-audio .download-part-background .download-button {
+  background-image: url('mejs-download-light.svg') !important;
+}
 .audio-player .title-line {
   width: inherit;
   height: 25px;
-  border-bottom: 1px rgba(235, 141, 58, 0.5) solid;
 }
 .audio-player .title-line .title {
   font-family: 'Lora', serif;
@@ -28,6 +41,9 @@ audio.mobile {
 }
 .audio-player .title-line .title.title-padding {
   padding-right: 66px;
+}
+.audio-player .title-line .collection-title {
+  background: transparent url('../images/layout/collection-icon.png') no-repeat center right / 25px;
 }
 .audio-player .title-line .download-link {
   margin-top: -26px;
@@ -98,8 +114,16 @@ audio.mobile {
 .hidder .hidder-row .hidder-cell.download-part .download-part-background {
   width: 40px;
   height: 30px;
-  background-color: #9F9483;
   border-radius: 0 4px 4px 0;
+  transition: 0.3s;
+}
+.hidder .hidder-row .hidder-cell.download-part .download-part-background.on-play {
+  background-color: #9F9483;
+  transition: 0.3s;
+}
+.hidder .hidder-row .hidder-cell.download-part .download-part-background.on-play .download-button {
+  background-image: url('mejs-download-light.svg') !important;
+  transition: 0.3s;
 }
 .hidder .hidder-row .hidder-cell.download-part .download-part-background .audio-download {
   width: inherit;
@@ -132,11 +156,20 @@ audio.mobile {
 }
 .mejs__controls {
   height: 30px;
-  background-color: #9F9483 !important;
   border-radius: 4px;
+  transition: background-image 0.3s;
+}
+.mejs__controls.on-play {
+  background-color: #9F9483 !important;
+  transition: background-image 0.3s;
+}
+.mejs__controls.on-play .mejs__button.mejs__playpause-button > button {
+  background-image: url('mejs-controls-light.svg');
+  transition: background-image 0.3s;
 }
 .mejs__button > button {
   margin-top: 6px;
+  transition: background 0.3s;
 }
 .mejs__play > button {
   margin-left: 5px;

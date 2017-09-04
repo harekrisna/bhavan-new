@@ -2,12 +2,12 @@
 	 viewBox="0 0 400 120" style="enable-background:new 0 0 400 120;" xml:space="preserve">
   <g id="controls">
     <g id="play">
-      <path d="M16.31,9.48a.56.56,0,0,1,0,1l-11.38,7c-.47.29-.85.07-.85-.48V3c0-.55.38-.77.85-.48Z" transform="translate(0.17 -0.99)" style="fill: #333333"/>
+      <path d="M16.31,9.48a.56.56,0,0,1,0,1l-11.38,7c-.47.29-.85.07-.85-.48V3c0-.55.38-.77.85-.48Z" transform="translate(0.17 -0.99)" style="fill: #fff"/>
     </g>
     <g id="pause">
       <g>
-        <rect x="23" y="1.01" width="4.2" height="16" rx="1" ry="1" style="fill: #333333"/>
-        <rect x="32.8" y="1.01" width="4.2" height="16" rx="1" ry="1" style="fill: #333333"/>
+        <rect x="23" y="1.01" width="4.2" height="16" rx="1" ry="1" style="fill: #fff"/>
+        <rect x="32.8" y="1.01" width="4.2" height="16" rx="1" ry="1" style="fill: #fff"/>
       </g>
     </g>
     <g id="fullscreen">

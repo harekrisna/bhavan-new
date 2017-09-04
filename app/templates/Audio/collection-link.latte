@@ -1,7 +1,7 @@
 {var $show_interpret_link = empty($show_interpret_link) ? false : $show_interpret_link}
 <div class="audio-player">
 	<div class="title-line">
-		<a class="title" n:href="audioCollection, $lecture->audio_collection_id">{$lecture->audio_collection->title}</a>
+		<a class="title collection-title" n:href="audioCollection, $lecture->audio_collection_id">{$lecture->audio_collection->title}</a>
 	</div>
 	<div class="audio-info">
 		<div class="place-time">{$lecture->place} {$lecture->audio_year, $lecture->audio_month, $lecture->audio_day|dynamicDate}</div>
