@@ -1,11 +1,20 @@
 {layout ../@layout.latte}
 {block content}
-<h1 class="collection-title">Učení</h1>
-<nav class="collection-breadcrumb-nav" id="breadcrumb_nav" n:ifset="$backlinks">
-    {foreach $backlinks as $backlink => $backtitle}
-    <span>&raquo;</span>
-    <a class="link" href="{$backlink}">{$backtitle}</a>
+
+<nav class="collection-breadcrumb-nav" id="breadcrumb_nav">
+{ifset $backlinks}
+	<a class="link" href="{link Teaching:category, 1}">Učení</a>
+    {foreach $backlinks as $backtitle => $backlink}
+	    <span>&raquo;</span>
+	    {if $iterator->last}
+	    	<h1 class="collection-title"><a class="link-inverse" href="{$backlink}">{$backtitle}</a></h1>
+	    {else}
+	    	<a class="link" href="{$backlink}">{$backtitle}</a>
+	    {/if}
     {/foreach}
+{else}
+	<h1 class="collection-title"><a class="link-inverse" href="{link Teaching:category, 1}">Učení</a></h1>
+{/ifset}
 </nav>
 <div class="divider simple"></div>
 <nav class="collection-nav nav-taller" n:inner-foreach="$article_categories AS $article_category">

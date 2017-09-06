@@ -55,11 +55,10 @@ class TeachingPresenter extends BasePresenter {
 		$backlinks = [];
 		while($article->article_id != NULL) {
 			$article = $this->article->get($article->article_id);
-			$backlinks = [$this->link('article', $article->id) => $article->title] + $backlinks;
+			$backlinks = [$article->title => $this->link('article', $article->id)] + $backlinks;
 		}
-
 		
-		$backlinks = [$this->link('category', $article->category_id) => $article->category->title] + $backlinks;
+		$backlinks = [$article->category->title => $this->link('category', $article->category_id)] + $backlinks;
 		$this->template->backlinks = $backlinks;
 	}
 }

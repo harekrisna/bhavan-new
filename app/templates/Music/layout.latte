@@ -1,6 +1,7 @@
 {layout ../@layout.latte}
 {block content}
-<nav class="collection-breadcrumb-nav" id="breadcrumb_nav" n:ifset="$backlinks">
+<nav class="collection-breadcrumb-nav" id="breadcrumb_nav">
+{ifset $backlinks}
 	<a class="link" n:href="interprets">Audio</a>
     {foreach $backlinks as $backtitle => $backlink}
 	    <span>&raquo;</span>
@@ -10,6 +11,9 @@
 	    	<a class="link" href="{$backlink}">{$backtitle}</a>
 	    {/if}
     {/foreach}
+{else}
+	<h1 class="collection-title"><a class="link-inverse" n:href="interprets">Audio</a></h1>
+{/ifset}    
 </nav>
 <div class="divider simple"></div>
 {include audio}

@@ -47,7 +47,6 @@ class MusicPresenter extends BasePresenter	{
 											   ->order('time_created DESC')
 											   ->limit(20);
 												
-		$this->template->backlinks = ["Hudba" => $this->link('interprets')];
 		$this->session->backlinks = ["Hudba" => $this->link('interprets'),
 									 "Nejnovější" => $this->link('latest')];
 
@@ -60,8 +59,6 @@ class MusicPresenter extends BasePresenter	{
 	public function renderInterprets()	{
 		$this->template->interprets = $this->musicInterpret->findAll()
 														   ->order('position ASC');
-
-		$this->template->backlinks = ["Hudba" => $this->link('interprets')];
 		$this->session->main_group = "interprets";													  
     }
     
@@ -234,8 +231,6 @@ class MusicPresenter extends BasePresenter	{
 	public function renderGenres()	{
 		$this->template->genres = $this->musicGenre->findAll()
 											  ->order('position');
-		
-		$this->template->backlinks = ["Hudba" => $this->link('interprets')];
 		$this->session->main_group = "genres";
 	}	
 

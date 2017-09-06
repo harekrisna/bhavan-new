@@ -142,19 +142,21 @@ audio.mobile {
 					&.on-play {
 						background-color: #9F9483;
 						transition: 0.3s;
+						
+						.audio-download {
+							background: linear-gradient(transparent, rgba(0,0,0,.35));
 
-						.download-button {
-							background-image: url('mejs-download-light.svg') !important;
-							transition: 0.3s;
+							.download-button {
+								background-image: url('mejs-download-light.svg') !important;
+								transition: 0.3s;
+							}
 						}
-
 					}
 					
 					.audio-download {
 						width: inherit;
 						height: inherit;
 						background: inherit;
-						background: linear-gradient(transparent, rgba(0,0,0,.35));
 						float: right;
 						border-radius: inherit;
 						
@@ -194,11 +196,14 @@ audio.mobile {
 .mejs__controls {
 	height: 30px;
 	border-radius: 4px;
-	transition: background-image 0.3s;
+	transition: 0.3s;
+	background: none !important;
 
 	&.on-play {
+		background: linear-gradient(transparent, rgba(0, 0, 0, 0.35)) !important;
 		background-color: #9F9483 !important;
-		transition: background-image 0.3s;
+		transition: 0.3s;
+
 
 		.mejs__button.mejs__playpause-button > button {
 			background-image: url('mejs-controls-light.svg');
@@ -209,7 +214,7 @@ audio.mobile {
 
 .mejs__button > button {
 	margin-top: 6px;
-	transition: background 0.3s;
+	transition: background-image 0.3s;
 }
 
 .mejs__play > button{

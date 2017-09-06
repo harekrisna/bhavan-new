@@ -49,9 +49,9 @@ class AudioPresenter extends BasePresenter	{
 												->order('time_created DESC')
 												->limit(20);
 
-		$this->template->backlinks = ["Přednášky" => $this->link('interprets')];
 		$this->session->backlinks = ["Přednášky" => $this->link('interprets'),
 									 "Nejnovější" => $this->link('latest')];
+									 
 		$this->session->main_group = "latest";
 	}
 	
@@ -59,7 +59,6 @@ class AudioPresenter extends BasePresenter	{
 		$this->template->interprets = $this->interpret->getAll()
 													  ->order('sort_order ASC');
 
-		$this->template->backlinks = ["Přednášky" => $this->link('interprets')];
 		$this->session->main_group = "interprets";													  
     }
 	
@@ -69,7 +68,6 @@ class AudioPresenter extends BasePresenter	{
 											 ->group('audio_year')
 											 ->order('audio_year DESC');
 
-		$this->template->backlinks = ["Přednášky" => $this->link('interprets')];											 	
 		$this->session->main_group = "years";
 	}
 	
@@ -168,7 +166,6 @@ class AudioPresenter extends BasePresenter	{
 												   ->where('book_id IS NULL AND seminar = ? AND sankirtan = ?', array(0, 0))
 												   ->count();
 
-		$this->template->backlinks = ["Přednášky" => $this->link('interprets')];
 		$this->session->main_group = "themes";
 	}
 	
