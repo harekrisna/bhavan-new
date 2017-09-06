@@ -17,7 +17,7 @@ $(function(){
     });
 
 
-	$('.lectures-group .group-header-title').click(function() {
+	$('.lectures-group-collapse .group-header-title').click(function() {
       	var item_content = $(this).parent().next();
       	if($(this).hasClass('item-expanded')) {
       		$(this).removeClass('item-expanded');	

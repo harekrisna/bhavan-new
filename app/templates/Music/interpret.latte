@@ -97,9 +97,9 @@
 {if $group_by == 'album'}
 	{foreach $groups as $group}
 	{continueIf !$group->music_album_id}
-	<section class="lectures-group lg-collapse">
+	<section class="lectures-group-collapse">
 		<div class="group-header">
-			<h2 class="group-header-title text-only link">{$group->music_album->title}</h2>
+			<h2 class="group-header-title link">{$group->music_album->title}</h2>
 		</div>
 		<div class="album-list">
 		{foreach $records[$group->music_album_id] as $record}
@@ -110,9 +110,9 @@
 	{/foreach}
 
 	{ifset $records[""]}
-	<section class="lectures-group lg-collapse">
+	<section class="lectures-group-collapse">
 		<div class="group-header">
-			<h2 class="group-header-title text-only link">Nezařazené</h2>
+			<h2 class="group-header-title link">Nezařazené</h2>
 		</div>
 		<div class="album-list">
 		{foreach $records[""] as $record}

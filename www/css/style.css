@@ -1535,10 +1535,6 @@ footer .contact-info .link-mail {
   position: relative;
   top: -28px;
 }
-.lectures-group .group-header .group-header-title.text-only {
-  margin-left: 0 !important;
-  top: -20px;
-}
 .lectures-group .group-header .group-header-title.adjust-mob-large {
   top: -53px;
 }
@@ -1574,9 +1570,24 @@ footer .contact-info .link-mail {
 .lectures-group .group-header .group-header-label.unknown-label {
   background-color: #BBBBBB;
 }
-.lectures-group .album-list {
-  display: none;
+.lectures-group-collapse:first-of-type .group-header-title {
+  margin-top: 10px !important;
+}
+.lectures-group-collapse .group-header {
+  width: 100%;
+  clear: both;
+}
+.lectures-group-collapse .group-header .group-header-title {
+  font-family: "PT Sans", sans-serif;
+  font-weight: normal;
+  font-size: 23px;
+  color: #333333;
+  border-bottom: 2px solid rgba(235, 140, 58, 0.78);
+  margin-top: 20px;
+}
+.lectures-group-collapse .album-list {
   height: 100%;
+  display: none;
 }
 /**********************
        CONSTANTS
