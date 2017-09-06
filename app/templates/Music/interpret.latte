@@ -97,24 +97,28 @@
 {if $group_by == 'album'}
 	{foreach $groups as $group}
 	{continueIf !$group->music_album_id}
-	<section class="lectures-group">
+	<section class="lectures-group lg-collapse">
 		<div class="group-header">
-			<h2 class="group-header-title text-only">{$group->music_album->title}</h2>
+			<h2 class="group-header-title text-only link">{$group->music_album->title}</h2>
 		</div>
+		<div class="album-list">
 		{foreach $records[$group->music_album_id] as $record}
 			{include player-bar.latte, record => $record}
 		{/foreach}
+		</div>
 	</section>
 	{/foreach}
 
 	{ifset $records[""]}
-	<section class="lectures-group">
+	<section class="lectures-group lg-collapse">
 		<div class="group-header">
-			<h2 class="group-header-title text-only">Nezařazené</h2>
+			<h2 class="group-header-title text-only link">Nezařazené</h2>
 		</div>
+		<div class="album-list">
 		{foreach $records[""] as $record}
 			{include player-bar.latte, record => $record}
 		{/foreach}
+		</div>
 	</section>
 	{/ifset}
 {/if}

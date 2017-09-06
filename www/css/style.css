@@ -990,6 +990,7 @@ footer .contact-info .link-mail {
 .list-simple .list-simple-text {
   list-style: none;
   margin-bottom: 25px;
+  height: 100%;
 }
 @media screen and (max-width: 767px) {
   .list-simple .list-simple-text {
@@ -1515,6 +1516,9 @@ footer .contact-info .link-mail {
 .lectures-group.group-continual {
   margin-top: 20px;
 }
+.lectures-group.lg-collapse {
+  margin-bottom: 40px;
+}
 .lectures-group .group-header {
   width: 100%;
   margin: 20px 0 -20px 0;
@@ -1569,6 +1573,10 @@ footer .contact-info .link-mail {
 }
 .lectures-group .group-header .group-header-label.unknown-label {
   background-color: #BBBBBB;
+}
+.lectures-group .album-list {
+  display: none;
+  height: 100%;
 }
 /**********************
        CONSTANTS
@@ -1629,7 +1637,7 @@ a:focus {
   color: #eb8c3a !important;
 }
 .link:hover {
-  color: #eb8c3a;
+  color: #eb8c3a !important;
   transition: 0.3s;
 }
 .link:focus {

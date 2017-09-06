@@ -16,6 +16,19 @@ $(function(){
       	}
     });
 
+
+	$('.lectures-group .group-header-title').click(function() {
+      	var item_content = $(this).parent().next();
+      	if($(this).hasClass('item-expanded')) {
+      		$(this).removeClass('item-expanded');	
+      		$(item_content).slideUp();
+      	}
+      	else {
+      		$(this).addClass('item-expanded');
+      		$(item_content).slideDown();
+      	}
+    });
+
     function ScaleListTitle() {
 		var container = $('.scale-text');
 		var text = container.find('span');
