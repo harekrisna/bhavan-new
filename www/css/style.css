@@ -1588,6 +1588,7 @@ footer .contact-info .link-mail {
 .lectures-group-collapse .album-list {
   height: 100%;
   display: none;
+  margin-bottom: 40px;
 }
 /**********************
        CONSTANTS
