@@ -2,13 +2,16 @@
 {var $group_by = empty($group_by) ? "time_created" : $group_by}
 {var douwnloadcount = $record->related('music_downloadcount')->sum(downloadcount)}
 {var playcount = $record->related('music_playcount')->sum(playcount)}
-
 <div class="audio-player">
 	<div class="title-line">
 	{if isset($title_only_text) && $title_only_text == true}
 		<div n:class="title, $isMobile ? 'title-padding'" n:href="Music:singleAudio, $record->id">{$record->title}</div>
 	{else}
+		{if $record->music_album_id}
+		<a n:class="title, $isMobile ? 'title-padding'" n:href="album, $record->music_album_id">{$record->title}</a>
+		{else}
 		<a n:class="title, $isMobile ? 'title-padding'" n:href="Music:singleAudio, $record->id">{$record->title}</a>
+		{/if}
 	{/if}
 		{if $isMobile}<a href="{$basePath}/mp3_music/{$record->music_interpret->mp3_folder}/{$record->mp3_file}" class="link download-link" title="Staženo: {if $douwnloadcount}{$douwnloadcount}x{else}0x{/if}" download>Stáhnout</a>{/if}
 	</div>

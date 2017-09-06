@@ -164,6 +164,14 @@ class RouterFactory
 		
 		$router[] = new Route('hudba/<id [0-9]+>', 'Music:singleAudio');
 
+		$router[] = new Route('hudba/album/<album_id>', array(
+			'presenter' => 'Music',
+			'action' => 'album',
+			'album_id' => array(
+				Route::FILTER_OUT => function ($id) use($container) { return $container->getService('music_album')->getTitleById($id);},
+				Route::FILTER_IN => function ($url) use($container) { return $container->getService('music_album')->getIdByTitle($url);},
+			),
+		));
 		/*
 		$router[] = new Route('audio/knihy/<book_id>', array(
 			'presenter' => 'Audio',

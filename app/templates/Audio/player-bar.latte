@@ -2,13 +2,16 @@
 {var $group_by = empty($group_by) ? "time_created" : $group_by}
 {var douwnloadcount = $lecture->related('audio_downloadcount')->sum(downloadcount)}
 {var playcount = $lecture->related('audio_playcount')->sum(playcount)}
-
 <div class="audio-player">
 	<div class="title-line">
 	{if isset($title_only_text) && $title_only_text == true}
-		<div n:class="title, $isMobile ? 'title-padding'" n:href="Audio:singleAudio, $lecture->id">{$lecture->title}</div>
+		<div n:class="title, $isMobile ? 'title-padding'">{$lecture->title}</div>
 	{else}
+		{if $lecture->audio_collection_id}
+		<a n:class="title, $isMobile ? 'title-padding'" n:href="audioCollection, $lecture->audio_collection_id">{$lecture->title}</a>
+		{else}
 		<a n:class="title, $isMobile ? 'title-padding'" n:href="Audio:singleAudio, $lecture->id">{$lecture->title}</a>
+		{/if}
 	{/if}
 		{if $isMobile}<a href="{$basePath}/mp3/{$lecture->audio_interpret->mp3_folder}/{$lecture->mp3_file}" class="link download-link" title="Staženo: {if $douwnloadcount}{$douwnloadcount}x{else}0x{/if}" download>Stáhnout</a>{/if}
 	</div>
