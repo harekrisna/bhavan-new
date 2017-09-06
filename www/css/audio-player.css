@@ -13,12 +13,14 @@ audio.mobile {
   margin-bottom: 5px;
 }
 .audio-player.single-audio .mejs__controls {
+  background: linear-gradient(transparent, rgba(0, 0, 0, 0.35)) !important;
   background-color: #9F9483 !important;
 }
 .audio-player.single-audio .mejs__controls .mejs__button.mejs__playpause-button > button {
   background-image: url('mejs-controls-light.svg');
 }
 .audio-player.single-audio .download-part-background {
+  background: linear-gradient(transparent, rgba(0, 0, 0, 0.35));
   background-color: #9F9483;
 }
 .audio-player.single-audio .download-part-background .download-button {
