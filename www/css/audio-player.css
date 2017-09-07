@@ -47,6 +47,9 @@ audio.mobile {
 .audio-player .title-line .collection-title {
   background: transparent url('../images/layout/collection-icon.png') no-repeat center right / 25px;
 }
+.audio-player .title-line .album-title {
+  float: right;
+}
 .audio-player .title-line .download-link {
   margin-top: -26px;
   float: right;
@@ -64,12 +67,12 @@ audio.mobile {
   font-style: italic;
 }
 .audio-player .audio-info .place-time {
-  float: left;
-}
-.audio-player .audio-info .verse-autor {
   float: right;
 }
-.audio-player .audio-info .verse-autor .link {
+.audio-player .audio-info .verse-autor {
+  float: left;
+}
+.audio-player .audio-info .verse-autor .audio-info-verse {
   margin-left: 5px;
 }
 .mejs-container.wide {

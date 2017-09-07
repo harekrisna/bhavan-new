@@ -16,11 +16,11 @@
 		{if $isMobile}<a href="{$basePath}/mp3/{$lecture->audio_interpret->mp3_folder}/{$lecture->mp3_file}" class="link download-link" title="Staženo: {if $douwnloadcount}{$douwnloadcount}x{else}0x{/if}" download>Stáhnout</a>{/if}
 	</div>
 	<div class="audio-info">
-		<div class="place-time">{$lecture->place} {$lecture->audio_year, $lecture->audio_month, $lecture->audio_day|dynamicDate}</div>
 		<div class="verse-autor">
-			<span n:if="$lecture->book_id">{$lecture->book->abbreviation, $lecture->chapter, $lecture->verse|verseReadable}</span>
 			<a n:if="$show_interpret_link" class="link" n:href="Audio:interpret, $lecture->audio_interpret->id, $group_by" title="{$lecture->audio_interpret->title}">{$lecture->audio_interpret->title|replace:['HG ', 'HH '], ['']}</a>
+			<span class="audio-info-verse" n:if="$lecture->book_id">{$lecture->book->abbreviation, $lecture->chapter, $lecture->verse|verseReadable}</span>
 		</div>
+		<div class="place-time">{$lecture->place} {$lecture->audio_year, $lecture->audio_month, $lecture->audio_day|dynamicDate}</div>
 	</div>
 	
 	{if $isMobile}
