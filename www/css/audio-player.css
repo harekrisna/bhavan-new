@@ -3,7 +3,7 @@ audio.mobile {
 }
 .audio-player {
   max-width: 720px;
-  height: 87px;
+  height: auto;
   margin-bottom: 20px;
   clear: both;
   border-bottom: 1px rgba(235, 141, 58, 0.5) solid;
@@ -44,8 +44,10 @@ audio.mobile {
 .audio-player .title-line .title.title-padding {
   padding-right: 66px;
 }
-.audio-player .title-line .collection-title {
-  background: transparent url('../images/layout/collection-icon.png') no-repeat center right / 25px;
+@media screen and (min-width: 600px) {
+  .audio-player .title-line .collection-title {
+    background: transparent url('../images/layout/collection-icon.png') no-repeat center right / 20px;
+  }
 }
 .audio-player .title-line .album-title {
   float: right;
@@ -60,20 +62,43 @@ audio.mobile {
   margin-top: 2px;
 }
 .audio-player .audio-info .place-time,
-.audio-player .audio-info .verse-autor {
+.audio-player .audio-info .author-text {
   color: #12323D;
   font-family: 'Lora', serif;
   font-size: 14px;
   font-style: italic;
 }
 .audio-player .audio-info .place-time {
+  margin-left: 5px;
   float: right;
 }
-.audio-player .audio-info .verse-autor {
+.audio-player .audio-info .place-time .download-alt-link {
+  width: 18px;
+  height: 18px;
+  margin-left: 8px;
+  background: url('mejs-download.svg') no-repeat top left / 18px;
+  display: inline-block;
+  vertical-align: sub;
+}
+.audio-player .audio-info .author-text {
   float: left;
 }
-.audio-player .audio-info .verse-autor .audio-info-verse {
-  margin-left: 5px;
+.audio-player .audio-info .author-text *:not(:first-child):before {
+  content: '|';
+  font-style: normal;
+  color: #12323d;
+  margin-right: 4px;
+  position: relative;
+  top: -1px;
+}
+.audio-player .audio-info .author-text .audio-info-author {
+  margin-right: 4px;
+}
+@media screen and (max-width: 599px) {
+  .audio-player .collection-info {
+    background: transparent url('../images/layout/collection-icon.png') no-repeat center left / 16px;
+    padding-left: 20px;
+  }
 }
 .mejs-container.wide {
   width: 581px !important;
@@ -82,6 +107,7 @@ audio.mobile {
   height: 40px;
 }
 .player-bar-container {
+  margin-bottom: 5px;
   position: relative;
   display: none;
 }
