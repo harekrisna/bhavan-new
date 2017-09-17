@@ -14,20 +14,20 @@ audio.mobile {
 		margin-bottom: 5px;
 
 		.mejs__controls {
-			background: linear-gradient(transparent, rgba(0,0,0,.35)) !important;
-			background-color: #9F9483 !important;
+			//background: linear-gradient(transparent, rgba(0,0,0,.35)) !important;
+			//background-color: #9F9483 !important;
 
 			.mejs__button.mejs__playpause-button > button {
-				background-image: url('mejs-controls-light.svg');
+				//background-image: url('mejs-controls-light.svg');
 			}
 		}
 
 		.download-part-background {
-			background: linear-gradient(transparent, rgba(0,0,0,.35));
-			background-color: #9F9483;
+			//background: linear-gradient(transparent, rgba(0,0,0,.35));
+			//background-color: #9F9483;
 
 			.download-button {
-				background-image: url('mejs-download-light.svg') !important;
+				//background-image: url('mejs-download-light.svg') !important;
 			}
 		}
 
@@ -74,30 +74,21 @@ audio.mobile {
 		height: 23px;
 		margin-top: 2px;
 
-		.place-time, .author-text {
-			color: #12323D;
+		.info-text {
+			color: #415a5e;
 			font-family: 'Lora', serif;
 			font-size: 14px;
 			font-style: italic;
-		}
-
-		.place-time {
-			margin-left: 5px;
-			float: right;
-
-			.download-alt-link {
-				width: 18px;
-    			height: 18px;
-    			margin-left: 8px;
-				background: url('mejs-download.svg') no-repeat top left / 18px;
-				display: inline-block;
-				vertical-align: sub;
-			}
-		}
-
-		.author-text {
 			float: left;
-
+			
+			.link {
+				color: inherit;
+			}
+			
+			* {
+				margin-right: 4px;
+			}
+			
 			*:not(:first-child):before {
 			    content: '|';
 			    font-style: normal;
@@ -106,9 +97,19 @@ audio.mobile {
 			    position: relative;
 			    top: -1px;
 			}
+		}
 
-			.audio-info-author {
-				margin-right: 4px;
+		.download-alt {
+			margin-left: 5px;
+			float: right;
+
+			.download-alt-button {
+				width: 18px;
+    			height: 18px;
+    			margin-left: 8px;
+				background: url('mejs-download.svg') no-repeat top left / 18px;
+				display: inline-block;
+				vertical-align: sub;
 			}
 		}
 	}
@@ -136,7 +137,7 @@ audio.mobile {
 }
 
 .hidder {
-	width: 87px; 
+	width: 75px; 
 	height: 30px;   	
 	display: table;  
 	z-index: 10; 	
@@ -155,7 +156,7 @@ audio.mobile {
 			transition: 0.3s;
 			
 			&.transparent-part {
-				width: 47px;
+				width: 35px;
 				background: transparent;
 			}
 			
@@ -175,14 +176,14 @@ audio.mobile {
 					transition: 0.3s;
 
 					&.on-play {
-						background-color: #9F9483;
+						//background-color: #9F9483;
 						transition: 0.3s;
 						
 						.audio-download {
-							background: linear-gradient(transparent, rgba(0,0,0,.35));
+							//background: linear-gradient(transparent, rgba(0,0,0,.35));
 
 							.download-button {
-								background-image: url('mejs-download-light.svg') !important;
+								//background-image: url('mejs-download-light.svg') !important;
 								transition: 0.3s;
 							}
 						}
@@ -198,7 +199,6 @@ audio.mobile {
 						.download-button {
 							width: 30px;
 							height: 30px;
-							margin-right: 7px;
 							background: transparent url('mejs-download.svg') center center no-repeat;
 							background-size: 20px 20px;
 							float: right;
@@ -210,7 +210,7 @@ audio.mobile {
 			
 			&.hidder-part {	
 				position: relative;
-				top:-30px;
+				top: -30px;
 				background-image: url('../images/layout/bg.gif');
 				background-size: 120px;
 				background-position: right top;
@@ -231,17 +231,17 @@ audio.mobile {
 .mejs__controls {
 	height: 30px;
 	border-radius: 4px;
+	padding-left: 0;
 	transition: 0.3s;
 	background: none !important;
 
 	&.on-play {
-		background: linear-gradient(transparent, rgba(0, 0, 0, 0.35)) !important;
-		background-color: #9F9483 !important;
+		//background: linear-gradient(transparent, rgba(0, 0, 0, 0.35)) !important;
+		//background-color: #9F9483 !important;
 		transition: 0.3s;
 
-
 		.mejs__button.mejs__playpause-button > button {
-			background-image: url('mejs-controls-light.svg');
+			//background-image: url('mejs-controls-light.svg');
 			transition: background-image 0.3s;
 		}
 	}
@@ -252,8 +252,8 @@ audio.mobile {
 	transition: background-image 0.3s;
 }
 
-.mejs__play > button{
-	margin-left: 5px;
+.mejs__button.mejs__playpause-button > button{
+	margin-left: 0;
 }
 
 .mejs__volume-button {
@@ -263,12 +263,23 @@ audio.mobile {
 .mejs__time {
 	width: 44px;
 	padding-top: 10px;
+	color: #000000;
 }
 
 .mejs__time-rail {
 	padding-top: 5px;
+	
+	.mejs__time-slider {
+		background-color: #8e867a;
+	}
 }  
 
 .mejs__horizontal-volume-slider {
 	margin-top: -4px;
+	width: 63px;
+	
+	.mejs__horizontal-volume-total {
+		width: 70px;
+		background-color: #8e867a;
+	}
 }

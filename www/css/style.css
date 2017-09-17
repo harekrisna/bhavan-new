@@ -1000,6 +1000,87 @@ footer .contact-info .link-mail {
 .list-simple .list-simple-text.text-hidden {
   display: none;
 }
+.collection-title {
+  height: inherit;
+  font-size: 18px;
+  display: inline-block;
+  margin: 0;
+}
+.category-title {
+  margin: 15px 0px 15px 0px;
+}
+@media screen and (min-width: 768px) {
+  .category-title {
+    display: none;
+  }
+}
+.collection-nav {
+  margin-top: 10px;
+  margin-right: 15px;
+  float: left;
+}
+@media (max-width: 767px) {
+  .collection-nav {
+    display: none;
+  }
+}
+.collection-nav.right-nav {
+  margin-right: 0;
+  float: right;
+}
+@media (max-width: 767px) {
+  .collection-nav.right-nav {
+    display: block;
+  }
+}
+.collection-nav.right-nav .link {
+  text-transform: none;
+}
+.collection-nav.nav-taller {
+  margin-bottom: 12px;
+}
+.collection-nav .link {
+  text-transform: uppercase;
+  display: block;
+  float: left;
+  padding-left: 10px;
+}
+.collection-nav .link:after,
+.collection-nav .link:first-child:before {
+  content: '|';
+  font-size: 1.0em;
+  color: #12323d;
+  margin-left: 10px;
+  position: relative;
+  top: -1px;
+}
+.collection-nav .link:first-child {
+  padding-left: 0;
+}
+.collection-nav .link:first-child:before {
+  margin-right: 10px;
+  margin-left: 0;
+}
+.collection-nav-clearfix {
+  height: 30px;
+}
+@media (max-width: 320px) {
+  .collection-nav-clearfix {
+    height: 0;
+  }
+}
+.collection-breadcrumb-nav {
+  float: left;
+  margin-left: 5px;
+  margin-bottom: 15px;
+}
+.collection-breadcrumb-nav.mobile {
+  margin-top: 0;
+  margin-bottom: 3px;
+}
+.next-prev-nav-labels-container.nav-top .link-hover-label {
+  right: 0;
+}
 .slideshow {
   position: relative;
   top: 0px;
@@ -1415,87 +1496,6 @@ footer .contact-info .link-mail {
 .article-navigation .next-prev-nav-labels-container .label-next {
   right: 0;
 }
-.collection-title {
-  height: inherit;
-  font-size: 18px;
-  display: inline-block;
-  margin: 0;
-}
-.category-title {
-  margin: 15px 0px 15px 0px;
-}
-@media screen and (min-width: 768px) {
-  .category-title {
-    display: none;
-  }
-}
-.collection-nav {
-  margin-top: 10px;
-  margin-right: 15px;
-  float: left;
-}
-@media (max-width: 767px) {
-  .collection-nav {
-    display: none;
-  }
-}
-.collection-nav.right-nav {
-  margin-right: 0;
-  float: right;
-}
-@media (max-width: 767px) {
-  .collection-nav.right-nav {
-    display: block;
-  }
-}
-.collection-nav.right-nav .link {
-  text-transform: none;
-}
-.collection-nav.nav-taller {
-  margin-bottom: 12px;
-}
-.collection-nav .link {
-  text-transform: uppercase;
-  display: block;
-  float: left;
-  padding-left: 10px;
-}
-.collection-nav .link:after,
-.collection-nav .link:first-child:before {
-  content: '|';
-  font-size: 1.0em;
-  color: #12323d;
-  margin-left: 10px;
-  position: relative;
-  top: -1px;
-}
-.collection-nav .link:first-child {
-  padding-left: 0;
-}
-.collection-nav .link:first-child:before {
-  margin-right: 10px;
-  margin-left: 0;
-}
-.collection-nav-clearfix {
-  height: 30px;
-}
-@media (max-width: 320px) {
-  .collection-nav-clearfix {
-    height: 0;
-  }
-}
-.collection-breadcrumb-nav {
-  float: left;
-  margin-left: 5px;
-  margin-bottom: 15px;
-}
-.collection-breadcrumb-nav.mobile {
-  margin-top: 0;
-  margin-bottom: 3px;
-}
-.next-prev-nav-labels-container.nav-top .link-hover-label {
-  right: 0;
-}
 .audio-section {
   margin-top: 5px;
 }
@@ -1570,6 +1570,16 @@ footer .contact-info .link-mail {
 .lectures-group .group-header .group-header-label.unknown-label {
   background-color: #BBBBBB;
 }
+@media screen and (min-width: 1199px) {
+  .lectures-group-collapse {
+    width: 70%;
+  }
+}
+@media screen and (min-width: 992px) and (max-width: 1199px) {
+  .lectures-group-collapse {
+    width: 80%;
+  }
+}
 .lectures-group-collapse:first-of-type .group-header-title {
   margin-top: 10px !important;
 }
@@ -1582,7 +1592,10 @@ footer .contact-info .link-mail {
   font-weight: normal;
   font-size: 23px;
   color: #333333;
-  border-bottom: 2px solid rgba(235, 140, 58, 0.78);
+  background-image: linear-gradient(to right, rgba(235, 140, 58, 0.78) 40%, rgba(255, 255, 255, 0) 20%);
+  background-position: bottom;
+  background-size: 4px 2px;
+  background-repeat: repeat-x;
   margin-top: 20px;
 }
 .lectures-group-collapse .album-list {

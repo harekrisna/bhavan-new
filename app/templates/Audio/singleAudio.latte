@@ -9,14 +9,16 @@
 
 <div class="audio-player single-audio">
 	<div class="title-line">
-		<div n:class="title" n:href="singleAudio, $lecture->id">{$lecture->title}</div>
-	</div>
+		<div n:class="title">{$lecture->title}</div>
+	</div>	
 	<div class="audio-info">
-		<div class="place-time">{$lecture->place} {$lecture->audio_year, $lecture->audio_month, $lecture->audio_day|dynamicDate}<a n:if="$isMobile" href="{$basePath}/mp3/{$lecture->audio_interpret->mp3_folder}/{$lecture->mp3_file}" class="link download-alt-link" title="Staženo: {if $douwnloadcount}{$douwnloadcount}x{else}0x{/if}" download></a></div>
-		<div class="author-text">
+		<div class="info-text">
+			<a class="link audio-info-author" n:href="Audio:interpret, $lecture->audio_interpret->id, 'time_created'" title="{$lecture->audio_interpret->title}">{$lecture->audio_interpret->title|replace:['HG ', 'HH '], ['']}</a>
 			<span n:if="$lecture->book_id">{$lecture->book->abbreviation, $lecture->chapter, $lecture->verse|verseReadable}</span>
-			<a class="link" n:href="interpret, $lecture->audio_interpret->id, 'time_created'" title="{$lecture->audio_interpret->title}">{$lecture->audio_interpret->title|replace:['HG ', 'HH '], ['']}</a>
+			<span n:if="$lecture->place != ''">{$lecture->place}</span>
+			<span>{$lecture->audio_year, $lecture->audio_month, $lecture->audio_day|dynamicDate}</span>
 		</div>
+		<div class="download-alt"><a n:if="$isMobile" href="{$basePath}/mp3/{$lecture->audio_interpret->mp3_folder}/{$lecture->mp3_file}" class="link download-alt-button" title="Staženo: {if $douwnloadcount}{$douwnloadcount}x{else}0x{/if}" download></a></div>
 	</div>
 	
 	{if $isMobile}
