@@ -6,7 +6,7 @@
 {block audio}
 {var $displayed_collections = []}
 <div class="audio-section">
-	<h1 n:inner-block="title">{$title}</h1>
+	<h1 class="scale-text"><span>{$title}</span></h1>
 	<nav class="audio_nav">
 		<span>Seskupit podle:</span>
 		<a n:href="byType, $type, 'audio_interpret_id'" class="link {ifCurrent Audio:byType, $type, 'audio_interpret_id'} current{/ifCurrent}">Autorů</a>

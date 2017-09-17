@@ -5,10 +5,10 @@
 <div class="audio-player">
 	<div class="title-line">
 	{if isset($title_only_text) && $title_only_text == true}
-		<div n:class="title" n:href="Music:singleAudio, $record->id">{$record->title}</div>
+		<div n:class="title">{$record->title}</div>
 	{else}
 		{if $record->music_album_id}
-		<a n:class="title" n:href="album, $record->music_album_id">{$record->title}</a>
+		<a n:class="title" n:href="Music:album, $record->music_album_id">{$record->title}</a>
 		{else}
 		<a n:class="title" n:href="Music:singleAudio, $record->id">{$record->title}</a>
 		{/if}
@@ -17,7 +17,7 @@
 	<div class="audio-info">
 		<div class="author-text">
 			<a n:if="$show_interpret_link" class="link audio-info-author" n:href="Music:interpret, $record->music_interpret->id, $group_by">{$record->music_interpret->title|replace:['HG ', 'HH '], ['']}</a>
-			{if $record->music_album_id}<a class="link" n:href="album, $record->music_album_id">{$record->music_album->title}</a>{/if}
+			{if $record->music_album_id}<a class="link" n:href="Music:album, $record->music_album_id">{$record->music_album->title}</a>{/if}
 		</div>
 		<div class="place-time">{$record->place} {$record->music_year, $record->music_month, $record->music_day|dynamicDate}<a n:if="$isMobile" href="{$basePath}/mp3/{$record->music_interpret->mp3_folder}/{$record->mp3_file}" class="link download-alt-link" title="Staženo: {if $douwnloadcount}{$douwnloadcount}x{else}0x{/if}" download></a></div>
 	</div>

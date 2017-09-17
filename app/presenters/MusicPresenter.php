@@ -330,17 +330,15 @@ class MusicPresenter extends BasePresenter	{
 
 		if (!$records)
             throw new Nette\Application\BadRequestException;
-			
-		$album = $this->musicAlbum->get($album_id);			
-		$this->template->album = $album;
+						
+		$this->template->album = $this->musicAlbum->get($album_id);
 		$this->template->records = $records;
 
 		$first_record = $records->fetch();
 
 		$this->template->backlinks = ["Hudba" => $this->link('interprets'),
 									  "Autoři" => $this->link('interprets'),
-									  $first_record->music_interpret->title => $this->link('interpret', $first_record->music_interpret_id),
-									  $album->title => $this->link('album', $album_id)];
+									  $first_record->music_interpret->title => $this->link('interpret', $first_record->music_interpret_id)];
 									  
 		$this->template->main_group = $this->session->main_group;
 		$this->template->main_audio_type = "music";

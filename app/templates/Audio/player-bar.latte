@@ -8,7 +8,7 @@
 		<div class="title">{$lecture->title}</div>
 	{else}
 		{if $lecture->audio_collection_id}
-		<a class="title" n:href="audioCollection, $lecture->audio_collection_id">{$lecture->title}</a>
+		<a class="title" n:href="Audio:audioCollection, $lecture->audio_collection_id">{$lecture->title}</a>
 		{else}
 		<a class="title" n:href="Audio:singleAudio, $lecture->id">{$lecture->title}</a>
 		{/if}

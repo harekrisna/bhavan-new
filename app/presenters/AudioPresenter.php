@@ -490,7 +490,13 @@ class AudioPresenter extends BasePresenter	{
 			
 		$this->template->collection = $this->collection->get($collection_id);
 		$this->template->audio_collection = $audio_collection;
-		$this->template->backlinks = $this->session->backlinks;
+
+		$first_record = $audio_collection->fetch();
+		
+		$this->template->backlinks = ["Přednášky" => $this->link('interprets'),
+									  "Autoři" => $this->link('interprets'),
+									  $first_record->audio_interpret->title => $this->link('interpret', $first_record->audio_interpret_id)];
+
 		$this->template->main_group = $this->session->main_group;
 		$this->template->main_audio_type = "lecture";
 		
