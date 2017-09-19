@@ -10,5 +10,5 @@
 			<a n:if="$show_interpret_link" class="link" n:href="interpret, $lecture->audio_interpret->id, $group_by" title="{$lecture->audio_interpret->title}">{$lecture->audio_interpret->title|replace:['HG ', 'HH '], ['']}</a>
 		</div>
 	</div>
-	<span class="collection-info">Kolekce {ifset $collection_count}{$collection_count}{/ifset} přednášek</span>
+	<span>Kolekce {ifset $collection_count}{$collection_count}{/ifset} přednášek</span>
 </div>
