@@ -17,7 +17,7 @@
 </nav>
 <div class="divider simple"></div>
 <nav class="collection-nav nav-taller" n:inner-foreach="$article_categories AS $article_category">
-	<a n:class="link, $article_category->id == $category->id ? current" n:href="Teaching:category, $article_category->id">{$article_category->title}</a>
+	<a n:if="$article_category->id != 5 && $article_category->id != 6" n:class="link, $article_category->id == $category->id ? current" n:href="Teaching:category, $article_category->id">{$article_category->title}</a>
 </nav>
 {*<div class="clearfix collection-nav-clearfix"></div>*}
 {include teaching_content}
