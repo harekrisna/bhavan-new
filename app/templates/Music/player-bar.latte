@@ -13,7 +13,7 @@
 		<a n:class="title, $isMobile ? 'title-padding'" n:href="Music:singleAudio, $record->id">{$record->title}</a>
 		{/if}
 	{/if}
-		<div class="download-alt"><a n:if="$isMobile" href="{$basePath}/mp3/{$record->music_interpret->mp3_folder}/{$record->mp3_file}" class="link download-alt-button" title="Staženo: {if $douwnloadcount}{$douwnloadcount}x{else}0x{/if}" download></a></div>
+		<div class="download-alt"><a n:if="$isMobile" href="{$basePath}/mp3_music/{$record->music_interpret->mp3_folder}/{$record->mp3_file}" class="link download-alt-button" title="Staženo: {if $douwnloadcount}{$douwnloadcount}x{else}0x{/if}" download></a></div>
 	</div>
 	<div n:class="audio-info, (!$record->music_album_id && !$show_interpret_link && !$record->place && !$record->music_year) ? empty-bar">
 		<div class="info-text">

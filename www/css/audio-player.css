@@ -134,6 +134,7 @@ audio.mobile {
   transition: 0.3s;
 }
 .hidder .hidder-row .hidder-cell.download-part .download-part-background.on-play .audio-download .download-button {
+  float: right;
   transition: 0.3s;
 }
 .hidder .hidder-row .hidder-cell.download-part .download-part-background .audio-download {
@@ -148,8 +149,9 @@ audio.mobile {
   height: 30px;
   background: transparent url('mejs-download.svg') center center no-repeat;
   background-size: 20px 20px;
-  float: right;
+  float: left;
   display: block;
+  transition: 0.3s;
 }
 .hidder .hidder-row .hidder-cell.hidder-part {
   position: relative;

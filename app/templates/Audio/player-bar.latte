@@ -13,6 +13,7 @@
 		<a n:class="title, $isMobile ? 'title-padding'" n:href="Audio:singleAudio, $lecture->id">{$lecture->title}</a>
 		{/if}
 	{/if}
+		<div class="download-alt"><a n:if="$isMobile" href="{$basePath}/mp3/{$lecture->audio_interpret->mp3_folder}/{$lecture->mp3_file}" class="link download-alt-button" title="Staženo: {if $douwnloadcount}{$douwnloadcount}x{else}0x{/if}" download></a></div>
 	</div>
 	<div class="audio-info">
 		<div class="info-text">

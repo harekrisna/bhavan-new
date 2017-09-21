@@ -117,18 +117,18 @@ $(function(){
 	ScaleListTitle();
     CollectionBreadcrumbNavigationFit();
     CollectionNextPrevNavigationFit();
-    ScaleAudioGroupHeaderTitle();
+    //ScaleAudioGroupHeaderTitle();
     
     $(window).bind("load", ScaleListTitle);
-    $(window).bind("load", ScaleAudioGroupHeaderTitle);
+    //$(window).bind("load", ScaleAudioGroupHeaderTitle);
     $(window).bind("load", CollectionNextPrevNavigationFit);
     $(window).bind("load", CollectionBreadcrumbNavigationFit);
     $(window).bind("resize", ScaleListTitle);
-    $(window).bind("resize", ScaleAudioGroupHeaderTitle);    
+    //$(window).bind("resize", ScaleAudioGroupHeaderTitle);    
     $(window).bind("resize", CollectionNextPrevNavigationFit);
     $(window).bind("resize", CollectionBreadcrumbNavigationFit);
     $(window).bind("orientationchange", ScaleListTitle);
-    $(window).bind("orientationchange", ScaleAudioGroupHeaderTitle);    
+    //$(window).bind("orientationchange", ScaleAudioGroupHeaderTitle);    
     $(window).bind("orientationchange", CollectionNextPrevNavigationFit);
     $(window).bind("orientationchange", CollectionBreadcrumbNavigationFit);
 	

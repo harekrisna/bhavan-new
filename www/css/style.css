@@ -1533,10 +1533,10 @@ footer .contact-info .link-mail {
   top: -1px;
 }
 .lectures-group {
-  margin-bottom: 90px;
+  margin-bottom: 70px;
 }
 .lectures-group:first-of-type {
-  margin-top: 36px;
+  margin-top: 16px;
 }
 .lectures-group.group-continual {
   margin-top: 20px;
@@ -1546,33 +1546,14 @@ footer .contact-info .link-mail {
 }
 .lectures-group .group-header {
   width: 100%;
-  margin: 20px 0 -20px 0;
-  clear: both;
-}
-.lectures-group .group-header .group-header-title {
-  font-family: "PT Sans", sans-serif;
-  font-weight: normal;
-  font-size: 23px !important;
-  color: #333333;
-  border-bottom: 2px solid rgba(235, 140, 58, 0.78);
-  margin-left: 90px !important;
-  display: block;
-  position: relative;
-  top: -28px;
-}
-.lectures-group .group-header .group-header-title.adjust-mob-large {
-  top: -53px;
-}
-.lectures-group .group-header .group-header-title.adjust-mob-small {
-  top: -77px;
+  height: 75px;
+  margin-bottom: 20px;
 }
 .lectures-group .group-header .group-header-label {
   width: 75px;
   height: 75px;
   border-radius: 15px 0 15px 0;
   background-size: 75px;
-  margin: -20px 15px 0 0;
-  display: block;
   float: left;
 }
 .lectures-group .group-header .group-header-label.label-text {
@@ -1594,6 +1575,22 @@ footer .contact-info .link-mail {
 }
 .lectures-group .group-header .group-header-label.unknown-label {
   background-color: #BBBBBB;
+}
+.lectures-group .group-header .group-header-title {
+  height: 75px;
+  margin-left: 90px;
+  border-bottom: 2px solid rgba(235, 140, 58, 0.78);
+  line-height: 75px;
+}
+.lectures-group .group-header .group-header-title h2 {
+  font-family: "PT Sans", sans-serif;
+  font-weight: normal;
+  font-size: 23px !important;
+  vertical-align: middle;
+  color: #333333;
+  margin: 0;
+  display: inline-block;
+  clear: none;
 }
 @media screen and (min-width: 1199px) {
   .lectures-group-collapse {
