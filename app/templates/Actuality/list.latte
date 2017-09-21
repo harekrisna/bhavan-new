@@ -5,7 +5,7 @@
 	<div>
 		<div class="list-box">
 			<a class="list-box-title sms-down" n:href="sunday">Programy pro veřejnost</a>
-			<div class="list-box-image" style="background-image: url('{*$basePath*}/images/actuality/previews/program.jpg');">
+			<div class="list-box-image" style="background-image: url('{$basePath}/images/actuality/previews/program.jpg');">
 				<div class="list-box-image-title">neděle</div>
 			</div>
 			<a class="list-box-title sms-up" n:href="sunday">Programy pro veřejnost</a>
@@ -15,7 +15,7 @@
 	<div n:foreach="$actualities as $actuality">
 		<div class="list-box">
 			<a class="list-box-title sms-down" n:href="detail, $actuality->id">{$actuality->title}</a>
-			<div class="list-box-image" style="background-image: url('{*$basePath*}/images/actuality/previews/{$actuality->preview_image|noescape}');">
+			<div class="list-box-image" style="background-image: url('{$basePath}/images/actuality/previews/{$actuality->preview_image|noescape}');">
 				<div class="list-box-image-title">
 					{if $actuality->date_to != ""}
 						{$actuality->date_from|date: 'j.n'}-{$actuality->date_to|date: 'j.n Y'}

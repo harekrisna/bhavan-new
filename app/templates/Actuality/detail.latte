@@ -24,11 +24,14 @@
 </div>
 <article class="article-detail">
 	<h1 class="article-title">{$actuality->title}</h1>
-    <div class="article-container" style="width: 100%">
+    <div class="article-container">
         <div class="article-text">
-            <img n:if="$actuality->article_image" class="article-image article-main-image-mobile" style="width: 40%;" 	src="{*$basePath*}/images/actuality/{$actuality->article_image}" />
+            <img n:if="$actuality->article_image" class="article-image article-main-image-mobile" src="{$basePath}/images/actuality/{$actuality->article_image}" />
             {!$actuality->description}
         </div>
+    </div>
+    <div n:if="$actuality->article_image" class="article-image article-main-image-wide">
+        <img src="{$basePath}/images/actuality/{$actuality->article_image}" />
     </div>
 </article>
 {/block}
