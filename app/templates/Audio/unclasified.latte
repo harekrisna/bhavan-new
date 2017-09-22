@@ -15,16 +15,10 @@
 {foreach $groups as $group}
 	<section class="lectures-group">
 		{if $group_by == 'audio_interpret_id'}
-		<div class="group-header">
-			<div class="group-header-label" style="background-image: url('{$basePath}/images/interpret_avatars/{$group->audio_interpret->image}')"></div>
-			<h2 class="group-header-title">{$group->audio_interpret->title}</h2>
-		</div>
+			{include group-header.latte, group_title => $group->audio_interpret->title, label_image => "{$basePath}/images/interpret_avatars/{$group->audio_interpret->image}"}
 		{/if}
 		{if $group_by == 'audio_year'}
-		<div class="group-header">
-			<div n:class="group-header-label, label-text, year-label, $group->audio_year < 2000 ? 'alt-color'">{$group->audio_year}</div>
-			<h2 class="group-header-title">Přednášky z roku {$group->audio_year}</h2>
-		</div>
+			{include group-header.latte, class => "label-text year-label", label_text => $group->audio_year, group_title => "Přednášky z roku $group->audio_year"}
 		{/if}
 		{foreach $lectures[$group->id] as $lecture} 
 			{if $lecture->audio_collection_id}

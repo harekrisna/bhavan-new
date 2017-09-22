@@ -37,29 +37,20 @@
 
 {if $group_by == 'time_created'}
 	<section n:if="$last_30_days->count()" class="lectures-group">
-		<div class="group-header">
-			<div class="group-header-label label-text">30</div>
-			<h2 class="group-header-title">Skladby přidané za posledních 30 dnů</h2>
-		</div>
+		{include group-header.latte, class => "label-text", label_text => "30", group_title => "Skladby přidané za posledních 30 dnů"}
 		{foreach $last_30_days as $record}
 			{include player-bar.latte, record => $record}
 		{/foreach}
 	</section>
 	<section n:if="$last_60_days->count()" class="lectures-group">
-		<div class="group-header">
-			<div class="group-header-label label-text">60</div>
-			<h2 class="group-header-title">Skladby přidané za posledních 60 dnů</h2>
-		</div>
+		{include group-header.latte, class => "label-text", label_text => "60", group_title => "Skladby přidané za posledních 60 dnů"}
 		{foreach $last_60_days as $record} 
 			{include player-bar.latte, record => $record}
 		{/foreach}
 	</section>
 	{if $records}
 	<section class="lectures-group">
-		<div class="group-header">
-			<div class="group-header-label label-text infinity">&infin;</div>
-			<h2 class="group-header-title">Starší skladby</h2>
-		</div>
+		{include group-header.latte, class => "label-text infinity", label_text => "&infin;", group_title => "Starší skladby"}
 		{foreach $records as $record} 
 			{include player-bar.latte, record => $record}
 		{/foreach}
@@ -70,15 +61,11 @@
 {if $group_by == 'music_genre_id'}
 	{foreach $groups as $group}
 	<section class="lectures-group">
-		<div class="group-header">
 		{if $group->music_genre_id == ""}
-			<div n:class="group-header-label" style="background-image: url('{$basePath}/images/music_genres/unclasified.jpg')"></div>
-			<h2 class="group-header-title">Nezařazené</h2>
+			{include group-header.latte, group_title => "Nezařazené", label_image => "{$basePath}/images/music_genres/unclasified.jpg"}
 		{else}
-			<div n:class="group-header-label" style="background-image: url('{$basePath}/images/music_genres/{$group->music_genre->image_file}')"></div>
-			<h2 class="group-header-title">{$group->music_genre->title}</h2>
+			{include group-header.latte, group_title => $group->music_genre->title, label_image => "{$basePath}/images/music_genres/{$group->music_genre->image_file}"}
 		{/if}
-		</div>
 		{foreach $records[$group->id] as $record}
 			{include player-bar.latte, record => $record}
 		{/foreach}

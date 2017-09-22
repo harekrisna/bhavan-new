@@ -16,10 +16,7 @@
 {if $group_by == 'music_interpret_id'}
 	{foreach $groups as $group}
 		<section class="lectures-group">
-			<div class="group-header">
-				<div class="group-header-label" style="background-image: url('/images/music_interpret_avatars/{$group->music_interpret->image}')"></div>
-				<h2 class="group-header-title">{$group->music_interpret->title}</h2>
-			</div>
+			{include group-header.latte, group_title => $group->music_interpret->title, label_image => "{$basePath}/images/music_interpret_avatars/{$group->music_interpret->image}"}
 			{foreach $records[$group->id] as $record} 
 				{include player-bar.latte, record => $record}
 			{/foreach}
@@ -52,24 +49,28 @@
 {if $group_by == 'album'}
 	{foreach $groups as $group}
 	{continueIf !$group->music_album_id}
-	<section class="lectures-group">
+	<section class="lectures-group-collapse">
 		<div class="group-header">
-			<h2 class="group-header-title text-only">{$group->music_album->title}</h2>
+			<h2 class="group-header-title link">{$group->music_album->title}</h2>
 		</div>
+		<div class="album-list">
 		{foreach $records[$group->music_album_id] as $record}
 			{include player-bar.latte, record => $record}
 		{/foreach}
+		</div>
 	</section>
 	{/foreach}
 
 	{ifset $records[""]}
-	<section class="lectures-group">
+	<section class="lectures-group-collapse">
 		<div class="group-header">
-			<h2 class="group-header-title text-only">Nezařazené</h2>
+			<h2 class="group-header-title link">Nezařazené</h2>
 		</div>
+		<div class="album-list">
 		{foreach $records[""] as $record}
 			{include player-bar.latte, record => $record}
 		{/foreach}
+		</div>
 	</section>
 	{/ifset}
 {/if}
