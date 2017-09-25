@@ -11,20 +11,36 @@ use Nette\Utils\Image;
 class GaleryPresenter extends BasePresenter
 {	
 	public function renderGaleries()	{
-		$this->template->galeries = $this->galery->getAll()
-												 ->where('active IS TRUE')
-												 ->order('galery_year DESC, galery_month DESC, galery_day DESC');
+		$this->template->galeries = $this->galery->getList();
 	}
 	
 	public function renderPhotos($galery_id) {
-		$galery = $this->galery->get($galery_id);
+		$selected_galery = $this->galery->get($galery_id);
 		
-		/*
-		if(!$galery->active)
-            throw new Nette\Application\BadRequestException;
-		*/
+		$galeries = $this->galery->getList();
+		        
+		$offset = 0;
+		foreach ($galeries as $galery) {
+			if($galery->id == $selected_galery->id) 
+				break;
+			else
+				$offset++;
+		}
 		
-		$this->template->galery = $galery;
+		if($offset == 0) {
+			$this->template->prev = false;        	
+        }
+        else {
+			$this->template->prev = $this->galery->getList()
+												 ->limit(1, $offset-1)
+												 ->fetch();
+		}
+        
+		$this->template->next = $this->galery->getList()
+											 ->limit(1, $offset+1)
+											 ->fetch();
+		
+		$this->template->galery = $selected_galery;
 		
 		$this->template->photos = $this->photo->getAll()
 											  ->where(["galery_id" => $galery_id])

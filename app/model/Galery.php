@@ -28,19 +28,6 @@ class Galery extends Table   {
 	            throw $e;
 	    }
 	}
-
-	public function getTitleById($id)  {
-		$galery = $this->get($id);
-		if($galery)
-			return $galery->url;
-	}
-	
-	public function getIdByTitle($url)  {
-		$galery = $this->findBy(array("url" => $url))->fetch();
-		if($galery) {
-			return $galery->id;	
-		}
-	}
 	
 	public function generateNumberArray($start, $end) {
 		$array = array();
@@ -50,4 +37,11 @@ class Galery extends Table   {
 		
 		return $array;
 	}
+
+    public function getList() {
+    	return $this->findAll()
+					->where('active IS TRUE')
+					->order('galery_year DESC, galery_month DESC, galery_day DESC');
+    }	
+	
 }

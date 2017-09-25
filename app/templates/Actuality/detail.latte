@@ -20,7 +20,7 @@
     {else}
         <div id="top_label_prev" class="link-hover-label label-picture"><img class="image-picture" src="{$basePath}/{=ACTUALITIES_IMG_FOLDER}/previews/program.jpg" />Programy pro veřejnost</div>
     {/if}
-    <div n:if="$next" id="top_label_next" id="label_next" n:class="link-hover-label, label-prev, $next->preview_image ? label-picture : label-text"><img n:if="$next->preview_image" class="image-picture" src="{$basePath}/{=ACTUALITIES_IMG_FOLDER}/previews/{$next->preview_image}" />{$next->title}</div>
+    <div n:if="$next" id="top_label_next" n:class="link-hover-label, label-prev, $next->preview_image ? label-picture : label-text"><img n:if="$next->preview_image" class="image-picture" src="{$basePath}/{=ACTUALITIES_IMG_FOLDER}/previews/{$next->preview_image}" />{$next->title}</div>
 </div>
 <article class="article-detail">
 	<h1 class="article-title">{$actuality->title}</h1>

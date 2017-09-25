@@ -1314,6 +1314,7 @@ footer .contact-info .link-mail {
 .article-detail .article-title {
   margin-left: 0;
   margin-bottom: 10px;
+  display: table;
   clear: both;
 }
 @media screen and (min-width: 600px) and (max-width: 767px) {
@@ -1495,7 +1496,7 @@ footer .contact-info .link-mail {
   position: absolute;
   top: 0;
   left: 0;
-  background: url("../images/layout/open-book.png") no-repeat center center / 35px 33px;
+  background: url("../images/layout/open-book.png") no-repeat center center / 30px 28px;
   transition: 0.3s;
 }
 .article-navigation .links-container .link-backlink .backlink-icon-out {

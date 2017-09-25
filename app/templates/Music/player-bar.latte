@@ -13,7 +13,7 @@
 		<a n:class="title, $isMobile ? 'title-padding'" n:href="Music:singleAudio, $record->id">{$record->title}</a>
 		{/if}
 	{/if}
-		<div class="download-alt"><a n:if="$isMobile" href="{$basePath}/mp3_music/{$record->music_interpret->mp3_folder}/{$record->mp3_file}" class="link download-alt-button" title="Staženo: {if $douwnloadcount}{$douwnloadcount}x{else}0x{/if}" download></a></div>
+		<div class="download-alt"><a n:if="$isMobile" onclick="$.get({link Music:increaseMp3Download, $record->id});" href="{$basePath}/mp3_music/{$record->music_interpret->mp3_folder}/{$record->mp3_file}" class="link download-alt-button" download></a></div>
 	</div>
 	<div n:class="audio-info, (!$record->music_album_id && !$show_interpret_link && !$record->place && !$record->music_year) ? empty-bar">
 		<div class="info-text">
@@ -23,19 +23,18 @@
 			<span n:if="$record->music_year">{$record->music_year, $record->music_month, $record->music_day|dynamicDate}</span>
 		</div>
 	</div>
-	
 	{if $isMobile}
-	<audio class="mobile" width="100%" src="{$basePath}/mp3_music/{$record->music_interpret->mp3_folder}/{$record->mp3_file}" type="audio/mp3" controls="controls" preload="none" data-id="{$record->id}" data-playcount="{if $playcount}{$playcount}{else}0{/if}" onplay="on_play(this, 'music')"></audio>
+	<audio class="mobile" width="100%" src="{$basePath}/mp3_music/{$record->music_interpret->mp3_folder}/{$record->mp3_file}" type="audio/mp3" controls="controls" preload="none" onplay="$.get({link Music:increaseMp3Playcount, $record->id});"></audio>
 	{else}
 	<div class="player-bar-container">	
-		<audio class="desktop" width="100%" src="{$basePath}/mp3_music/{$record->music_interpret->mp3_folder}/{$record->mp3_file}" type="audio/mp3" controls="controls" preload="none" data-id="{$record->id}" data-presenter="music" data-playcount="{if $playcount}{$playcount}{else}0{/if}"></audio>
+		<audio class="desktop" width="100%" src="{$basePath}/mp3_music/{$record->music_interpret->mp3_folder}/{$record->mp3_file}" type="audio/mp3" controls="controls" preload="none" data-increase_url="{link Music:increaseMp3Playcount, $record->id}" data-playcount="{if $playcount}{$playcount}{else}0{/if}"></audio>
 		<div class="hidder hidder-hide">
 			<div class="hidder-row">
 				<div class="hidder-cell transparent-part"></div>
 				<div class="hidder-cell download-part">
 					<div class="download-part-background">
 						<div class="mejs__button audio-download">
-							<a href="{$basePath}/mp3_music/{$record->music_interpret->mp3_folder}/{$record->mp3_file}" class="download-button" title="Staženo: {if $douwnloadcount}{$douwnloadcount}x{else}0x{/if}" download></a>
+							<a href="{$basePath}/mp3_music/{$record->music_interpret->mp3_folder}/{$record->mp3_file}" class="download-button" data-increase_url="{link Music:increaseMp3Download, $record->id}" title="Staženo: {if $douwnloadcount}{$douwnloadcount}x{else}0x{/if}" download></a>
 						</div>
 					</div>
 				</div>

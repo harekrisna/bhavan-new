@@ -1,5 +1,8 @@
+
 audio.mobile {
 	width: 100%;
+	
+
 }
 
 .audio-player {
@@ -118,6 +121,8 @@ audio.mobile {
 	}
 }
 
+
+
 .mejs-container.wide {
 	width: 581px !important;
 }
@@ -196,8 +201,8 @@ audio.mobile {
 						.download-button {
 							width: 30px;
 							height: 30px;
-							background: transparent url('mejs-download.svg') center center no-repeat;
-							background-size: 20px 20px;
+							background: transparent url('mejs-download.svg') center 6px no-repeat;
+							background-size: 18px 18px;
 							float: left;
 							display: block;
 							transition: 0.3s;
@@ -280,4 +285,17 @@ audio.mobile {
 		width: 70px;
 		background-color: #8e867a;
 	}
+}
+
+		/* schování download buttonu na mobilech (mám vlastní nad přehrávačem) */
+audio::-internal-media-controls-download-button {
+    display:none;
+}
+
+audio::-webkit-media-controls-enclosure {
+    overflow:hidden;
+}
+
+audio::-webkit-media-controls-panel {
+    width: calc(~"100% + 30px");
 }
