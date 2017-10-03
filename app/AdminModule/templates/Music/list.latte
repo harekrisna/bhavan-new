@@ -31,8 +31,8 @@
 			<td><a n:href="edit, $mp3->id">{$mp3->title}</a></td>
 			<td>{$mp3->interpret->abbreviation}</td>
 			<td>{if isset($mp3->music_genre_id)}{$mp3->music_genre->title}{/if}</td>
-	        <td class="center"></td>
-	        <td class="center"></td>
+	        <td class="center">{$mp3->related('music_playcount')->sum(playcount)}</td>
+	        <td class="center">{$mp3->related('music_downloadcount')->sum(downloadcount)}</td>
             <td><a class="button edit" n:href="edit, $mp3->id"></a><a class="button remove" n:href="delete!, $mp3->id"></a></td>
 		</tr>        
     {/foreach}
