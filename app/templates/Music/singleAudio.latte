@@ -1,0 +1,108 @@
+{extends layout.latte}
+{block head}
+	<link rel="stylesheet" media="screen" href="{$basePath}/css/mediaelementplayer.min.css">
+	<link rel="stylesheet" media="screen" href="{$basePath}/css/audio-player.css">
+{/block}
+{block audio}
+{var playcount = $record->related('music_playcount')->sum(playcount)}
+{var douwnloadcount = $record->related('music_downloadcount')->sum(downloadcount)}
+
+<div class="audio-player single-audio">
+	<div class="title-line">
+		<div n:class="title" n:href="singleAudio, $record->id">{$record->title}</div>
+		<div class="download-alt"><a n:if="$isMobile" onclick="$.get({link Music:increaseMp3Download, $record->id});" href="{$basePath}/mp3/{$record->music_interpret->mp3_folder}/{$record->mp3_file}" class="link download-alt-button" download></a></div>
+	</div>
+	<div class="audio-info">
+		<div class="info-text">
+			<a class="link" n:href="Music:interpret, $record->music_interpret->id, 'time_created'">{$record->music_interpret->title|replace:['HG ', 'HH '], ['']}</a>
+			<a n:if="$record->music_album_id" class="link" n:href="Music:album, $record->music_album_id">{$record->music_album->title}</a>
+			<span n:if="$record->place">{$record->place}</span>
+			<span n:if="$record->music_year">{$record->music_year, $record->music_month, $record->music_day|dynamicDate}</span>
+		</div>
+	</div>
+	
+	{if $isMobile}
+	<audio class="mobile" width="100%" src="{$basePath}/mp3_music/{$record->music_interpret->mp3_folder}/{$record->mp3_file}" type="audio/mp3" controls="controls" preload="none" onplay="$.get({link Music:increaseMp3Playcount, $record->id});"></audio>
+	{else}
+	<div class="player-bar-container">	
+		<audio class="desktop" width="100%" src="{$basePath}/mp3_music/{$record->music_interpret->mp3_folder}/{$record->mp3_file}" type="audio/mp3" controls="controls" preload="none" data-playcount="{if $playcount}{$playcount}{else}0{/if}"></audio>
+		<div class="hidder">
+			<div class="hidder-row">
+				<div class="hidder-cell transparent-part"></div>
+				<div class="hidder-cell download-part">
+					<div class="download-part-background">
+						<div class="mejs__button audio-download">
+							<a href="{$basePath}/mp3_music/{$record->music_interpret->mp3_folder}/{$record->mp3_file}" class="download-button" title="Staženo: {if $douwnloadcount}{$douwnloadcount}x{else}0x{/if}" download></a>
+						</div>
+					</div>
+				</div>
+				<div class="hidder-cell hidder-part"></div>
+			</div>
+		</div>
+	</div>
+	{/if}
+</div>
+<div class="category-list">Tato lekce je v kategoriích:
+	{foreach $categories as $category}
+	<a class="link" href="{$category['link']}" class="link-reverse">{$category['text']}</a>{sep}, {/sep}
+	{/foreach}
+	{if $record->music_album_id} a v albu: <a class="link" n:href="album, $record->music_album_id" class="link-reverse">{$record->music_album->title}</a>{/if}
+</div>
+{/block}
+{block scripts}
+{include parent}
+{if !$isMobile}
+	<script src="{$basePath}/js/mediaelement-and-player.min.js"></script>
+	<script>
+		$(function(){
+		  	var me = $('audio.desktop').mediaelementplayer({
+			    alwaysShowHours: true,
+			    alwaysShowControls: true,
+			    iPadUseNativeControls: false,
+			    iPhoneUseNativeControls: false,
+			    AndroidUseNativeControls: false,
+			});
+			
+			redraw_playcount_title($('audio'), $('audio').data('playcount'));
+			
+			// přičtení počtu stažení
+			$('.audio-player .download-button').on('click tap', function(event) {				
+				var download_link = $(this).closest('.audio-player').find('.download-link');	
+				var download_button = $(this).closest('.audio-player').find('.download-button');
+				
+				$.get({link Music:increaseMp3Download, $record->id}, 
+		            function(payload) {
+			            var downloadcount = payload.downloadcount;
+			            if(downloadcount == "") downloadcount = 0;
+						$(download_link).attr('title', 'Staženo: ' + downloadcount + 'x');
+						$(download_button).attr('title', 'Staženo: ' + downloadcount + 'x');
+		            }
+		        );
+			});
+
+			$('div.mejs__controls').append('<div class="mejs__button"><!-- padding --></div>');
+			
+			$('.mejs__playpause-button').click(function() {
+				var button = $(this).find('button').attr('aria-label');
+				var audio = $(this).closest('.audio-player').find('audio');
+				
+				if(button == 'Play') {
+					$.get({link Music:increaseMp3Playcount, $record->id}, 
+				        function(payload) {
+				            redraw_playcount_title(audio, payload.playcount)
+				        }
+				    );
+				}
+			});
+			
+			$('.player-bar-container').show();
+		});
+
+		function redraw_playcount_title(me, playcount) {
+			var player_bar = $(me).closest('div.player-bar-container');
+			var playpause_button = $(player_bar).find('div.mejs__playpause-button button');
+			$(playpause_button).attr('title', 'Přehráno: ' + playcount + 'x');	
+		}
+</script>
+{/if}
+{/block}

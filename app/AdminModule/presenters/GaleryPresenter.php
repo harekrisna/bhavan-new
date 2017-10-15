@@ -338,6 +338,7 @@ final class GaleryPresenter extends BasePresenter {
 	}
 
 	function actionGeneratePhotos($galery_id) {
+
 		$galery = $this->galery->get($galery_id);
 		$galery_dir = $this->galery_dir."/".$galery->photos_folder;
 		$galery->related("photo", "galery_id")->delete();
@@ -346,7 +347,8 @@ final class GaleryPresenter extends BasePresenter {
 			unlink($file_path);
 		}
 		
-		foreach (Finder::findFiles('*.jpg', '*.jpeg', '*.png', '*.gif')->in($galery_dir."/photos") as $file_path => $file) {			
+		foreach (Finder::findFiles('*.jpg', '*.jpeg', '*.png', '*.gif')->in($galery_dir."/photos") as $file_path => $file) {		
+			Debugger::fireLog($file_path);
 			$image = Image::fromFile($file_path);
 			
 			$pathinfo = pathinfo($file_path);
@@ -375,15 +377,34 @@ final class GaleryPresenter extends BasePresenter {
 		}
 		
 		$this->redirect("detail", $galery_id);
-	}
+	}	
 	
-	function actionSortPhotos($galery_id) {
+	function actionSortPhotosConcatAlg($galery_id) {
 		$galery = $this->galery->get($galery_id);
 		$folder = $galery->photos_folder;
+	
 		$photos = $this->photo->findAll()
 							  ->where(['galery_id' => $galery_id])
 							  ->order('CONCAT(REPEAT("0", 18 - LENGTH(file)), file)');
-		
+	
+				
+		$position = 1;
+		foreach($photos as $photo) {
+			Debugger::fireLog($photo);
+			$this->photo->update($photo->id, ['position' => $position]);
+			$position++;
+		}
+				
+		$this->redirect("detail", $galery_id);
+	}
+	
+	function actionSortPhotosLengthAlg($galery_id) {
+		$galery = $this->galery->get($galery_id);
+		$folder = $galery->photos_folder;
+
+		$photos = $this->photo->findBy(['galery_id' => $galery_id])
+							  ->order('LENGTH(file), file');
+				
 		$position = 1;
 		foreach($photos as $photo) {
 			$this->photo->update($photo->id, ['position' => $position]);
@@ -391,10 +412,8 @@ final class GaleryPresenter extends BasePresenter {
 		}
 				
 		$this->redirect("detail", $galery_id);
-	}	
-	
-	
-	
+	}
+
 	function handleUpdateDescription($photo_id, $text) {
     	$this->photo->update($photo_id, ["description" => $text]);
     	$this->sendPayload();

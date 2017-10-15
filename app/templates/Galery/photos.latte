@@ -6,6 +6,23 @@
 <link rel="stylesheet" href="{$basePath}/css/default-skin/default-skin.min.css" type="text/css" />{/block}
 {block content}
 {include breadcrumb_nav, backlinks => $backlinks}
+<nav class="next-prev-nav stand-alone" id="next_prev_nav">
+    {if $prev}
+        <a id="top_link_prev" class="link" n:href="photos, $prev->id">&laquo; předchozí</a>
+    {else}
+        <div class="link link-disabled">&laquo; předchozí</div>
+    {/if}
+    <span class="nav-delimiter">&#124;</span>
+    {if $next}
+        <a id="top_link_next" class="link link-next" n:href="photos, $next->id">následující &raquo;</a>
+    {else}
+        <div class="link link-disabled link-next">následující &raquo;</div>
+    {/if}
+</nav>
+<div class="next-prev-nav-labels-container nav-top">
+    <div n:if="$prev" id="top_label_prev" class="link-hover-label label-picture"><img class="image-picture" src="{$basePath}/images/galery/{$prev->photos_folder|noescape}/galery_image.jpg" />{$prev->title}</div>
+    <div n:if="$next" id="top_label_next" class="link-hover-label label-prev label-picture"><img class="image-picture" src="{$basePath}/images/galery/{$next->photos_folder|noescape}/galery_image.jpg" />{$next->title}</div>
+</div>
 <h1>{$galery->title}</h1>
 <div id="gallery" n:inner-foreach="$photos as $photo">
 	<a href="{$basePath}/images/galery/{$galery->photos_folder}/photos/{$photo->file}">

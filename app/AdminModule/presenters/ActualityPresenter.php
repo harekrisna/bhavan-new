@@ -86,7 +86,7 @@ final class ActualityPresenter extends BasePresenter {
             throw new Nette\Application\BadRequestException;
 
 		$this->actuality->update($actuality_id, array("preview_image" => NULL));
-		unlink("images/actuality/previews/".$actuality->preview_image);	
+		@unlink("images/actuality/previews/".$actuality->preview_image);	
 		$this->redirect("edit", $actuality_id);
 	}
 	
@@ -175,6 +175,7 @@ final class ActualityPresenter extends BasePresenter {
         	if($values['article_image']->isOK()) {
 				$article_file_name = $new_row->id."_".$values['article_image']->name;
 				$image = $values['article_image']->toImage();
+				$image->resize(560, null);
 				$image->save("images/actuality/".$article_file_name);
 				$this->actuality->update($new_row->id, array("article_image" => $article_file_name));
 	        }
@@ -227,6 +228,7 @@ final class ActualityPresenter extends BasePresenter {
 					
 				$file_name = $this->actuality_record->id."_".$values['article_image']->name;
 				$image = $values['article_image']->toImage();
+				$image->resize(560, null);
 				$image->save("images/actuality/".$file_name);
 				$this->actuality->update($this->actuality_record->id, array("article_image" => $file_name));
 	        }

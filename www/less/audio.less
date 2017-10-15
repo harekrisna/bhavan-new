@@ -1,3 +1,7 @@
+.audio-section {
+	margin-top: 5px;
+}
+
 .audio_nav {
 	.link:not(:last-child):after {
 		content: '|';
@@ -10,37 +14,32 @@
 }
 
 .lectures-group {
-	margin-bottom: 90px;
+	margin-bottom: 70px;
 	
 	&:first-of-type {
-		margin-top: 36px;
+		margin-top: 16px;
+	}
+	
+	&.group-continual {
+		margin-top: 20px;
+	}
+
+	&.lg-collapse {
+		margin-bottom: 40px;
 	}
 	
 	.group-header {
 		width: 100%;
-		margin: 20px 0 -20px 0;
-		clear: both;
-		
-		.group-header-title {
-			font-family: "PT Sans",sans-serif;
-			font-weight: normal;
-			font-size: 23px !important;
-			color: #333333;
-			border-bottom: 2px solid rgba(235, 140, 58, 0.78);
-			margin-left: 90px !important;
-			display: block;
-			position: relative;
-			top: -50px;
-		}
+		height: 75px;
+		margin-bottom: 20px;
 		
 		.group-header-label {
 			width: 75px;
 			height: 75px;
 			border-radius: 15px 0 15px 0;
 			background-size: 75px;
-			margin: -20px 15px 0 0;
-			display: block;
 			float: left;
+			
 
 			&.label-text {
 				font-size: 30px;
@@ -62,10 +61,71 @@
 			&.alt-color {
 				background-color: #796956;
 			}
+
+			&.unknown-label {
+				
+				background-color: #BBBBBB;
+			}
+		}
+
+
+		.group-header-title {
+			height: 75px;
+			margin-left: 90px;
+			border-bottom: 2px solid rgba(235, 140, 58, 0.78);
+			line-height: 75px;
+
+			h2 {
+				font-family: "PT Sans",sans-serif;
+				font-weight: normal;
+				font-size: 23px !important;
+				vertical-align:middle;
+				color: #333333;
+				margin: 0;
+				display: inline-block;	
+				clear: none;	
+			}
 		}
 	}
 }
 
-.category-list {
+.lectures-group-collapse {
+	.desktop-screen({
+		width: 70%;
+	});
+	
+	.tablet-wide-screen({
+		width: 80%;
+	});
+	
+	&:first-of-type {
+		.group-header-title {
+			margin-top: 10px !important;
+		}
+	}
+
+	.group-header {
+		width: 100%;
+		clear: both;
 		
+		.group-header-title {
+			font-family: "PT Sans",sans-serif;
+			font-weight: normal;
+			font-size: 23px;
+			color: #333333;
+			//border-bottom: 2px solid rgba(235, 140, 58, 0.78);
+			background-image: linear-gradient(to right, rgba(235, 140, 58, 0.78) 40%, rgba(255, 255, 255, 0) 20%);
+			background-position: bottom;
+			background-size: 4px 2px;
+			background-repeat: repeat-x;
+			margin-top: 20px;
+		}		
+	}
+
+	.album-list {
+		height: 100%;
+		display: none;
+		margin-bottom: 40px;
+
+	}
 }

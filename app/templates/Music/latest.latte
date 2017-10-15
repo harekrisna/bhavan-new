@@ -1,0 +1,33 @@
+{extends layout.latte}
+{block head}
+	<link rel="stylesheet" media="screen" href="{$basePath}/css/mediaelementplayer.min.css">
+	<link rel="stylesheet" media="screen" href="{$basePath}/css/audio-player.css">
+{/block}
+{block audio}
+{include navigation}
+<section n:if="$last_30_days->count()" class="lectures-group">
+	{include group-header.latte, class => "label-text", label_text => "30", group_title => "Skladby přidané za posledních 30 dnů"}
+	{foreach $last_30_days as $record} 
+		{include player-bar.latte, record => $record, show_interpret_link => true}
+	{/foreach}
+</section>
+<section n:if="$last_60_days->count()" class="lectures-group">
+	{include group-header.latte, class => "label-text", label_text => "60", group_title => "Skladby přidané za posledních 60 dnů"}
+{foreach $last_60_days as $record} 
+	{include player-bar.latte, record => $record, show_interpret_link => true}
+{/foreach}
+</section>
+<section class="lectures-group">
+	{include group-header.latte, class => "label-text infinity", label_text => "&infin;", group_title => "Starší skladby"}
+{foreach $records as $record} 
+	{include player-bar.latte, record => $record, show_interpret_link => true}
+{/foreach}
+</section>
+{/block}
+{block scripts}
+{include parent}
+{if !$isMobile}
+	<script src="{$basePath}/js/mediaelement-and-player.min.js"></script>
+	<script src="{$basePath}/js/mediaelement-and-player.init.js"></script>
+{/if}
+{/block}

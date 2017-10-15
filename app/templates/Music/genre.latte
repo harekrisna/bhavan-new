@@ -1,0 +1,85 @@
+{extends layout.latte}
+{block head}
+	<link rel="stylesheet" media="screen" href="{$basePath}/css/mediaelementplayer.min.css">
+	<link rel="stylesheet" media="screen" href="{$basePath}/css/audio-player.css">
+{/block}
+{block audio}
+<div class="audio-section">
+	<h1 n:inner-block="title">{$genre->title}</h1>
+	<nav class="audio_nav">
+		<span>Seskupit podle:</span>
+		<a n:href="genre, $genre->id, 'album'" class="link{ifCurrent Music:genre, $genre->id, 'album'} current{/ifCurrent}">Alba</a>
+			<a n:href="genre, $genre->id, 'alphabetical'" class="link{ifCurrent Music:genre, $genre->id, 'alphabetical'} current{/ifCurrent}">Abecedně</a>
+		<a n:href="genre, $genre->id, 'music_interpret_id'" class="link {ifCurrent Music:genre, $genre->id, 'music_interpret_id'} current{/ifCurrent}">Autorů</a>
+		{*<a n:href="genre, $genre->id, 'music_year'" class="link {ifCurrent Music:genre, $genre->id, 'music_year'} current{/ifCurrent}">Roků</a>*}
+	</nav>
+{if $group_by == 'music_interpret_id'}
+	{foreach $groups as $group}
+		<section class="lectures-group">
+			{include group-header.latte, group_title => $group->music_interpret->title, label_image => "{$basePath}/images/music_interpret_avatars/{$group->music_interpret->image}"}
+			{foreach $records[$group->id] as $record} 
+				{include player-bar.latte, record => $record}
+			{/foreach}
+		</section>
+	{/foreach}
+{/if}
+
+{if $group_by == 'music_year'}
+	{foreach $groups as $group}
+		<section class="lectures-group">
+			<div class="group-header">
+				<div n:class="group-header-label, label-text, !$group->music_year ? 'unknown-label' : 'year-label', $group->music_year < 2000 ? 'alt-color'">{$group->music_year ?: "?"}</div>
+				<h2 class="group-header-title">{if $group->music_year}Skladby z roku {$group->music_year}{else}Neznámý rok{/if}</h2>
+			</div>
+			{foreach $records[$group->id] as $record} 
+				{include player-bar.latte, record => $record}
+			{/foreach}
+		</section>
+	{/foreach}
+{/if}
+
+{if $group_by == 'alphabetical'}
+	<section class="lectures-group group-continual">
+		{foreach $records as $record}
+			{include player-bar.latte, record => $record}
+		{/foreach}
+	</section>
+{/if}
+
+{if $group_by == 'album'}
+	{foreach $groups as $group}
+	{continueIf !$group->music_album_id}
+	<section class="lectures-group-collapse">
+		<div class="group-header">
+			<h2 class="group-header-title link">{$group->music_album->title}</h2>
+		</div>
+		<div class="album-list">
+		{foreach $records[$group->music_album_id] as $record}
+			{include player-bar.latte, record => $record}
+		{/foreach}
+		</div>
+	</section>
+	{/foreach}
+
+	{ifset $records[""]}
+	<section class="lectures-group-collapse">
+		<div class="group-header">
+			<h2 class="group-header-title link">Nezařazené</h2>
+		</div>
+		<div class="album-list">
+		{foreach $records[""] as $record}
+			{include player-bar.latte, record => $record}
+		{/foreach}
+		</div>
+	</section>
+	{/ifset}
+{/if}
+</div>
+{/block}
+{block scripts}
+{include parent}
+{if !$isMobile}
+	<script src="{$basePath}/js/mediaelement-and-player.min.js"></script>
+	<script src="{$basePath}/js/mediaelement-and-player.init.js"></script>
+{/if}
+{/block}

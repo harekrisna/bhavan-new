@@ -1,0 +1,15 @@
+{extends layout.latte}
+{block audio}
+{include navigation}
+<div class="row list collection-list">
+	<div class="col-md-6" n:foreach="$interprets as $interpret">
+		<div class="list-box">
+			<a class="list-box-title sms-down" n:href="interpret, $interpret->id">{$interpret->title}</a>
+			<div class="list-box-image" style="background-image: url('/images/music_interpret_avatars/{$interpret->image}');"></div>
+			<a class="list-box-title sms-up" n:href="interpret, $interpret->id">{$interpret->title}</a>
+			<p class="list-box-text">{!$interpret->description}</p>
+			<span class="list-box-note">{$interpret->related("music", "music_interpret_id")->count()|czPlural}</span>
+	    </div>
+	</div>
+</div>
+{/block}

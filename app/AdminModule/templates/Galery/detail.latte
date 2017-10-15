@@ -7,7 +7,8 @@
 	<h1 n:block=title>Galerie: {$galery->title}</h1>
 	<nav id="sub_actions">
 		<a class="generate-photos" n:href="generatePhotos, $galery->id">Generovat fotky z adresáře</a>
-		<a class="sort" n:href="sortPhotos, $galery->id">Seřadit fotky podle názvu souboru</a>
+		<a class="sort" n:href="sortPhotosConcatAlg, $galery->id">Seřadit fotky (CONCAT algoritmus)</a>
+		<a class="sort" n:href="sortPhotosLengthAlg, $galery->id">Seřadit fotky (LENGTH algoritmus)</a>
 	</nav>
 </div>
 <table id="galery_info">

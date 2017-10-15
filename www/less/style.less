@@ -6,6 +6,7 @@
 @import "collection.less";
 @import "audio.less";
 
+
 /**********************
        CONSTANTS
 ***********************/
@@ -19,6 +20,12 @@
 ***********************/
 
 // Mixins for mediaqueries
+.desktop-screen(@rules) {
+	@media screen and (min-width: 1199px) {
+        @rules();
+    }
+}
+
 .tablet-wide-screen(@rules) {
     @media screen and (min-width: 992px) and (max-width: 1199px) {
         @rules();
@@ -127,6 +134,12 @@
 	});
 }
 
+.hide-lms-up {
+    .large-mobile-screen-up({
+        display: none !important;
+    });
+}
+
 .visible-ts  {
     .tablet-screen({
         display: block;
@@ -145,13 +158,14 @@ a:hover, a:focus{
 .link {
 	color: @webTextColor;
 	transition: 0.3s; 
+    cursor: pointer;
 
 	&.current {
-		color: @webTextColorHover;
+		color: @webTextColorHover !important;
 	}	
 
 	&:hover {
-		color: @webTextColorHover;
+		color: @webTextColorHover !important;
 		transition: 0.3s; 
 	}
 	
@@ -165,7 +179,7 @@ a:hover, a:focus{
     transition: 0.3s; 
 
     &.current {
-        color: @webTextColor;
+        color: @webTextColor !important;
     }   
 
     &:hover {
@@ -196,8 +210,13 @@ a:hover, a:focus{
     }
 }
 
+.link-current {
+    color: @webTextColorHover;
+}
+
 .link-disabled {
-    color: #BBBBBB;
+    color: #BBBBBB !important;
+    cursor: not-allowed;
 
     &:hover {
         color: #BBBBBB !important;

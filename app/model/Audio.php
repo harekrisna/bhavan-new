@@ -32,4 +32,8 @@ class Audio extends Table   {
 							 ORDER BY year DESC");
 	}
 	
+	public function searchLectures($pattern) {
+		return $this->findAll()
+					->where("title LIKE ?", "%".$pattern."%");
+	}
 }

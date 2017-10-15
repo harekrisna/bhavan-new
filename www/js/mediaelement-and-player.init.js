@@ -1,25 +1,36 @@
-$(function(){
+$(function() {
   	var me = $('audio.desktop').mediaelementplayer({
 	    alwaysShowHours: true,
 	    alwaysShowControls: true,
 	    iPadUseNativeControls: false,
 	    iPhoneUseNativeControls: false,
 	    AndroidUseNativeControls: false,
+
+	    success: function (mediaElement, domObject) {
+
+	        // Event listeners
+
+	        mediaElement.addEventListener('seeking', function (e) {
+	            var audio_player = $(mediaElement).closest('.audio-player');
+	            var time_float = $(audio_player).find('.mejs__controls .mejs__time-float');
+	            $(time_float).show();
+
+	        }, false);
+        }
 	});
 	
-	$('section.lectures-group audio').each(function(index) {
+	$('div.audio-section audio').each(function(index) {
 		redraw_playcount_title(this, $(this).data('playcount'));
+		console.log("lol");
 	});
 	
 	// přičtení počtu stažení
-	$('.audio-player .download-link, .audio-player .download-button').on('click tap', function(event) {
-		var audio_player = $(this).closest('div.audio-player');
-		var	audio = $(audio_player).find('audio');
-		var audio_id = $(audio).data('id');
+	$('.audio-player .download-button').on('click', function(event) {
 		var download_link = $(this).closest('.audio-player').find('.download-link');	
 		var download_button = $(this).closest('.audio-player').find('.download-button');
-		
-		$.get('increase-mp3-download/' + audio_id, 
+		var url = $(download_button).data('increase_url');
+						
+		$.get(url, 
             function(payload) {
 	            var downloadcount = payload.downloadcount;
 	            if(downloadcount == "") downloadcount = 0;
@@ -36,34 +47,37 @@ $(function(){
 		var audio = $(this).closest('.audio-player').find('audio');
 		
 		if(button == 'Play') {
-			on_play(audio);
+			var audio_player = $(audio).closest('.audio-player');
+			var hidder = audio_player.find('.hidder');
+			var url = $(audio).data('increase_url');
+			
+			$(audio_player).find('.mejs__controls').addClass('on-play');
+			$(audio_player).find('.download-part-background').addClass('on-play');
+		
+			$('.audio-player .hidder').addClass("hidder-hide");
+		
+			hidder.removeClass('hidder-hide');
+			
+			$.get(url, 
+		        function(payload) {
+		            redraw_playcount_title(audio, payload.playcount)
+		        }
+		    );
 		}
 		
 		if(button == 'Pause') {
-			on_pause(audio);
+			var audio_player = $(audio).closest('.audio-player');
+			var hidder = audio_player.find('.hidder');
+		
+			$(audio_player).find('.mejs__controls').removeClass('on-play');
+			$(audio_player).find('.download-part-background').removeClass('on-play');
+		
+			hidder.addClass("hidder-hide");
 		}
 	});
+
+	$('.player-bar-container').show();
 });
-
-function on_play(audio) {
-	var audio_player = $(audio).closest('.audio-player');
-	var hidder = audio_player.find('.hidder');
-	var audio_id = $(audio).data('id');
-	
-	hidder.removeClass('hidder-hide');
-	$.get('increase-mp3-playcount/' + audio_id, 
-        function(payload) {
-            redraw_playcount_title(audio, payload.playcount)
-        }
-    );
-}
-
-function on_pause(audio) {
-	var audio_player = $(audio).closest('.audio-player');
-	var hidder = audio_player.find('.hidder');
-	
-	hidder.addClass("hidder-hide");
-}
 
 function redraw_playcount_title(me, playcount) {
 	var player_bar = $(me).closest('div.player-bar-container');

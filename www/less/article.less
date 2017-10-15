@@ -1,33 +1,21 @@
 .article-detail {
+	font-family: Georgia, serif;
+	font-size: 16px;
+	width: 100%;
 	margin-bottom: 50px;
+	
+	&.font-inherit {
+		font-family: inherit;
+	}
 
-	a {
-		color: #EB8C3A;
-		transition: 0.3s; 
-		
-		&:hover {
-			color: #12323D;
-			transition: 0.3s; 
-		}	
+	&.in-content {
+		margin-bottom: 25px !important;
 	}
 	
-	hr {
-		border-top: 1px #000 solid;
-	}
-
-	h3 {
-		margin: 15px 0;
-	}
-
-	p {
-	    text-align: justify;
-	    margin-bottom: 20px;
-	}
-    
 	.article-title {
-		clear: both;
 		margin-left: 0;
 		margin-bottom: 10px;
+		display: table;
 		clear: both;
 
 		.large-mobile-screen({
@@ -41,140 +29,233 @@
 		})
 	}
 	
+	.article-image {
+		width: 30%; 
+		margin: 5px 0 10px 20px;
+		float: right;
+		box-shadow: 10px 9px 22px -10px rgba(0,0,0,0.55);			
+		
+		&.main-image {
+			margin-top: 0;
+		}
+		
+		&.article-main-image-mobile {
+			width: 40%;
+			
+			.ts-up({
+				display: none;
+			});
+		}
+		
+		&.article-main-image-wide {
+			width: 31.5%;
+
+			.tws-down({
+				display: none ;
+			});
+			
+			img {
+				width: 100%;
+			}
+		}
+	}	
+
 	.article-text {
-		.ts-up({width: 66%})
+		a {
+			color: #EB8C3A;
+			transition: 0.3s; 
+			
+			&:hover {
+				color: #12323D;
+				transition: 0.3s; 
+			}	
+		}
+		
+		hr {
+			border-top: 1px #000 solid;
+		}
+
+		h3 {
+			margin: 15px 0;
+		}
+
+		p {
+		    text-align: justify;
+		    margin-bottom: 20px;
+		}
 	}
 	
-	.article-image {
-		width:50%; 
-		border-radius: 70px 0;
-		margin: 30px 0 0px 15px;
+	.article-container {
+		width: 100%;
+		float: left;
+
+		.ts-up({width: 66%});
+	}
+	
+	.article-category-links {
+		width: 32%;
+		background-color: rgba(255, 246, 216, 0.55);
+		box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.3);
+		padding: 0 10px 5px 10px;
 		float: right;
-		position: relative;
-		top: -20px;
-
+		
 		.tws-down({
-			border-radius: 40px 0;
+			display: none;
 		});
+		
+		.article-category-links-title {
+			font-size: 21px;
+			color: #eb8c3a;
+			padding: 20px 0 15px 10px;
+		
+			.acl-title-delimiter {
+				width: 40px;
+				text-align: center;
+				display: inline-block;
+			}
+		}
+		
+		#article_category_links_slideshow {
+			width: 100%;
+			height: 320px;
+			visibility: hidden;
+			div[u=slides], img[u=image] {
+				width: 100%;
+				height: 320px;
+			}
+		}
 
-		.extra-small-screen({
-			border-radius: 20px 0;
-		});
+		.article-category-links-list {
+			padding-left: 30px;
+
+			.article-category-links-item {
+				padding: 0 0 5px 5px;
+
+				.article-category-links-item-link {
+					font-size: 17px;
+					max-width: 95%;
+					white-space: nowrap;
+					overflow: hidden;
+					text-overflow: ellipsis;
+					display: inline-block;
+					vertical-align: bottom;
+					line-height: 26px;
+				}
+			}
+		}
+
+		.acl-next-prev {
+			font-size: 17px;
+			margin-bottom: 10px;
+
+			.acl-np-prev {
+				color: #12323d;
+				background-color: transparent;
+				border: 0;
+				transition: 0.3s;
+				margin-left: 5px;
+
+				&:hover {
+					color: #eb8c3a;
+					transition: 0.3s;
+				}
+
+				&:focus {
+					transition: 0.3s;
+				}
+			}
+
+			.acl-np-next {
+				color: #12323d;
+				background-color: transparent;
+				border: 0;
+				transition: 0.3s;
+				margin-right: 5px;
+				float: right;
+
+				&:hover {
+					color: #eb8c3a;
+					transition: 0.3s;
+				}
+
+				&:focus {
+					transition: 0.3s;
+				}
+			}
+		}
 	}
 }
 
 .article-navigation {
-	font-size: 16px;
-	height: 110px;
-	margin-top: 60px;
-
-	.article-navigation-linkbox {
-		float: left;
+	margin-bottom: 40px;
+	
+	.links-container {
+		width: 100%;
+		height: 38px;
 		
-		&.link-right {
-			float: right;
-			
-			.link-hover-label {
-				position: inherit;
-			}
-		}
-		
-		&:hover {
-			.article-navigation-link {
-				color: @webTextColorHover;	
-			}
-			
-			.link-hover-label {
-				opacity: 1;
-				transition: 0.3s; 
-			}
-			
-			.link-backlink .icon-line{	 
-				background: @webTextColorHover !important;	
-				transition: 0.3s; 
-			}
-		}
-		
-		.article-navigation-link {
-			font-size: 15px;
-			height: 38px;
-			line-height: 28px;
+		.nav-link {
 			display: block;
-			
-			&.link-backlink {
-				width: 40px;
-				height: 38px;
-				margin-right: 20px;
-				padding-top: 12px;
-
-				.icon-line {
-					width: 23px;
-					height: 2px;
-					border-radius: 1px;
-					background: @webTextColor;
-					margin: 0 auto;
-					transition: 0.3s; 
-
-					&:not(:first-child) {
-						margin-top: 4px;
-					}
-				}
-			}
-
-			&.link-prev {
-				width: 250px;
-				padding: 5px 10px;
-
-				&:before {
-					content:'«';
-					margin-right: 5px;
-				}
-			}
-			
-			&.link-next {
-				text-align: right;
-				padding: 5px 10px;
-
-				&:after {
-					content:'»';
-					margin-left: 5px;
-				}
-			}
+			padding: 0 10px;
 		}
-
-		.link-hover-label {
-			color: @webTextColor;
-			position: absolute;
-			background-color: #FFFFFF;
-			box-shadow: 0px 0px 20px 0px rgba(200,200,200,0.5);
-			display: inline-block;
-			opacity: 0;
-			transition: 0.3s;
-
-			&:hover {
-				opacity: 1;
-			}
-
-			&.label-text {
-				font-size: 15px;
-				padding: 10px 15px;
-			}
-
-			&.label-picture {
-				font-size: 15px;
-				line-height: 61px;
-				height: 79px;
-				padding: 10px 20px 10px 10px;
-
-				.image-picture {
-					width: 58px;
-					height: 58px;
-					margin-right: 20px;
-					border-radius: 10px 0 10px 0;
-					display: block;
-					float: left;
+		
+		.link-backlink {
+			position: relative;
+			float: left;
+			width: 35px;
+			height: 33px;
+			margin-right: 20px;
+			padding-top: 12px;
+		    
+		    &:hover {
+    			.backlink-icon-out {
+	    			opacity: 0;
+    			}	    
+    			
+			    .backlink-icon-hover {
+				    opacity: 100;
 				}
+		    }
+		    
+		    .backlink-icon {
+    			width: inherit;
+				height: inherit;
+			    position: absolute;
+			    top: 0;
+			    left: 0;
+    		    background: url("../images/layout/open-book.png") no-repeat center center / 30px 28px;
+    		    transition: 0.3s; 
+		    }
+			
+			.backlink-icon-out {
+				opacity: 100;
+				z-index: 5;
 			}
+			
+		    .backlink-icon-hover {
+    		    background-image: url("../images/layout/open-book-hover.png");
+    		    z-index: 10;
+    		    opacity: 0;
+		    }		    
+		}
+		
+		.link-prev {
+			margin-top: 7px;
+			float: left;
+		}
+		
+		.link-next {
+			margin-top: 7px;
+			float: right;
+		}
+	}
+	
+	.next-prev-nav-labels-container {
+		.label-prev {
+			left: 60px;
+		}
+		
+		.label-next {
+			right: 0;
 		}
 	}
 }

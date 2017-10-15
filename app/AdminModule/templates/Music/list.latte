@@ -1,0 +1,51 @@
+{extends layout.latte}
+{block title}Skladby{/block}
+{block audio-content}
+<table id="audio_list" class="list">
+	<thead>
+    	<tr>
+	        <th><span>Datum přidání</span></th>
+	        <th><span>Datum skladby</span></th>
+	        <th><span>Název</span></th>
+	        <th><span>Interpret</span></th>
+			<th><span>Žánr</span></th>
+			<th><span style="padding: 0">P</span></th>
+			<th><span style="padding: 0">D</span></th>
+	        <th></th>
+		</tr>
+    </thead>
+    <tbody id="table_list">
+    {foreach $music as $mp3}
+        <tr id="{$mp3->id}">
+	        <td class="date">
+		        <span class="sort-helper">{$mp3->time_created|date: 'Y'}x{$mp3->time_created|date: 'm'}x{$mp3->time_created|date: 'd'}x{$mp3->time_created|date: 'H:i:s'}</span>{$mp3->time_created|date: 'j.n.Y H:i:s'}</td>
+            <td class="date">
+	            {if $mp3->music_month && $mp3->music_day}
+		            <span class="sort-helper">{$mp3->music_year}x{$mp3->music_month}x{$mp3->music_day}</span><span class="day">{$mp3->music_day}</span><span class="month">{$mp3->music_month}</span>{$mp3->music_year}
+	            {elseif $mp3->music_month}
+		            <span class="sort-helper">{$mp3->music_year.'x'.$mp3->music_month.'00'}</span><span class="month">{$mp3->music_month}</span>{$mp3->music_year}
+	            {else}
+		            <span class="sort-helper">{$mp3->music_year.'00x00'}</span>{$mp3->music_year}
+	            {/if}
+	        </td>
+			<td><a n:href="edit, $mp3->id">{$mp3->title}</a></td>
+			<td>{$mp3->interpret->abbreviation}</td>
+			<td>{if isset($mp3->music_genre_id)}{$mp3->music_genre->title}{/if}</td>
+	        <td class="center">{$mp3->related('music_playcount')->sum(playcount)}</td>
+	        <td class="center">{$mp3->related('music_downloadcount')->sum(downloadcount)}</td>
+            <td><a class="button edit" n:href="edit, $mp3->id"></a><a class="button remove" n:href="delete!, $mp3->id"></a></td>
+		</tr>        
+    {/foreach}
+    </tbody>
+</table>
+{/block}
+{block scripts}
+{include parent}
+  <script src="{$basePath}/js/admin.js"></script>
+  <script src="{$basePath}/js/jquery.tablesorter.min.js"></script>
+  <script>      
+	$(function(){
+		$('#audio_list').tablesorter();
+	});
+  </script>
+{/block}

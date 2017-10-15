@@ -102,7 +102,7 @@ final class SlidesPresenter extends BasePresenter {
 				 ->addRule($form::IMAGE, 'Obrázek musí být JPEG, PNG nebo GIF');
 
 		$actualities = $this->actuality->findAll()
-									   ->order('actuality_date DESC');
+									   ->order('date_from DESC');
 
 		foreach($actualities as $actuality) {
 			$url = "aktuality/".$actuality->url;

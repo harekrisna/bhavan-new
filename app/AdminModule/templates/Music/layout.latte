@@ -1,0 +1,19 @@
+{layout ../@layout.latte}
+{block left-column}
+<ul>
+	<li><a {ifCurrent 'list', 'all'}class="current"{/ifCurrent} n:href="list, all">Vše</a></li>
+	<li n:foreach="$interprets as $interpret"><a {ifCurrent 'list', $interpret->id}class="current"{/ifCurrent} n:href="list, $interpret->id">{$interpret->abbreviation}</a></li>
+</ul>
+{/block}
+{block content}
+<div id="head_line">
+	<h1>Hudba</h1>
+	<nav id="sub_actions">
+		<a class="mp3-list" n:href="list">Skladby</a>
+		<a class="add" n:href="add">Přidat skladbu</a>
+		<a class="interprets" n:href="MusicInterpret:list">Interpreti</a>
+		<a class="albums" n:href="MusicAlbum:list">Alba</a>
+	</nav>
+</div>
+{include audio-content}
+{/block}

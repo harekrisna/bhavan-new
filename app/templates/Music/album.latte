@@ -1,0 +1,21 @@
+{extends layout.latte}
+{block head}
+	<link rel="stylesheet" media="screen" href="{$basePath}/css/mediaelementplayer.min.css">
+	<link rel="stylesheet" media="screen" href="{$basePath}/css/audio-player.css">
+{/block}
+{block title}{$album->title} | Hudba{/block}
+{block audio}
+<div class="audio-section">
+	<h1 class="scale-text"><span>Album: {$album->title}</span></h1>
+	{foreach $records as $record} 
+		{include player-bar.latte, record => $record, show_interpret_link => true, title_only_text => true}
+	{/foreach}
+</div>
+{/block}
+{block scripts}
+{include parent}
+{if !$isMobile}
+	<script src="{$basePath}/js/mediaelement-and-player.min.js"></script>
+	<script src="{$basePath}/js/mediaelement-and-player.init.js"></script>
+{/if}
+{/block}

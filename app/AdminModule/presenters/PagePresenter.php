@@ -36,7 +36,7 @@ final class PagePresenter extends BasePresenter {
 		                   ->fetch();
 
         $this->template->page_name = $this->pageName;
-        
+
 		if ($page) {
             $this["pageForm"]->setDefaults($page);
             
@@ -58,7 +58,9 @@ final class PagePresenter extends BasePresenter {
 	public function pageFormSucceeded(Form $form, $values)	{
     	$page = $this->page->findBy(['page' => $this->pageName])
     	                   ->fetch();
-    	                   
+    	
+Debugger::fireLog($this->pageName);
+
 		$page->update(['text' => $values['text']]);
 
         $this->flashMessage('Text uložen.', 'success');

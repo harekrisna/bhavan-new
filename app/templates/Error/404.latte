@@ -1,8 +1,75 @@
 {block content}
-<h1 n:block=title>Page Not Found</h1>
+    <div class="error-404-wrapper">
+		<div class="error-404-label">
+			<h1 class="error-title scale-text"><span>{block title}Stránka nenalezena{/block}</span></h1>
+			<p class="error-text">Požadovaná stránka nebyla nalezena.<br /> Je možné, že je adresa nesprávná nebo již neexistuje.<br /><small>error 404</small></p>
+		</div>
+	</div>
+	<style>
+		.error-404-wrapper {
+			width: 100%;
+			display: inline-block;
+			position: relative;
+		}
+		
+		.error-404-wrapper:after {
+			padding-top: 59.48%;
+			display: block;
+			content: '';
+		}
+		
+		.error-404-label {
+			position: absolute;
+			top: 0;
+			bottom: 0;
+			right: 0;
+			left: 0;
+			background-image: url('./images/layout/maha-vishnu.png');
+			background-repeat:no-repeat;
+			background-size:contain;
+			background-position:bottom;
+		}
+		
+		.main-content {
+			min-height: 0;
+		}
 
-<p>The page you requested could not be found. It is possible that the address is
-incorrect, or that the page no longer exists. Please use a search engine to find
-what you are looking for.</p>
+		@media screen and (max-width: 991px) {
+			.error-text {
+				width: 40%;
+			}
+		}		
+		
+		@media screen and (max-width: 767px) {
+			.error-title {
+				padding-left: 15px;
+			}
 
-<p><small>error 404</small></p>
+			.error-text {
+				padding-left: 15px;
+			}
+						
+			.main-content {
+				margin-bottom: 0;
+				padding-left: 0;
+				padding-right: 0;
+			}
+			
+			.error-title {
+				font-size: 28px;
+			}
+		}
+
+		@media screen and (max-width: 600px) {
+			.error-404-label, .error-404-wrapper {
+				height: 85vw;
+				min-height: 300px;
+			}
+			
+			.error-text {
+				width: 100%;
+			}
+		}
+		
+	</style>
+{/block}
