@@ -17,7 +17,7 @@
 	{foreach $groups as $group}
 	<section class="lectures-group">
 		<div class="group-header">
-			<div class="group-header-label" style="background-image: url('/images/music_interpret_avatars/{$group->music_interpret->image}')"></div>
+			<div class="group-header-label" style="background-image: url('/images/music_interpret_avatars/{$group->music_interpret->image|noescape}')"></div>
 			<h2 class="group-header-title">{$group->music_interpret->title}</h2>
 		</div>
 		{foreach $records[$group->id] as $record}
@@ -41,7 +41,7 @@
 			<div n:class="group-header-label" style="background-image: url('{$basePath}/images/music_genres/unclasified.jpg')"></div>
 			<h2 class="group-header-title">Nezařazené</h2>
 		{else}
-			<div n:class="group-header-label" style="background-image: url('{$basePath}/images/music_genres/{$group->music_genre->image_file}')"></div>
+			<div n:class="group-header-label" style="background-image: url('{$basePath}/images/music_genres/{$group->music_genre->image_file|noescape}')"></div>
 			<h2 class="group-header-title">{$group->music_genre->title}</h2>
 		{/if}
 		</div>

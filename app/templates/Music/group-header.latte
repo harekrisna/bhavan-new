@@ -1,4 +1,4 @@
 <div class="group-header">
-	<div class="group-header-label{ifset $class} {$class}{/ifset}"{ifset $label_image} style="background-image: url('{$label_image}')"{/ifset}>{ifset $label_text}{!$label_text}{/ifset}</div>
+	<div class="group-header-label{ifset $class} {$class}{/ifset}"{ifset $label_image} style="background-image: url('{$label_image|noescape}')"{/ifset}>{ifset $label_text}{!$label_text}{/ifset}</div>
 	<div class="group-header-title"><h2 n:ifset="$group_title">{$group_title}</h2></div>
 </div>
