@@ -341,10 +341,19 @@ section#galery_photos > div {
   -ms-transition: background-color 2s ease-in-out;
   transition: background-color 2s ease-in-out;
 }
-section#galery_photos > div a {
+section#galery_photos > div a.remove {
   height: 20px;
   line-height: 20px;
   background: url(../../images/admin/remove.png) no-repeat left center;
+  margin-top: -1px;
+  padding-left: 20px;
+  display: block;
+  float: left;
+}
+section#galery_photos > div a.rotate {
+  height: 20px;
+  line-height: 20px;
+  background: url(../../images/admin/.png) no-repeat left center;
   margin-top: -1px;
   padding-left: 20px;
   display: block;

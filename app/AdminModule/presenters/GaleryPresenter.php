@@ -390,7 +390,6 @@ final class GaleryPresenter extends BasePresenter {
 				
 		$position = 1;
 		foreach($photos as $photo) {
-			Debugger::fireLog($photo);
 			$this->photo->update($photo->id, ['position' => $position]);
 			$position++;
 		}
@@ -420,7 +419,6 @@ final class GaleryPresenter extends BasePresenter {
 	}	
 	
 	function handleUpdatePosition($galery_id, $photo_id, $new_position) {
-    	$this->setView("galery");
         $old_position = $this->photo->get($photo_id)
                                     ->position;
 		
@@ -438,5 +436,23 @@ final class GaleryPresenter extends BasePresenter {
         }
         
         $this->sendPayload();
-	}	
+	}
+
+	function handleRotatePhoto($photo_id, $angle) {
+        $photo = $this->photo->get($photo_id);
+        $photo_file = $this->galery_dir."/".$photo->galery->photos_folder."/photos/".$photo->file;
+        $image = Image::fromFile($photo_file);
+        $image->rotate(90, 0);
+        $image->save($this->galery_dir."/".$photo->galery->photos_folder."/photos/".$photo->file);
+        unset($image);
+
+        $preview_file = $this->galery_dir."/".$photo->galery->photos_folder."/previews/".$photo->file;
+        $image = Image::fromFile($preview_file);
+        $image->rotate(90, 0);
+        $image->save($this->galery_dir."/".$photo->galery->photos_folder."/previews/".$photo->file);
+		unset($image);
+
+        //Debugger::fireLog($image);
+        $this->sendPayload();
+	}
 }

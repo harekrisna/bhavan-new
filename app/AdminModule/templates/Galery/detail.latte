@@ -118,6 +118,16 @@
         }   
         
   	}
+
+	function rotatePhoto(event, a) {
+		event.preventDefault();
+		$.get(a.href, function(payload) {
+			console.log(payload);
+			if(payload.success) {
+				
+			}
+		});
+	}
   	
   	function removePhoto(event, a) {
 		event.preventDefault();
@@ -138,10 +148,10 @@
 		});
 	}
 
-function saveDescription(photo_id, text ) { 
-    $.get({link updateDescription!}, { "photo_id": photo_id,
-                                       "text": text }
-)};
+	function saveDescription(photo_id, text ) { 
+	    $.get({link updateDescription!}, { "photo_id": photo_id,
+	                                       "text": text }
+	)};
 
   </script>
 
