@@ -19,7 +19,7 @@ function initDateIntervalPicker(from_el, to_el) {
 	    isRTL: false, 
 	    showMonthAfterYear: false, 
 	    yearSuffix: '',
-			yearRange: '2010:2020',
+		yearRange: '2010:2020',
 	}; 
 	
 	$.datepicker.setDefaults($.datepicker.regional['cs']);
