@@ -442,17 +442,20 @@ final class GaleryPresenter extends BasePresenter {
         $photo = $this->photo->get($photo_id);
         $photo_file = $this->galery_dir."/".$photo->galery->photos_folder."/photos/".$photo->file;
         $image = Image::fromFile($photo_file);
-        $image->rotate(90, 0);
+        $image->rotate($angle, 0);
         $image->save($this->galery_dir."/".$photo->galery->photos_folder."/photos/".$photo->file);
         unset($image);
 
         $preview_file = $this->galery_dir."/".$photo->galery->photos_folder."/previews/".$photo->file;
         $image = Image::fromFile($preview_file);
-        $image->rotate(90, 0);
-        $image->save($this->galery_dir."/".$photo->galery->photos_folder."/previews/".$photo->file);
+        $image->rotate($angle, 0);
+        $this->payload->success = $image->save($this->galery_dir."/".$photo->galery->photos_folder."/previews/".$photo->file);
 		unset($image);
 
-        //Debugger::fireLog($image);
+		$photo->update(['width' => $photo->height, 'height' => $photo->width]);
+
+		$this->payload->new_width = $photo->width;
+		$this->payload->new_height = $photo->height;
         $this->sendPayload();
 	}
 }

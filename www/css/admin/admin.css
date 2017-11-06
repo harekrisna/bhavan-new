@@ -347,27 +347,39 @@ section#galery_photos > div a.remove {
   background: url(../../images/admin/remove.png) no-repeat left center;
   margin-top: -1px;
   padding-left: 20px;
+  margin-right: 29px;
   display: block;
   float: left;
 }
-section#galery_photos > div a.rotate {
+section#galery_photos > div a.rotate_left {
+  width: 20px;
   height: 20px;
-  line-height: 20px;
-  background: url(../../images/admin/.png) no-repeat left center;
-  margin-top: -1px;
-  padding-left: 20px;
+  background: url(../../images/admin/rotate-left.png) no-repeat center center / 20px 20px;
+  margin: -1px 0 1px 0;
+  display: block;
+  float: left;
+}
+section#galery_photos > div a.rotate_right {
+  width: 20px;
+  height: 20px;
+  background: url(../../images/admin/rotate-right.png) no-repeat center center / 20px 20px;
+  margin: -1px 0 1px 0;
   display: block;
   float: left;
 }
 section#galery_photos > div div.move {
-  width: 40px;
+  width: 26px;
   height: 20px;
   background: url(../../images/admin/move-icon.png) no-repeat center center / 20px 20px;
-  margin: -1px 0 1px 20px;
+  margin: -1px 2px 1px 2px;
   float: left;
 }
 section#galery_photos > div div.move:hover {
   cursor: move;
+}
+section#galery_photos > div a.loading {
+  background: url(../../images/admin/loading-spinner.gif) no-repeat center center / 20px 20px;
+  cursor: default;
 }
 section#galery_photos > div span.dimensions {
   float: right;

@@ -1,9 +1,10 @@
-	<div id="{$photo->id}">
+	<div id="{$photo->id}" class="photo-box">
     	{var @filesize = filesize("./images/galery/".$photo->galery->photos_folder."/photos/".$photo->file)}
-        <a class="remove" onclick="removePhoto(event, this);" n:href="removePhoto!, $photo->id">Smazat fotku</a>
+        <a class="remove" onclick="removePhoto(event, this);" n:href="removePhoto!, $photo->id">Smazat</a>
+        <a class="rotate_left" onclick="rotatePhoto(event, this);" n:href="rotatePhoto!, $photo->id, '90'"></a>
         <div class="move"></div>
-        <a class="rotate" onclick="rotatePhoto(event, this);" n:href="rotatePhoto!, $photo->id, '90'">rotate</a>
-        <span class="dimensions">{$photo->width}x{$photo->height}</span>
+        <a class="rotate_right" onclick="rotatePhoto(event, this);" n:href="rotatePhoto!, $photo->id, '-90'"></a>
+        <span class="dimensions"><span class="width">{$photo->width}</span>x<span class="height">{$photo->height}</span></span>
         <div class="info">{$photo->file} [<span>{$filesize|bytes}</span>]</div>
         <div class="box">
             <img alt="{$photo->file}" title="{$photo->file}" src="{$basePath}/images/galery/{$photo->galery->photos_folder}/previews/{$photo->file}" />

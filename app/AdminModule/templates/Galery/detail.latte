@@ -121,10 +121,29 @@
 
 	function rotatePhoto(event, a) {
 		event.preventDefault();
+		if(in_progress)
+			return;
+
+		in_progress = true;
+		$(a).addClass("loading");
+
+		var photo_box = $(a).closest('div.photo-box');
 		$.get(a.href, function(payload) {
-			console.log(payload);
 			if(payload.success) {
+				var image = $(photo_box).find('.box img');
+				var src = $(image).attr('src');
+				$(image).removeAttr("src").attr("src", src + "?timestamp=" + new Date().getTime());
 				
+				var photo_width = $(photo_box).find('.dimensions .width');
+				var photo_height = $(photo_box).find('.dimensions .height');
+
+			   	$(photo_width).empty().html(payload.new_width);
+			   	$(photo_height).empty().html(payload.new_height);
+
+				$('div.loading').fadeOut(400);
+				$(a).removeClass("loading");
+				in_progress = false;
+
 			}
 		});
 	}
