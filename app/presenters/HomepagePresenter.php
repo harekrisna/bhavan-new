@@ -9,6 +9,9 @@ use Tracy\Debugger;
 class HomepagePresenter extends BasePresenter  {
 	
 	public function renderDefault()	{
+		$session = $this->getSession('backlinks');
+		$session->backlinks = [];
+
 		$this->template->slides = $this->slide->getAll()
 											  ->where('show_from IS NULL OR show_from < NOW()')
 											  ->where('show_to IS NULL OR show_to > NOW()')

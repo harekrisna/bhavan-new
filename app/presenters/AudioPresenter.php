@@ -37,7 +37,7 @@ class AudioPresenter extends BasePresenter	{
 		$detect = new Mobile_Detect;
 		$this->template->isMobile = $detect->isMobile();		
 		$this->template->last_30_days = $this->audio->findAll()
-													->where(new SqlLiteral("`time_created` BETWEEN (CURDATE() - INTERVAL 30 DAY) AND (CURDATE() + 0)"))
+													->where(new SqlLiteral("`time_created` BETWEEN (CURDATE() - INTERVAL 30 DAY) AND (CURDATE() + 1)"))
 													->order('time_created DESC');
 													
 		$this->template->last_60_days = $this->audio->findAll()
@@ -390,7 +390,7 @@ class AudioPresenter extends BasePresenter	{
 		
 		if($group_by == 'time_created') {
 			$this->template->last_30_days = $this->audio->findBy(['audio_interpret_id' => $interpret_id])
-														->where(new SqlLiteral("`time_created` BETWEEN CURDATE() - INTERVAL 30 DAY AND (CURDATE() + 0)"))
+														->where(new SqlLiteral("`time_created` BETWEEN CURDATE() - INTERVAL 30 DAY AND (CURDATE() + 1)"))
 														->order('time_created DESC');
 												
 			$this->template->last_60_days = $this->audio->findBy(['audio_interpret_id' => $interpret_id])
