@@ -7,7 +7,7 @@
 {var playcount = $record->related('music_playcount')->sum(playcount)}
 {var douwnloadcount = $record->related('music_downloadcount')->sum(downloadcount)}
 
-<div class="audio-player single-audio">
+<div n:class="audio-player, single-audio, $isMobile ? mobile">
 	<div class="title-line">
 		<div n:class="title" n:href="singleAudio, $record->id">{$record->title}</div>
 		<div class="download-alt"><a n:if="$isMobile" onclick="$.get({link Music:increaseMp3Download, $record->id});" href="{$basePath}/mp3/{$record->music_interpret->mp3_folder}/{$record->mp3_file}" class="link download-alt-button" download></a></div>

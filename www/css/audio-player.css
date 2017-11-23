@@ -1,6 +1,9 @@
 audio.mobile {
   width: 100%;
 }
+.audio-player.mobile .title-line .title {
+  width: 91%;
+}
 .audio-player {
   max-width: 720px;
   height: auto;
@@ -52,6 +55,8 @@ audio.mobile {
   margin-top: -23px;
   background: url('mejs-download.svg') no-repeat top left / 18px;
   display: block;
+  position: relative;
+  z-index: 100;
 }
 .audio-player .audio-info {
   width: 100%;
@@ -215,5 +220,5 @@ audio::-webkit-media-controls-enclosure {
   overflow: hidden;
 }
 audio::-webkit-media-controls-panel {
-  width: calc(100% + 30px);
+  width: calc(100% + 35px);
 }

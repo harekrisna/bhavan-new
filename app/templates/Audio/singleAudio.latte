@@ -7,9 +7,9 @@
 {var playcount = $lecture->related('audio_playcount')->sum(playcount)}
 {var douwnloadcount = $lecture->related('audio_downloadcount')->sum(downloadcount)}
 
-<div class="audio-player single-audio">
+<div n:class="audio-player, single-audio, $isMobile ? mobile">
 	<div class="title-line">
-		<div n:class="title">{$lecture->title}</div>
+		<div class="title">{$lecture->title}</div>
 		<div class="download-alt"><a n:if="$isMobile" onclick="$.get({link Audio:increaseMp3Download, $lecture->id});" href="{$basePath}/mp3/{$lecture->audio_interpret->mp3_folder}/{$lecture->mp3_file}" class="link download-alt-button" download></a></div>
 	</div>	
 	<div class="audio-info">

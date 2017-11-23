@@ -2,15 +2,15 @@
 {var $group_by = empty($group_by) ? "time_created" : $group_by}
 {var douwnloadcount = $lecture->related('audio_downloadcount')->sum(downloadcount)}
 {var playcount = $lecture->related('audio_playcount')->sum(playcount)}
-<div class="audio-player">
+<div n:class="audio-player, $isMobile ? mobile">
 	<div class="title-line">
 	{if isset($title_only_text) && $title_only_text == true}
-		<div n:class="title, $isMobile ? 'title-padding'">{$lecture->title}</div>
+		<div class="title">{$lecture->title}</div>
 	{else}
 		{if $lecture->audio_collection_id}
-		<a n:class="title, $isMobile ? 'title-padding'" n:href="Audio:audioCollection, $lecture->audio_collection_id">{$lecture->title}</a>
+		<a class="title" n:href="Audio:audioCollection, $lecture->audio_collection_id">{$lecture->title}</a>
 		{else}
-		<a n:class="title, $isMobile ? 'title-padding'" n:href="Audio:singleAudio, $lecture->id">{$lecture->title}</a>
+		<a class="title" n:href="Audio:singleAudio, $lecture->id">{$lecture->title}</a>
 		{/if}
 	{/if}
 		<div class="download-alt"><a n:if="$isMobile" onclick="$.get({link Audio:increaseMp3Download, $lecture->id});" href="{$basePath}/mp3/{$lecture->audio_interpret->mp3_folder}/{$lecture->mp3_file}" class="link download-alt-button" download></a></div>
