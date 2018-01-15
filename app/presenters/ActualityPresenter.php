@@ -38,6 +38,8 @@ class ActualityPresenter extends BasePresenter
 		$this->template->next = $this->actuality->getList()
 												->limit(1, $offset+1)
 												->fetch();
+		if (empty($actuality))
+            throw new Nette\Application\BadRequestException("Aktualita nenalazena.");
 
 		$this->template->actuality = $actuality;
 		$this->template->backlinks = [$this->link('list') => "Akce"];
